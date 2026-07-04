@@ -66,13 +66,13 @@ function App() {
       )}
       {screen === "admin" && (
         <AdminDashboard
-          dailyTotals={dailyTotals}
-          grandTotal={grandTotal}
-          orderHistory={orderHistory}
-          onDeleteOrder={deleteOrder}
-          onClearHistory={clearHistory}
-          onBack={handleBack}
-        />
+        dailyTotals={dailyTotals}
+        grandTotal={grandTotal}
+        orderHistory={orderHistory}
+        onDeleteOrder={deleteOrder}
+        onEditOrder={(id, updates) => { /* update in Firebase */ }}
+         onBack={handleBack}
+         />
       )}
     </>
   );
