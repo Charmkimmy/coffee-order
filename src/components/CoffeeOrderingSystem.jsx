@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { useOrderHistory } from "../hooks/useOrderHistory";
+import { useFirebaseOrders } from "../hooks/useFirebaseOrders";
 import Header from "./Header";
 import MenuColumn from "./MenuColumn";
 import OrderColumn from "./OrderColumn";
@@ -11,8 +11,8 @@ export default function CoffeeOrderingSystem({ onBack }) {
   const [orderPlaced, setOrderPlaced] = useState(null);
   const [showCart, setShowCart] = useState(false);
   const [customerName, setCustomerName] = useState("");
-
-  const { addOrder } = useOrderHistory();
+  
+  const { addOrder } = useFirebaseOrders();
 
   const addToCart = (item, selectedSize) => {
     const price = selectedSize === "16oz" ? item.price16 : item.price22;
