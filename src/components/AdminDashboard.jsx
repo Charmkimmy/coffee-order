@@ -277,7 +277,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           onClick={exportToExcel}
           style={{
             display: "flex",
-            alignItems: "center",
+            alignItems: "right",
             gap: 5,
             background: "transparent",
             border: "1px solid #8D6E63",
