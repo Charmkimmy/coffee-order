@@ -1,5 +1,5 @@
 import React from "react";
-import { Coffee, Receipt, ArrowLeft, ShoppingCart } from "lucide-react";
+import { Coffee, ShoppingBag, ArrowLeft, ShoppingCart } from "lucide-react";
 
 export default function Header({ itemCount, onBack, isCustomer, onCartToggle, showCart }) {
   return (
@@ -97,7 +97,7 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
             fontFamily: "'Space Mono', monospace",
           }}
         >
-          <Receipt size={15} />
+          <ShoppingBag size={15} />
           {itemCount} item{itemCount !== 1 ? "s" : ""}
         </div>
       </div>
