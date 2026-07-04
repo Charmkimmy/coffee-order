@@ -33,7 +33,6 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
     }
   };
 
-  // Parallax speed multipliers
   const bgY = scrollY * 0.3;
   const midY = scrollY * 0.5;
   const frontY = scrollY * 0.8;
@@ -52,26 +51,6 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
       {/* ===== PARALLAX BACKGROUND LAYERS ===== */}
 
       {/* Layer 1: Deep background - slowest */}
-       <button
-                type="button"
-                onClick={() => {
-                  setShowAdminLogin(false);
-                  setAdminCode("");
-                  setError(false);
-                }}
-                style={{
-                  flex: 1,
-                  padding: "12px",
-                  borderRadius: 10,
-                  border: "1px solid #5C4A38",
-                  background: "transparent",
-                  color: "#9A8770",
-                  fontSize: 13,
-                  cursor: "pointer",
-                }}
-              >
-                Cancel
-              </button>
       <div
         style={{
           position: "fixed",
@@ -79,7 +58,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           left: 0,
           width: "100%",
           height: "120vh",
-          background: "linear-gradient(180deg, #2B1B12 0%, #4A2E1F 40%, #6B4423 70%, #8B5E3C 100%)",
+          background: "linear-gradient(180deg, #3E2723 0%, #5D4037 40%, #795548 70%, #8D6E63 100%)",
           zIndex: 1,
         }}
       />
@@ -93,8 +72,8 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           width: 80,
           height: 80,
           borderRadius: "50% 40% 45% 55%",
-          background: "radial-gradient(circle at 30% 30%, #B8763E, #8B5E3C)",
-          opacity: 0.15,
+          background: "radial-gradient(circle at 30% 30%, #A1887F, #8D6E63)",
+          opacity: 0.2,
           transform: `rotate(${scrollY * 0.1}deg)`,
           zIndex: 2,
         }}
@@ -107,8 +86,8 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           width: 60,
           height: 60,
           borderRadius: "45% 55% 50% 40%",
-          background: "radial-gradient(circle at 30% 30%, #D8A15C, #B8763E)",
-          opacity: 0.12,
+          background: "radial-gradient(circle at 30% 30%, #BCAAA4, #A1887F)",
+          opacity: 0.18,
           transform: `rotate(${-scrollY * 0.15}deg)`,
           zIndex: 2,
         }}
@@ -121,8 +100,8 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           width: 100,
           height: 100,
           borderRadius: "50% 45% 55% 50%",
-          background: "radial-gradient(circle at 30% 30%, #9A6B3C, #6B4423)",
-          opacity: 0.08,
+          background: "radial-gradient(circle at 30% 30%, #8D6E63, #6D4C41)",
+          opacity: 0.12,
           transform: `rotate(${scrollY * 0.08}deg)`,
           zIndex: 2,
         }}
@@ -135,8 +114,8 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           width: 45,
           height: 45,
           borderRadius: "55% 45% 50% 60%",
-          background: "radial-gradient(circle at 30% 30%, #C4956A, #9A6B3C)",
-          opacity: 0.1,
+          background: "radial-gradient(circle at 30% 30%, #D7CCC8, #A1887F)",
+          opacity: 0.15,
           transform: `rotate(${-scrollY * 0.12}deg)`,
           zIndex: 2,
         }}
@@ -150,7 +129,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           left: "20%",
           width: 120,
           height: 200,
-          background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%)",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%)",
           borderRadius: "50%",
           filter: "blur(20px)",
           transform: `translateX(${Math.sin(scrollY * 0.01) * 20}px)`,
@@ -164,7 +143,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           right: "25%",
           width: 100,
           height: 180,
-          background: "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%)",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%)",
           borderRadius: "50%",
           filter: "blur(25px)",
           transform: `translateX(${Math.cos(scrollY * 0.01) * 15}px)`,
@@ -188,18 +167,131 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           textAlign: "center",
         }}
       >
+        {/* Admin Access - Top Right */}
+        <div
+          style={{
+            position: "absolute",
+            top: 24,
+            right: 24,
+            zIndex: 20,
+          }}
+        >
+          {!showAdminLogin ? (
+            <button
+              onClick={() => setShowAdminLogin(true)}
+              style={{
+                background: "rgba(255, 253, 249, 0.08)",
+                border: "1px solid rgba(215, 204, 200, 0.2)",
+                borderRadius: 10,
+                color: "#D7CCC8",
+                fontSize: 12,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "8px 14px",
+                backdropFilter: "blur(8px)",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(161, 136, 127, 0.2)";
+                e.currentTarget.style.borderColor = "rgba(161, 136, 127, 0.5)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255, 253, 249, 0.08)";
+                e.currentTarget.style.borderColor = "rgba(215, 204, 200, 0.2)";
+              }}
+            >
+              <Shield size={14} />
+              Admin Access
+            </button>
+          ) : (
+            <form onSubmit={handleAdminSubmit} style={{ width: 220 }}>
+              <div style={{ fontSize: 11, color: "#A1887F", marginBottom: 8, textTransform: "uppercase", letterSpacing: 1.5 }}>
+                Enter Admin Code
+              </div>
+              <input
+                type="password"
+                value={adminCode}
+                onChange={(e) => {
+                  setAdminCode(e.target.value);
+                  setError(false);
+                }}
+                placeholder="Enter code..."
+                style={{
+                  width: "100%",
+                  padding: "10px 14px",
+                  borderRadius: 10,
+                  border: error ? "1.5px solid #C62828" : "1px solid #6D4C41",
+                  background: "rgba(255, 253, 249, 0.05)",
+                  fontSize: 14,
+                  fontFamily: "'Space Mono', monospace",
+                  color: "#EFEBE9",
+                  marginBottom: 8,
+                  outline: "none",
+                  textAlign: "center",
+                }}
+                autoFocus
+              />
+              {error && (
+                <div style={{ color: "#C62828", fontSize: 11, marginBottom: 8 }}>
+                  Incorrect code. Try again.
+                </div>
+              )}
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  type="submit"
+                  style={{
+                    flex: 1,
+                    padding: "10px",
+                    borderRadius: 10,
+                    border: "none",
+                    background: "#8D6E63",
+                    color: "#FFF",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  Login
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowAdminLogin(false);
+                    setAdminCode("");
+                    setError(false);
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: "10px",
+                    borderRadius: 10,
+                    border: "1px solid #6D4C41",
+                    background: "transparent",
+                    color: "#A1887F",
+                    fontSize: 12,
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+
         {/* Logo with glow */}
         <div
           style={{
             width: 100,
             height: 100,
             borderRadius: "50%",
-            background: "radial-gradient(circle, #B8763E 0%, #8B5E3C 100%)",
+            background: "radial-gradient(circle, #8D6E63 0%, #6D4C41 100%)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             marginBottom: 32,
-            boxShadow: "0 0 60px rgba(184, 118, 62, 0.4), 0 0 120px rgba(184, 118, 62, 0.2)",
+            boxShadow: "0 0 60px rgba(141, 110, 99, 0.4), 0 0 120px rgba(141, 110, 99, 0.2)",
             animation: "float 3s ease-in-out infinite",
           }}
         >
@@ -211,7 +303,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             fontFamily: "'Fraunces', serif",
             fontSize: "clamp(36px, 8vw, 64px)",
             fontWeight: 700,
-            color: "#F7F2E9",
+            color: "#EFEBE9",
             marginBottom: 12,
             textShadow: "0 4px 20px rgba(0,0,0,0.3)",
             transform: `translateY(${-scrollY * 0.1}px)`,
@@ -224,7 +316,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
         <div
           style={{
             fontSize: "clamp(14px, 3vw, 18px)",
-            color: "#D8C9AF",
+            color: "#D7CCC8",
             marginBottom: 48,
             maxWidth: 400,
             lineHeight: 1.7,
@@ -244,7 +336,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             padding: "16px 40px",
             borderRadius: 14,
             border: "none",
-            background: "#B8763E",
+            background: "#8D6E63",
             color: "#FFF",
             fontSize: 16,
             fontWeight: 700,
@@ -252,7 +344,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             display: "flex",
             alignItems: "center",
             gap: 10,
-            boxShadow: "0 8px 30px rgba(184, 118, 62, 0.4)",
+            boxShadow: "0 8px 30px rgba(141, 110, 99, 0.4)",
             transform: `translateY(${-scrollY * 0.03}px)`,
             opacity: Math.max(0, 1 - scrollY / 300),
           }}
@@ -275,10 +367,10 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             opacity: Math.max(0, 1 - scrollY / 200),
           }}
         >
-          <span style={{ fontSize: 11, color: "#9A8770", letterSpacing: 2, textTransform: "uppercase" }}>
+          <span style={{ fontSize: 11, color: "#A1887F", letterSpacing: 2, textTransform: "uppercase" }}>
             Scroll
           </span>
-          <ChevronDown size={20} color="#9A8770" className="bounce" />
+          <ChevronDown size={20} color="#A1887F" className="bounce" />
         </div>
       </div>
 
@@ -288,7 +380,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           position: "relative",
           zIndex: 10,
           padding: "80px 24px",
-          background: "linear-gradient(180deg, transparent 0%, rgba(43, 27, 18, 0.95) 20%, #2B1B12 100%)",
+          background: "linear-gradient(180deg, transparent 0%, rgba(62, 39, 35, 0.95) 20%, #3E2723 100%)",
         }}
       >
         <div style={{ maxWidth: 800, margin: "0 auto" }}>
@@ -300,10 +392,10 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
               opacity: Math.min(1, Math.max(0, (scrollY - 200) / 300)),
             }}
           >
-            <div style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(24px, 5vw, 36px)", fontWeight: 700, color: "#F7F2E9", marginBottom: 12 }}>
+            <div style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(24px, 5vw, 36px)", fontWeight: 700, color: "#EFEBE9", marginBottom: 12 }}>
               How It Works
             </div>
-            <div style={{ fontSize: 14, color: "#9A8770", maxWidth: 400, margin: "0 auto" }}>
+            <div style={{ fontSize: 14, color: "#A1887F", maxWidth: 400, margin: "0 auto" }}>
               Three simple steps to your perfect cup
             </div>
           </div>
@@ -322,32 +414,32 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
                 gap: 20,
                 padding: "24px",
                 background: "rgba(255, 253, 249, 0.05)",
-                border: "1px solid rgba(216, 201, 175, 0.15)",
+                border: "1px solid rgba(215, 204, 200, 0.15)",
                 borderRadius: 14,
                 marginBottom: 16,
                 transform: `translateX(${Math.max(0, 50 - (scrollY - 400 - i * 100) * 0.2)}px)`,
                 opacity: Math.min(1, Math.max(0, (scrollY - 400 - i * 100) / 200)),
                 transition: "border-color 0.3s ease",
               }}
-              onMouseEnter={(e) => e.currentTarget.style.borderColor = "rgba(184, 118, 62, 0.4)"}
-              onMouseLeave={(e) => e.currentTarget.style.borderColor = "rgba(216, 201, 175, 0.15)"}
+              onMouseEnter={(e) => e.currentTarget.style.borderColor = "rgba(161, 136, 127, 0.4)"}
+              onMouseLeave={(e) => e.currentTarget.style.borderColor = "rgba(215, 204, 200, 0.15)"}
             >
               <div
                 style={{
                   fontFamily: "'Space Mono', monospace",
                   fontSize: 28,
                   fontWeight: 700,
-                  color: "#B8763E",
+                  color: "#A1887F",
                   lineHeight: 1,
                 }}
               >
                 {feature.num}
               </div>
               <div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: "#F7F2E9", marginBottom: 4 }}>
+                <div style={{ fontSize: 16, fontWeight: 600, color: "#EFEBE9", marginBottom: 4 }}>
                   {feature.title}
                 </div>
-                <div style={{ fontSize: 13, color: "#9A8770", lineHeight: 1.6 }}>
+                <div style={{ fontSize: 13, color: "#A1887F", lineHeight: 1.6 }}>
                   {feature.desc}
                 </div>
               </div>
@@ -363,7 +455,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           zIndex: 10,
           padding: "60px 24px 100px",
           textAlign: "center",
-          background: "#2B1B12",
+          background: "#3E2723",
         }}
       >
         <div
@@ -371,7 +463,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             fontFamily: "'Fraunces', serif",
             fontSize: "clamp(20px, 4vw, 28px)",
             fontWeight: 700,
-            color: "#F7F2E9",
+            color: "#EFEBE9",
             marginBottom: 24,
             transform: `translateY(${Math.max(0, 50 - (scrollY - 800) * 0.2)}px)`,
             opacity: Math.min(1, Math.max(0, (scrollY - 800) / 300)),
@@ -387,13 +479,13 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             padding: "16px 48px",
             borderRadius: 14,
             border: "none",
-            background: "#B8763E",
+            background: "#8D6E63",
             color: "#FFF",
             fontSize: 16,
             fontWeight: 700,
             cursor: "pointer",
             marginBottom: 40,
-            boxShadow: "0 8px 30px rgba(184, 118, 62, 0.4)",
+            boxShadow: "0 8px 30px rgba(141, 110, 99, 0.4)",
             transform: `translateY(${Math.max(0, 30 - (scrollY - 900) * 0.15)}px)`,
             opacity: Math.min(1, Math.max(0, (scrollY - 900) / 200)),
           }}
@@ -401,81 +493,6 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           Start Ordering
           <ArrowRight size={20} />
         </button>
-
-        {/* Admin Login */}
-        {!showAdminLogin ? (
-          <button
-            onClick={() => setShowAdminLogin(true)}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#5C4A38",
-              fontSize: 12,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 6,
-              margin: "0 auto",
-            }}
-          >
-            <Shield size={12} />
-            Admin Access
-          </button>
-        ) : (
-          <form onSubmit={handleAdminSubmit} style={{ maxWidth: 320, margin: "0 auto" }}>
-            <div style={{ fontSize: 11, color: "#7A6650", marginBottom: 10, textTransform: "uppercase", letterSpacing: 1.5 }}>
-              Enter Admin Code
-            </div>
-            <input
-              type="password"
-              value={adminCode}
-              onChange={(e) => {
-                setAdminCode(e.target.value);
-                setError(false);
-              }}
-              placeholder="Enter code..."
-              style={{
-                width: "100%",
-                padding: "12px 16px",
-                borderRadius: 10,
-                border: error ? "1.5px solid #C44" : "1px solid #5C4A38",
-                background: "rgba(255, 253, 249, 0.05)",
-                fontSize: 15,
-                fontFamily: "'Space Mono', monospace",
-                color: "#F7F2E9",
-                marginBottom: 10,
-                outline: "none",
-                textAlign: "center",
-              }}
-              autoFocus
-            />
-            {error && (
-              <div style={{ color: "#C44", fontSize: 12, marginBottom: 10 }}>
-                Incorrect code. Try again.
-              </div>
-            )}
-            <div style={{ display: "flex", gap: 10 }}>
-              <button
-                type="submit"
-                style={{
-                  flex: 1,
-                  padding: "12px",
-                  borderRadius: 10,
-                  border: "none",
-                  background: "#B8763E",
-                  color: "#FFF",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Login
-              </button>
-         
-            </div>
-          </form>
-        )}
       </div>
 
       {/* CSS Animations */}
@@ -494,4 +511,9 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
       `}</style>
     </div>
   );
-}
+}'''
+
+with open('/mnt/agents/output/IntroScreen.jsx', 'w') as f:
+    f.write(brown_theme)
+
+print("Brown theme saved!")
