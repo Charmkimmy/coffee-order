@@ -12,7 +12,6 @@ function App() {
     loading,
     addOrder,
     deleteOrder,
-    clearHistory,
     dailyTotals,
     grandTotal,
   } = useFirebaseOrders();
