@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ArrowLeft, Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { ArrowLeft, Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
@@ -7,6 +7,89 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
   const [selectedOrders, setSelectedOrders] = useState(new Set());
   const [editingOrder, setEditingOrder] = useState(null);
   const [editCustomerName, setEditCustomerName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 5;
+
+  // Filter orders by search query
+  const filteredOrderHistory = useMemo(() => {
+    if (!searchQuery.trim()) return orderHistory;
+    const query = searchQuery.toLowerCase();
+    return orderHistory.filter((order) =>
+      (order.customerName && order.customerName.toLowerCase().includes(query)) ||
+      order.orderNo.toString().includes(query) ||
+      order.items.some((item) => item.name.toLowerCase().includes(query))
+    );
+  }, [orderHistory, searchQuery]);
+
+  // Rebuild dailyTotals from filtered orders
+  const filteredDailyTotals = useMemo(() => {
+    const grouped = {};
+    filteredOrderHistory.forEach((order) => {
+      if (!grouped[order.date]) {
+        grouped[order.date] = {
+          date: order.date,
+          orders: [],
+          totalSales: 0,
+          itemCount: 0,
+        };
+      }
+      grouped[order.date].orders.push(order);
+      grouped[order.date].totalSales += order.total;
+      grouped[order.date].itemCount += order.items.reduce(
+        (sum, item) => sum + item.qty,
+        0
+      );
+    });
+    return Object.values(grouped).sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB - dateA;
+    });
+  }, [filteredOrderHistory]);
+
+  // Flatten orders for pagination
+  const allFilteredOrders = useMemo(() => {
+    const orders = [];
+    filteredDailyTotals.forEach((day) => {
+      day.orders.forEach((order) => {
+        orders.push({ ...order, dayDate: day.date });
+      });
+    });
+    return orders;
+  }, [filteredDailyTotals]);
+
+  const totalPages = Math.ceil(allFilteredOrders.length / ordersPerPage);
+  const paginatedOrders = useMemo(() => {
+    const start = (currentPage - 1) * ordersPerPage;
+    return allFilteredOrders.slice(start, start + ordersPerPage);
+  }, [allFilteredOrders, currentPage]);
+
+  // Group paginated orders back by day for display
+  const paginatedDailyTotals = useMemo(() => {
+    const grouped = {};
+    paginatedOrders.forEach((order) => {
+      if (!grouped[order.dayDate]) {
+        grouped[order.dayDate] = {
+          date: order.dayDate,
+          orders: [],
+          totalSales: 0,
+          itemCount: 0,
+        };
+      }
+      grouped[order.dayDate].orders.push(order);
+      grouped[order.dayDate].totalSales += order.total;
+      grouped[order.dayDate].itemCount += order.items.reduce(
+        (sum, item) => sum + item.qty,
+        0
+      );
+    });
+    return Object.values(grouped).sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB - dateA;
+    });
+  }, [paginatedOrders]);
 
   const toggleSelect = (orderId) => {
     const newSelected = new Set(selectedOrders);
@@ -19,7 +102,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
   };
 
   const selectAll = () => {
-    const allIds = new Set(orderHistory.map((o) => o.id));
+    const allIds = new Set(filteredOrderHistory.map((o) => o.id));
     setSelectedOrders(allIds);
   };
 
@@ -52,7 +135,28 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
     setEditCustomerName("");
   };
 
-  const allSelected = selectedOrders.size === orderHistory.length && orderHistory.length > 0;
+  const allSelected = selectedOrders.size === filteredOrderHistory.length && filteredOrderHistory.length > 0;
+
+  // Export to CSV
+  const exportToCSV = () => {
+    const headers = ["Date", "Time", "Order #", "Customer", "Items", "Payment", "Total"];
+    const rows = filteredOrderHistory.map((order) => [
+      order.date,
+      order.time,
+      order.orderNo,
+      order.customerName || "Walk-in",
+      order.items.map((i) => `${i.qty}x ${i.name} (${i.size})`).join("; "),
+      PAYMENTS.find((p) => p.id === order.payment)?.label || order.payment,
+      order.total,
+    ]);
+
+    const csvContent = [headers.join(","), ...rows.map((row) => row.map((cell) => `"${cell}"`).join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `sales-history-${new Date().toISOString().split("T")[0]}.csv`;
+    link.click();
+  };
 
   return (
     <div
@@ -120,8 +224,57 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         </div>
       </div>
 
+      {/* Search & Actions Bar */}
+      <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        {/* Search */}
+        <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
+          <Search size={16} color="#A1887F" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} />
+          <input
+            type="text"
+            placeholder="Search by customer, order #, or item..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            style={{
+              width: "100%",
+              padding: "10px 14px 10px 38px",
+              borderRadius: 10,
+              border: "1px solid #D7CCC8",
+              background: "#FFFDF9",
+              fontSize: 13,
+              fontFamily: "'Public Sans', sans-serif",
+              color: "#3E2723",
+              outline: "none",
+            }}
+          />
+        </div>
+
+        {/* Export CSV */}
+        <button
+          onClick={exportToCSV}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            background: "transparent",
+            border: "1px solid #8D6E63",
+            color: "#8D6E63",
+            padding: "8px 14px",
+            borderRadius: 8,
+            fontSize: 12,
+            cursor: "pointer",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <Download size={14} />
+          Export CSV
+        </button>
+      </div>
+
       {/* Select All / Delete Selected Bar */}
-      {orderHistory.length > 0 && (
+      {filteredOrderHistory.length > 0 && (
         <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 12 }}>
           <button
             onClick={allSelected ? deselectAll : selectAll}
@@ -161,6 +314,9 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
               Delete Selected ({selectedOrders.size})
             </button>
           )}
+          <span style={{ fontSize: 12, color: "#A1887F", marginLeft: "auto" }}>
+            {filteredOrderHistory.length} order{filteredOrderHistory.length !== 1 ? "s" : ""} found
+          </span>
         </div>
       )}
 
@@ -170,13 +326,13 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           Daily Sales
         </div>
 
-        {dailyTotals.length === 0 ? (
+        {paginatedDailyTotals.length === 0 ? (
           <div style={{ background: "#FFFDF9", border: "1px dashed #D7CCC8", borderRadius: 12, padding: "40px", textAlign: "center", color: "#A1887F" }}>
-            No sales yet. Orders will appear here once customers start ordering.
+            {searchQuery ? "No orders match your search." : "No sales yet. Orders will appear here once customers start ordering."}
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {dailyTotals.map((day) => (
+            {paginatedDailyTotals.map((day) => (
               <div key={day.date} style={{ background: "#FFFDF9", border: "1px solid #D7CCC8", borderRadius: 12, overflow: "hidden" }}>
                 {/* Day Header */}
                 <div
@@ -380,6 +536,47 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: 24 }}>
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              style={{
+                background: "transparent",
+                border: "1px solid #D7CCC8",
+                color: currentPage === 1 ? "#D7CCC8" : "#8D6E63",
+                padding: "6px 12px",
+                borderRadius: 8,
+                cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <span style={{ fontSize: 13, color: "#6D4C41" }}>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              style={{
+                background: "transparent",
+                border: "1px solid #D7CCC8",
+                color: currentPage === totalPages ? "#D7CCC8" : "#8D6E63",
+                padding: "6px 12px",
+                borderRadius: 8,
+                cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
         )}
       </div>

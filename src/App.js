@@ -28,9 +28,9 @@ function App() {
           alignItems: "center",
           justifyContent: "center",
           height: "100vh",
-          background: "#F7F2E9",
+          background: "#EFEBE9",
           fontFamily: "'Public Sans', sans-serif",
-          color: "#2B1B12",
+          color: "#3E2723",
         }}
       >
         <div style={{ textAlign: "center" }}>
@@ -38,8 +38,8 @@ function App() {
             style={{
               width: 40,
               height: 40,
-              border: "3px solid #E7DCC7",
-              borderTopColor: "#B8763E",
+              border: "3px solid #D7CCC8",
+              borderTopColor: "#8D6E63",
               borderRadius: "50%",
               animation: "spin 1s linear infinite",
               margin: "0 auto 16px",
@@ -65,13 +65,13 @@ function App() {
       )}
       {screen === "admin" && (
         <AdminDashboard
-        dailyTotals={dailyTotals}
-        grandTotal={grandTotal}
-        orderHistory={orderHistory}
-        onDeleteOrder={deleteOrder}
-        onEditOrder={(id, updates) => { /* update in Firebase */ }}
-         onBack={handleBack}
-         />
+          dailyTotals={dailyTotals}
+          grandTotal={grandTotal}
+          orderHistory={orderHistory}
+          onDeleteOrder={deleteOrder}
+          onEditOrder={(id, updates) => { /* update in Firebase */ }}
+          onBack={handleBack}
+        />
       )}
     </>
   );
