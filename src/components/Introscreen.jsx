@@ -511,9 +511,4 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
       `}</style>
     </div>
   );
-}'''
-
-with open('/mnt/agents/output/IntroScreen.jsx', 'w') as f:
-    f.write(brown_theme)
-
-print("Brown theme saved!")
+}
