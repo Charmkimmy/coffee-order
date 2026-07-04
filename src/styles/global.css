@@ -1,44 +1,38 @@
-/* Desktop layout */
+/* Desktop layout - shown on 769px and up */
 @media (min-width: 769px) {
-  .desktop-order {
-    display: block !important;
-    position: sticky;
-    top: 0;
-    background: #FFFDF9;
-    border-left: 1px solid #E7DCC7;
-    min-height: 600px;
-    padding: 24px 20px;
-    width: 340px;
+  .desktop-layout {
+    display: grid !important;
   }
-  
-  .mobile-cart-btn,
-  .mobile-cart-overlay {
+  .mobile-layout,
+  .mobile-cart-fab,
+  .mobile-cart-backdrop,
+  .mobile-cart-panel {
     display: none !important;
   }
 }
 
-/* Mobile layout */
+/* Mobile layout - shown on 768px and below */
 @media (max-width: 768px) {
-  .desktop-order {
+  .desktop-layout {
     display: none !important;
   }
-  
-  /* Make menu items more touch-friendly */
-  .cos-card {
-    padding: 16px !important;
-  }
-  
-  .cos-card button {
-    min-width: 40px;
-    min-height: 40px;
+  .mobile-layout {
+    display: block !important;
   }
   
   /* Larger tap targets */
+  .cos-card {
+    padding: 16px !important;
+  }
+  .cos-card button {
+    min-width: 44px;
+    min-height: 44px;
+  }
   button {
     min-height: 44px;
   }
   
-  /* Prevent text zoom on input focus */
+  /* Prevent zoom on inputs */
   input, select, textarea {
     font-size: 16px;
   }

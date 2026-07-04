@@ -9,7 +9,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
   const [cart, setCart] = useState([]);
   const [payment, setPayment] = useState(null);
   const [orderPlaced, setOrderPlaced] = useState(null);
-  const [showCart, setShowCart] = useState(false); // Mobile cart toggle
+  const [showCart, setShowCart] = useState(false);
 
   const { addOrder } = useOrderHistory();
 
@@ -75,6 +75,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
         minHeight: "100vh",
         color: "#2B1B12",
         padding: "0",
+        overflow: "hidden",
       }}
     >
       <Header
@@ -85,23 +86,14 @@ export default function CoffeeOrderingSystem({ onBack }) {
         showCart={showCart}
       />
 
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        {/* Menu column - full width on mobile */}
-        <div style={{ padding: "16px" }}>
-          {/* Size toggle */}
+      {/* Desktop: Side by side */}
+      <div className="desktop-layout" style={{ display: "grid", gridTemplateColumns: "1fr 340px" }}>
+        <div style={{ padding: "24px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
             <span style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: 1.2, color: "#7A6650" }}>
               Size
             </span>
-            <div
-              style={{
-                display: "flex",
-                background: "#EFE6D6",
-                borderRadius: 999,
-                padding: 4,
-                gap: 4,
-              }}
-            >
+            <div style={{ display: "flex", background: "#EFE6D6", borderRadius: 999, padding: 4, gap: 4 }}>
               {["16oz", "22oz"].map((s) => (
                 <button
                   key={s}
@@ -123,70 +115,63 @@ export default function CoffeeOrderingSystem({ onBack }) {
               ))}
             </div>
           </div>
-
-          {/* Menu items */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <MenuColumn
-              size={size}
-              setSize={setSize}
-              onAddToCart={addToCart}
-            />
-          </div>
+          <MenuColumn size={size} setSize={setSize} onAddToCart={addToCart} />
         </div>
 
-        {/* Mobile Cart Button (floating) */}
-        {itemCount > 0 && !showCart && (
-          <button
-            onClick={() => setShowCart(true)}
-            className="cos-btn"
-            style={{
-              position: "fixed",
-              bottom: 20,
-              right: 20,
-              background: "#B8763E",
-              color: "#FFF",
-              border: "none",
-              borderRadius: 50,
-              width: 56,
-              height: 56,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              boxShadow: "0 4px 12px rgba(184, 118, 62, 0.4)",
-              zIndex: 100,
-            }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="9" cy="21" r="1"></circle>
-              <circle cx="20" cy="21" r="1"></circle>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
-            <span
-              style={{
-                position: "absolute",
-                top: -4,
-                right: -4,
-                background: "#2B1B12",
-                color: "#FFF",
-                borderRadius: "50%",
-                width: 22,
-                height: 22,
-                fontSize: 11,
-                fontWeight: 700,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {itemCount}
-            </span>
-          </button>
-        )}
+        <div style={{ position: "sticky", top: 0, background: "#FFFDF9", borderLeft: "1px solid #E7DCC7", minHeight: "600px", padding: "24px 20px" }}>
+          <OrderColumn
+            cart={cart}
+            total={total}
+            payment={payment}
+            setPayment={setPayment}
+            orderPlaced={orderPlaced}
+            onChangeQty={changeQty}
+            onRemoveItem={removeItem}
+            onPlaceOrder={placeOrder}
+            onNewOrder={newOrder}
+            isMobile={false}
+          />
+        </div>
+      </div>
 
-        {/* Mobile Cart Slide-up Panel */}
-        {showCart && (
+      {/* Mobile: Menu always visible, cart slides from right */}
+      <div className="mobile-layout" style={{ position: "relative", padding: "16px", paddingBottom: "80px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+          <span style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: 1.2, color: "#7A6650" }}>
+            Size
+          </span>
+          <div style={{ display: "flex", background: "#EFE6D6", borderRadius: 999, padding: 4, gap: 4 }}>
+            {["16oz", "22oz"].map((s) => (
+              <button
+                key={s}
+                onClick={() => setSize(s)}
+                className="cos-btn"
+                style={{
+                  border: "none",
+                  padding: "6px 18px",
+                  borderRadius: 999,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  background: size === s ? "#2B1B12" : "transparent",
+                  color: size === s ? "#F7F2E9" : "#5C4A38",
+                }}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+        <MenuColumn size={size} setSize={setSize} onAddToCart={addToCart} />
+      </div>
+
+      {/* Mobile Cart Side Panel */}
+      {showCart && (
+        <>
+          {/* Backdrop */}
           <div
+            className="mobile-cart-backdrop"
+            onClick={() => setShowCart(false)}
             style={{
               position: "fixed",
               top: 0,
@@ -194,43 +179,27 @@ export default function CoffeeOrderingSystem({ onBack }) {
               right: 0,
               bottom: 0,
               background: "rgba(43, 27, 18, 0.5)",
+              zIndex: 150,
+            }}
+          />
+          {/* Cart Panel */}
+          <div
+            className="mobile-cart-panel"
+            style={{
+              position: "fixed",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              width: "85%",
+              maxWidth: 380,
+              background: "#FFFDF9",
               zIndex: 200,
+              boxShadow: "-4px 0 20px rgba(0,0,0,0.15)",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "flex-end",
             }}
-            onClick={() => setShowCart(false)}
           >
-            <div
-              style={{
-                background: "#FFFDF9",
-                borderRadius: "16px 16px 0 0",
-                maxHeight: "85vh",
-                overflowY: "auto",
-                padding: "20px",
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 700 }}>
-                  Your Order
-                </div>
-                <button
-                  onClick={() => setShowCart(false)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "#9A8770",
-                    padding: 4,
-                  }}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </button>
-              </div>
+            <div style={{ padding: "20px", flex: 1, overflowY: "auto" }}>
               <OrderColumn
                 cart={cart}
                 total={total}
@@ -246,24 +215,58 @@ export default function CoffeeOrderingSystem({ onBack }) {
               />
             </div>
           </div>
-        )}
+        </>
+      )}
 
-        {/* Desktop Order Column - hidden on mobile */}
-        <div className="desktop-order" style={{ display: "none" }}>
-          <OrderColumn
-            cart={cart}
-            total={total}
-            payment={payment}
-            setPayment={setPayment}
-            orderPlaced={orderPlaced}
-            onChangeQty={changeQty}
-            onRemoveItem={removeItem}
-            onPlaceOrder={placeOrder}
-            onNewOrder={newOrder}
-            isMobile={false}
-          />
-        </div>
-      </div>
+      {/* Mobile Floating Cart Button */}
+      {itemCount > 0 && !showCart && (
+        <button
+          onClick={() => setShowCart(true)}
+          className="mobile-cart-fab cos-btn"
+          style={{
+            position: "fixed",
+            bottom: 20,
+            right: 20,
+            background: "#B8763E",
+            color: "#FFF",
+            border: "none",
+            borderRadius: 50,
+            width: 56,
+            height: 56,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            boxShadow: "0 4px 12px rgba(184, 118, 62, 0.4)",
+            zIndex: 100,
+          }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span
+            style={{
+              position: "absolute",
+              top: -4,
+              right: -4,
+              background: "#2B1B12",
+              color: "#FFF",
+              borderRadius: "50%",
+              width: 22,
+              height: 22,
+              fontSize: 11,
+              fontWeight: 700,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {itemCount}
+          </span>
+        </button>
+      )}
     </div>
   );
 }

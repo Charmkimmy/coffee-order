@@ -22,7 +22,6 @@ export default function OrderColumn({
 
   const handlePlaceOrder = () => {
     if (cart.length === 0 || !payment) return;
-    
     if (payment === "gcash") {
       setShowGCashModal(true);
     } else {
@@ -40,6 +39,22 @@ export default function OrderColumn({
       <div style={{ width: "100%" }}>
         {!orderPlaced ? (
           <>
+            {/* Mobile close button */}
+            {isMobile && onCloseCart && (
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 700 }}>
+                  Your Order
+                </div>
+                <button
+                  onClick={onCloseCart}
+                  style={{ background: "none", border: "none", cursor: "pointer", color: "#9A8770", padding: 4 }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            )}
+
+            {/* Desktop header */}
             {!isMobile && (
               <div
                 style={{
@@ -195,7 +210,6 @@ export default function OrderColumn({
         )}
       </div>
 
-      {/* GCash Modal */}
       {showGCashModal && (
         <GCashModal
           total={total}
