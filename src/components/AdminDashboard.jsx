@@ -246,7 +246,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
       </div>
 
       {/* Search & Actions Bar */}
-      <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+      <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "space-between" }}>
         {/* Search - Smaller */}
         <div style={{ position: "relative", width: 220, flexShrink: 0 }}>
           <Search size={14} color="#A1887F" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
@@ -277,7 +277,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           onClick={exportToExcel}
           style={{
             display: "flex",
-            alignItems: "right",
+            alignItems: "center",
             gap: 5,
             background: "transparent",
             border: "1px solid #8D6E63",
