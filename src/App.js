@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import IntroScreen from "./components/IntroScreen";
+import IntroScreen from "./components/Introscreen";
 import CoffeeOrderingSystem from "./components/CoffeeOrderingSystem";
 import AdminDashboard from "./components/AdminDashboard";
 import { useFirebaseOrders } from "./hooks/useFirebaseOrders";
