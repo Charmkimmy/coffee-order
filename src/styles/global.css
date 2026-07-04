@@ -45,3 +45,14 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
+
+/* Parallax intro smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar for cleaner look */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
