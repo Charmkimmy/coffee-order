@@ -132,7 +132,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                 <div style={{ padding: "16px 20px" }}>
                   {day.orders.map((order) => (
                     <div
-                      key={order.timestamp}
+                      key={order.id}
                       style={{
                         borderBottom: "1px dashed #EEE3CF",
                         padding: "12px 0",
@@ -140,7 +140,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                       }}
                     >
                       <button
-                        onClick={() => onDeleteOrder(order.timestamp)}
+                        onClick={() => onDeleteOrder(order.id)}
                         className="cos-btn"
                         style={{
                           position: "absolute",
