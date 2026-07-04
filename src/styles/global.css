@@ -1,0 +1,53 @@
+/* Desktop layout */
+@media (min-width: 769px) {
+  .desktop-order {
+    display: block !important;
+    position: sticky;
+    top: 0;
+    background: #FFFDF9;
+    border-left: 1px solid #E7DCC7;
+    min-height: 600px;
+    padding: 24px 20px;
+    width: 340px;
+  }
+  
+  .mobile-cart-btn,
+  .mobile-cart-overlay {
+    display: none !important;
+  }
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .desktop-order {
+    display: none !important;
+  }
+  
+  /* Make menu items more touch-friendly */
+  .cos-card {
+    padding: 16px !important;
+  }
+  
+  .cos-card button {
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  /* Larger tap targets */
+  button {
+    min-height: 44px;
+  }
+  
+  /* Prevent text zoom on input focus */
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
+
+/* Safe area for notched phones */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
