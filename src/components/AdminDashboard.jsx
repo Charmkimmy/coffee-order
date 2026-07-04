@@ -137,8 +137,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
 
   const allSelected = selectedOrders.size === filteredOrderHistory.length && filteredOrderHistory.length > 0;
 
-  // Export to CSV
-  const exportToCSV = () => {
+  // Export to Excel (HTML table format that Excel can open)
+  const exportToExcel = () => {
     const headers = ["Date", "Time", "Order #", "Customer", "Items", "Payment", "Total"];
     const rows = filteredOrderHistory.map((order) => [
       order.date,
@@ -150,11 +150,32 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
       order.total,
     ]);
 
-    const csvContent = [headers.join(","), ...rows.map((row) => row.map((cell) => `"${cell}"`).join(","))].join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    let html = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          table { border-collapse: collapse; font-family: Arial, sans-serif; }
+          th { background: #3E2723; color: #EFEBE9; font-weight: bold; padding: 10px; border: 1px solid #D7CCC8; }
+          td { padding: 8px; border: 1px solid #D7CCC8; color: #3E2723; }
+          tr:nth-child(even) { background: #F5F0EB; }
+        </style>
+      </head>
+      <body>
+        <table>
+          <thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead>
+          <tbody>
+            ${rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`).join("")}
+          </tbody>
+        </table>
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob([html], { type: "application/vnd.ms-excel" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `sales-history-${new Date().toISOString().split("T")[0]}.csv`;
+    link.download = `sales-history-${new Date().toISOString().split("T")[0]}.xls`;
     link.click();
   };
 
@@ -225,13 +246,13 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
       </div>
 
       {/* Search & Actions Bar */}
-      <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-        {/* Search */}
-        <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
-          <Search size={16} color="#A1887F" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} />
+      <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        {/* Search - Smaller */}
+        <div style={{ position: "relative", width: 220, flexShrink: 0 }}>
+          <Search size={14} color="#A1887F" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
           <input
             type="text"
-            placeholder="Search by customer, order #, or item..."
+            placeholder="Search..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -239,11 +260,11 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
             }}
             style={{
               width: "100%",
-              padding: "10px 14px 10px 38px",
-              borderRadius: 10,
+              padding: "8px 12px 8px 32px",
+              borderRadius: 8,
               border: "1px solid #D7CCC8",
               background: "#FFFDF9",
-              fontSize: 13,
+              fontSize: 12,
               fontFamily: "'Public Sans', sans-serif",
               color: "#3E2723",
               outline: "none",
@@ -251,17 +272,17 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           />
         </div>
 
-        {/* Export CSV */}
+        {/* Export Excel */}
         <button
-          onClick={exportToCSV}
+          onClick={exportToExcel}
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 6,
+            gap: 5,
             background: "transparent",
             border: "1px solid #8D6E63",
             color: "#8D6E63",
-            padding: "8px 14px",
+            padding: "7px 12px",
             borderRadius: 8,
             fontSize: 12,
             cursor: "pointer",
@@ -269,7 +290,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           }}
         >
           <Download size={14} />
-          Export CSV
+          Export Excel
         </button>
       </div>
 
