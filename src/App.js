@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import IntroScreen from "./components/Introscreen";
 import CoffeeOrderingSystem from "./components/CoffeeOrderingSystem";
 import AdminDashboard from "./components/AdminDashboard";
-import { useFirebaseOrders } from "./hooks/useFirebaseOrders";
+import { useFirebaseOrders } from "./hooks/usefirebaseOrders";
 import "./styles/global.css";
 
 function App() {
