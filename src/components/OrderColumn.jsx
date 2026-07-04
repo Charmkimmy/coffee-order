@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Minus, Plus, Trash2, Check } from "lucide-react";
+import { PAYMENTS } from "../data/payments";
 import { peso } from "../utils/format";
 import OrderReceipt from "./OrderReceipt";
 import GCashModal from "./GCashModal";
