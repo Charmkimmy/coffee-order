@@ -247,8 +247,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
 
       {/* Search & Actions Bar */}
       <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "space-between" }}>
-        {/* Search - Smaller */}
-        <div style={{ position: "relative", width: 220, flexShrink: 0 }}>
+        {/* Search - Mobile responsive */}
+        <div style={{ position: "relative", flex: 1, minWidth: 140, maxWidth: 280 }}>
           <Search size={14} color="#A1887F" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
           <input
             type="text"
@@ -268,11 +268,12 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
               fontFamily: "'Public Sans', sans-serif",
               color: "#3E2723",
               outline: "none",
+              boxSizing: "border-box",
             }}
           />
         </div>
 
-        {/* Export Excel */}
+        {/* Export Excel - Mobile responsive */}
         <button
           onClick={exportToExcel}
           style={{
@@ -287,10 +288,11 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
             fontSize: 12,
             cursor: "pointer",
             whiteSpace: "nowrap",
+            flexShrink: 0,
           }}
         >
           <Download size={14} />
-          Export Excel
+          <span style={{ display: "inline" }}>Export Excel</span>
         </button>
       </div>
 
