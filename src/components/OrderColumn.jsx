@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Minus, Plus, Trash2, Check, X } from "lucide-react";
+import { Minus, Plus, Trash2, Check, X, User } from "lucide-react";
 import { PAYMENTS } from "../data/payments";
 import { peso } from "../utils/format";
 import OrderReceipt from "./OrderReceipt";
@@ -11,6 +11,8 @@ export default function OrderColumn({
   payment,
   setPayment,
   orderPlaced,
+  customerName,
+  setCustomerName,
   onChangeQty,
   onRemoveItem,
   onPlaceOrder,
@@ -21,7 +23,7 @@ export default function OrderColumn({
   const [showGCashModal, setShowGCashModal] = useState(false);
 
   const handlePlaceOrder = () => {
-    if (cart.length === 0 || !payment) return;
+    if (cart.length === 0 || !payment || !customerName.trim()) return;
     if (payment === "gcash") {
       setShowGCashModal(true);
     } else {
@@ -39,35 +41,17 @@ export default function OrderColumn({
       <div style={{ width: "100%" }}>
         {!orderPlaced ? (
           <>
-            {/* Mobile close button */}
             {isMobile && onCloseCart && (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 700 }}>
-                  Your Order
-                </div>
-                <button
-                  onClick={onCloseCart}
-                  style={{ background: "none", border: "none", cursor: "pointer", color: "#9A8770", padding: 4 }}
-                >
+                <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 700 }}>Your Order</div>
+                <button onClick={onCloseCart} style={{ background: "none", border: "none", cursor: "pointer", color: "#9A8770", padding: 4 }}>
                   <X size={20} />
                 </button>
               </div>
             )}
 
-            {/* Desktop header */}
             {!isMobile && (
-              <div
-                style={{
-                  fontFamily: "'Space Mono', monospace",
-                  fontSize: 12,
-                  letterSpacing: 2,
-                  color: "#9A8770",
-                  textTransform: "uppercase",
-                  marginBottom: 12,
-                  borderBottom: "1px dashed #D8C9AF",
-                  paddingBottom: 10,
-                }}
-              >
+              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, letterSpacing: 2, color: "#9A8770", textTransform: "uppercase", marginBottom: 12, borderBottom: "1px dashed #D8C9AF", paddingBottom: 10 }}>
                 Your Order
               </div>
             )}
@@ -77,45 +61,22 @@ export default function OrderColumn({
                 Nothing added yet. Tap + on a drink to start your order.
               </div>
             ) : (
-              <div className="cos-scroll" style={{ maxHeight: isMobile ? "50vh" : 320, overflowY: "auto", marginBottom: 14 }}>
+              <div className="cos-scroll" style={{ maxHeight: isMobile ? "35vh" : 240, overflowY: "auto", marginBottom: 14 }}>
                 {cart.map((c) => (
-                  <div
-                    key={c.key}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      padding: "12px 0",
-                      borderBottom: "1px dashed #EEE3CF",
-                      fontSize: 14,
-                    }}
-                  >
+                  <div key={c.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px dashed #EEE3CF", fontSize: 14 }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 600, marginBottom: 2 }}>{c.name}</div>
                       <div style={{ color: "#9A8770", fontSize: 12 }}>{c.size} · {peso(c.price)} each</div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-                      <button
-                        onClick={() => onChangeQty(c.key, -1)}
-                        className="cos-btn"
-                        style={{ border: "1px solid #E0D3BA", background: "#FFF", borderRadius: 8, width: 32, height: 32, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
-                      >
+                      <button onClick={() => onChangeQty(c.key, -1)} className="cos-btn" style={{ border: "1px solid #E0D3BA", background: "#FFF", borderRadius: 8, width: 32, height: 32, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <Minus size={14} />
                       </button>
                       <span style={{ width: 24, textAlign: "center", fontFamily: "'Space Mono', monospace", fontSize: 15 }}>{c.qty}</span>
-                      <button
-                        onClick={() => onChangeQty(c.key, 1)}
-                        className="cos-btn"
-                        style={{ border: "1px solid #E0D3BA", background: "#FFF", borderRadius: 8, width: 32, height: 32, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
-                      >
+                      <button onClick={() => onChangeQty(c.key, 1)} className="cos-btn" style={{ border: "1px solid #E0D3BA", background: "#FFF", borderRadius: 8, width: 32, height: 32, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <Plus size={14} />
                       </button>
-                      <button
-                        onClick={() => onRemoveItem(c.key)}
-                        className="cos-btn"
-                        style={{ border: "none", background: "none", cursor: "pointer", color: "#C08A5A", marginLeft: 4, padding: 4 }}
-                        aria-label={`Remove ${c.name}`}
-                      >
+                      <button onClick={() => onRemoveItem(c.key)} className="cos-btn" style={{ border: "none", background: "none", cursor: "pointer", color: "#C08A5A", marginLeft: 4, padding: 4 }} aria-label={`Remove ${c.name}`}>
                         <Trash2 size={16} />
                       </button>
                     </div>
@@ -124,24 +85,44 @@ export default function OrderColumn({
               </div>
             )}
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontFamily: "'Fraunces', serif",
-                fontSize: 22,
-                fontWeight: 700,
-                padding: "14px 0",
-                borderTop: "2px solid #2B1B12",
-                marginTop: 4,
-              }}
-            >
+            <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 700, padding: "14px 0", borderTop: "2px solid #2B1B12", marginTop: 4 }}>
               <span>Total</span>
               <span>{peso(total)}</span>
             </div>
 
+            {/* Customer Name Input */}
+            <div style={{ marginTop: 16, marginBottom: 16 }}>
+              <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: 1.2, color: "#7A6650", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                <User size={14} />
+                Your Name
+              </div>
+              <input
+                type="text"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                placeholder="Enter your name..."
+                style={{
+                  width: "100%",
+                  padding: "12px 14px",
+                  borderRadius: 10,
+                  border: customerName.trim() ? "1.5px solid #B8763E" : "1px solid #E7DCC7",
+                  background: "#FFF",
+                  fontSize: 14,
+                  fontFamily: "'Public Sans', sans-serif",
+                  color: "#2B1B12",
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
+              {!customerName.trim() && cart.length > 0 && (
+                <div style={{ fontSize: 11, color: "#C08A5A", marginTop: 6 }}>
+                  Please enter your name before placing order
+                </div>
+              )}
+            </div>
+
             {/* Payment method */}
-            <div style={{ marginTop: 18 }}>
+            <div style={{ marginTop: 16 }}>
               <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: 1.2, color: "#7A6650", marginBottom: 10 }}>
                 Payment method
               </div>
@@ -180,7 +161,7 @@ export default function OrderColumn({
 
             <button
               onClick={handlePlaceOrder}
-              disabled={cart.length === 0 || !payment}
+              disabled={cart.length === 0 || !payment || !customerName.trim()}
               className="cos-btn"
               style={{
                 width: "100%",
@@ -191,13 +172,15 @@ export default function OrderColumn({
                 fontSize: 15,
                 fontWeight: 700,
                 letterSpacing: 0.5,
-                color: cart.length === 0 || !payment ? "#B0A088" : "#FFF",
-                background: cart.length === 0 || !payment ? "#EFE6D6" : "#2B1B12",
-                cursor: cart.length === 0 || !payment ? "not-allowed" : "pointer",
+                color: cart.length === 0 || !payment || !customerName.trim() ? "#B0A088" : "#FFF",
+                background: cart.length === 0 || !payment || !customerName.trim() ? "#EFE6D6" : "#2B1B12",
+                cursor: cart.length === 0 || !payment || !customerName.trim() ? "not-allowed" : "pointer",
               }}
             >
               {cart.length === 0
                 ? "Add items to order"
+                : !customerName.trim()
+                ? "Enter your name"
                 : !payment
                 ? "Choose a payment method"
                 : payment === "gcash"
@@ -211,11 +194,7 @@ export default function OrderColumn({
       </div>
 
       {showGCashModal && (
-        <GCashModal
-          total={total}
-          onClose={() => setShowGCashModal(false)}
-          onConfirmPayment={handleGCashConfirm}
-        />
+        <GCashModal total={total} onClose={() => setShowGCashModal(false)} onConfirmPayment={handleGCashConfirm} />
       )}
     </>
   );

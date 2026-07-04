@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowLeft, Calendar, DollarSign, ShoppingBag, Clock, Trash2, X } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, ShoppingBag, Clock, Trash2, X, User } from "lucide-react";
 import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
@@ -160,9 +160,17 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                           <Clock size={12} />
                           {order.time}
                         </div>
-                        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, fontWeight: 700 }}>
-                          Order #{order.orderNo}
-                        </span>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          {order.customerName && (
+                            <span style={{ fontSize: 11, color: "#B8763E", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                              <User size={11} />
+                              {order.customerName}
+                            </span>
+                          )}
+                          <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, fontWeight: 700 }}>
+                            Order #{order.orderNo}
+                          </span>
+                        </div>
                       </div>
                       {order.items.map((item) => (
                         <div key={item.key} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#5C4A38", marginBottom: 2 }}>

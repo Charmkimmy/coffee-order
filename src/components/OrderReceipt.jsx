@@ -1,23 +1,12 @@
 import React from "react";
-import { Check } from "lucide-react";
+import { Check, User } from "lucide-react";
 import { PAYMENTS } from "../data/payments";
 import { peso } from "../utils/format";
 
 export default function OrderReceipt({ orderPlaced, onNewOrder }) {
   return (
     <div style={{ textAlign: "center", padding: "10px 0" }}>
-      <div
-        style={{
-          width: 48,
-          height: 48,
-          borderRadius: "50%",
-          background: "#EAF3E6",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          margin: "0 auto 14px",
-        }}
-      >
+      <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#EAF3E6", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
         <Check size={24} color="#4C7A3D" />
       </div>
       <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 700 }}>
@@ -27,17 +16,15 @@ export default function OrderReceipt({ orderPlaced, onNewOrder }) {
         {orderPlaced.time} · Order #{orderPlaced.orderNo}
       </div>
 
-      <div
-        style={{
-          textAlign: "left",
-          background: "#FBF7EE",
-          border: "1px dashed #D8C9AF",
-          borderRadius: 10,
-          padding: "14px 16px",
-          fontFamily: "'Space Mono', monospace",
-          fontSize: 12,
-        }}
-      >
+      {/* Customer Name */}
+      {orderPlaced.customerName && (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 12, fontSize: 14, color: "#5C4A38" }}>
+          <User size={14} color="#B8763E" />
+          <span style={{ fontWeight: 600 }}>{orderPlaced.customerName}</span>
+        </div>
+      )}
+
+      <div style={{ textAlign: "left", background: "#FBF7EE", border: "1px dashed #D8C9AF", borderRadius: 10, padding: "14px 16px", fontFamily: "'Space Mono', monospace", fontSize: 12 }}>
         {orderPlaced.items.map((c) => (
           <div key={c.key} style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
             <span>{c.qty}× {c.name} ({c.size})</span>
@@ -56,18 +43,7 @@ export default function OrderReceipt({ orderPlaced, onNewOrder }) {
       <button
         onClick={onNewOrder}
         className="cos-btn"
-        style={{
-          width: "100%",
-          marginTop: 16,
-          padding: "12px",
-          borderRadius: 10,
-          border: "1px solid #2B1B12",
-          background: "#FFF",
-          color: "#2B1B12",
-          fontSize: 13,
-          fontWeight: 700,
-          cursor: "pointer",
-        }}
+        style={{ width: "100%", marginTop: 16, padding: "12px", borderRadius: 10, border: "1px solid #2B1B12", background: "#FFF", color: "#2B1B12", fontSize: 13, fontWeight: 700, cursor: "pointer" }}
       >
         Start new order
       </button>

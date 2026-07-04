@@ -10,6 +10,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
   const [payment, setPayment] = useState(null);
   const [orderPlaced, setOrderPlaced] = useState(null);
   const [showCart, setShowCart] = useState(false);
+  const [customerName, setCustomerName] = useState("");
 
   const { addOrder } = useOrderHistory();
 
@@ -45,14 +46,17 @@ export default function CoffeeOrderingSystem({ onBack }) {
   const itemCount = useMemo(() => cart.reduce((s, c) => s + c.qty, 0), [cart]);
 
   const placeOrder = () => {
-    if (cart.length === 0 || !payment) return;
+    if (cart.length === 0 || !payment || !customerName.trim()) return;
+
     const orderNo = Math.floor(100 + Math.random() * 900);
     const orderData = {
       orderNo,
       items: [...cart],
       total,
       payment,
+      customerName: customerName.trim(),
     };
+
     addOrder(orderData);
     setOrderPlaced({
       ...orderData,
@@ -65,6 +69,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
     setCart([]);
     setPayment(null);
     setOrderPlaced(null);
+    setCustomerName("");
   };
 
   return (
@@ -125,6 +130,8 @@ export default function CoffeeOrderingSystem({ onBack }) {
             payment={payment}
             setPayment={setPayment}
             orderPlaced={orderPlaced}
+            customerName={customerName}
+            setCustomerName={setCustomerName}
             onChangeQty={changeQty}
             onRemoveItem={removeItem}
             onPlaceOrder={placeOrder}
@@ -168,7 +175,6 @@ export default function CoffeeOrderingSystem({ onBack }) {
       {/* Mobile Cart Side Panel */}
       {showCart && (
         <>
-          {/* Backdrop */}
           <div
             className="mobile-cart-backdrop"
             onClick={() => setShowCart(false)}
@@ -182,7 +188,6 @@ export default function CoffeeOrderingSystem({ onBack }) {
               zIndex: 150,
             }}
           />
-          {/* Cart Panel */}
           <div
             className="mobile-cart-panel"
             style={{
@@ -206,6 +211,8 @@ export default function CoffeeOrderingSystem({ onBack }) {
                 payment={payment}
                 setPayment={setPayment}
                 orderPlaced={orderPlaced}
+                customerName={customerName}
+                setCustomerName={setCustomerName}
                 onChangeQty={changeQty}
                 onRemoveItem={removeItem}
                 onPlaceOrder={placeOrder}
