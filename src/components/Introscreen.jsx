@@ -52,6 +52,26 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
       {/* ===== PARALLAX BACKGROUND LAYERS ===== */}
 
       {/* Layer 1: Deep background - slowest */}
+       <button
+                type="button"
+                onClick={() => {
+                  setShowAdminLogin(false);
+                  setAdminCode("");
+                  setError(false);
+                }}
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  borderRadius: 10,
+                  border: "1px solid #5C4A38",
+                  background: "transparent",
+                  color: "#9A8770",
+                  fontSize: 13,
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
       <div
         style={{
           position: "fixed",
@@ -452,26 +472,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
               >
                 Login
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowAdminLogin(false);
-                  setAdminCode("");
-                  setError(false);
-                }}
-                style={{
-                  flex: 1,
-                  padding: "12px",
-                  borderRadius: 10,
-                  border: "1px solid #5C4A38",
-                  background: "transparent",
-                  color: "#9A8770",
-                  fontSize: 13,
-                  cursor: "pointer",
-                }}
-              >
-                Cancel
-              </button>
+         
             </div>
           </form>
         )}
