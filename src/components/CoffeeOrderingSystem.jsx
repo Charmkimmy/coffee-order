@@ -79,9 +79,13 @@ export default function CoffeeOrderingSystem({ onBack }) {
     <div
       style={{
         fontFamily: "'Public Sans', sans-serif",
-        background: "#F7F2E9",
+        background: "#F2E9D8",
+        backgroundImage:
+          "radial-gradient(#E4D7BC 1px, transparent 1px), radial-gradient(#E4D7BC 1px, transparent 1px)",
+        backgroundSize: "24px 24px",
+        backgroundPosition: "0 0, 12px 12px",
         minHeight: "100vh",
-        color: "#2B1B12",
+        color: "#241A12",
         padding: "0",
         overflow: "hidden",
       }}
@@ -98,10 +102,10 @@ export default function CoffeeOrderingSystem({ onBack }) {
       <div className="desktop-layout" style={{ display: "grid", gridTemplateColumns: "1fr 340px" }}>
         <div style={{ padding: "24px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-            <span style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: 1.2, color: "#7A6650" }}>
+            <span style={{ fontSize: 11, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1.5, color: "#8A7F6C" }}>
               Size
             </span>
-            <div style={{ display: "flex", background: "#EFE6D6", borderRadius: 999, padding: 4, gap: 4 }}>
+            <div style={{ display: "flex", background: "#EFE6D3", borderRadius: 999, padding: 4, gap: 4 }}>
               {["16oz", "22oz"].map((s) => (
                 <button
                   key={s}
@@ -111,11 +115,12 @@ export default function CoffeeOrderingSystem({ onBack }) {
                     border: "none",
                     padding: "6px 18px",
                     borderRadius: 999,
-                    fontSize: 13,
-                    fontWeight: 600,
+                    fontSize: 12,
+                    fontFamily: "'Space Mono', monospace",
+                    fontWeight: 700,
                     cursor: "pointer",
-                    background: size === s ? "#2B1B12" : "transparent",
-                    color: size === s ? "#F7F2E9" : "#5C4A38",
+                    background: size === s ? "#241A12" : "transparent",
+                    color: size === s ? "#FCFAF5" : "#5C5140",
                   }}
                 >
                   {s}
@@ -123,10 +128,11 @@ export default function CoffeeOrderingSystem({ onBack }) {
               ))}
             </div>
           </div>
+          <div style={{ borderTop: "1.5px dashed #C9BB9E", marginBottom: 18 }} />
           <MenuColumn size={size} setSize={setSize} onAddToCart={addToCart} />
         </div>
 
-        <div style={{ position: "sticky", top: 0, background: "#FFFDF9", borderLeft: "1px solid #E7DCC7", minHeight: "600px", padding: "24px 20px" }}>
+        <div style={{ position: "sticky", top: 0, background: "#FCFAF5", borderLeft: "1px solid #C9BB9E", minHeight: "600px", padding: "24px 20px" }}>
           <OrderColumn
             cart={cart}
             total={total}
@@ -149,10 +155,10 @@ export default function CoffeeOrderingSystem({ onBack }) {
       {/* Mobile: Menu always visible, cart slides from right */}
       <div className="mobile-layout" style={{ position: "relative", padding: "16px", paddingBottom: "80px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-          <span style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: 1.2, color: "#7A6650" }}>
+          <span style={{ fontSize: 11, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1.5, color: "#8A7F6C" }}>
             Size
           </span>
-          <div style={{ display: "flex", background: "#EFE6D6", borderRadius: 999, padding: 4, gap: 4 }}>
+          <div style={{ display: "flex", background: "#EFE6D3", borderRadius: 999, padding: 4, gap: 4 }}>
             {["16oz", "22oz"].map((s) => (
               <button
                 key={s}
@@ -162,11 +168,12 @@ export default function CoffeeOrderingSystem({ onBack }) {
                   border: "none",
                   padding: "6px 18px",
                   borderRadius: 999,
-                  fontSize: 13,
-                  fontWeight: 600,
+                  fontSize: 12,
+                  fontFamily: "'Space Mono', monospace",
+                  fontWeight: 700,
                   cursor: "pointer",
-                  background: size === s ? "#2B1B12" : "transparent",
-                  color: size === s ? "#F7F2E9" : "#5C4A38",
+                  background: size === s ? "#241A12" : "transparent",
+                  color: size === s ? "#FCFAF5" : "#5C5140",
                 }}
               >
                 {s}
@@ -174,6 +181,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
             ))}
           </div>
         </div>
+        <div style={{ borderTop: "1.5px dashed #C9BB9E", marginBottom: 18 }} />
         <MenuColumn size={size} setSize={setSize} onAddToCart={addToCart} />
       </div>
 
@@ -202,13 +210,25 @@ export default function CoffeeOrderingSystem({ onBack }) {
               bottom: 0,
               width: "85%",
               maxWidth: 380,
-              background: "#FFFDF9",
+              background: "#FCFAF5",
               zIndex: 200,
               boxShadow: "-4px 0 20px rgba(0,0,0,0.15)",
               display: "flex",
               flexDirection: "column",
             }}
           >
+            <div
+              style={{
+                height: 10,
+                flexShrink: 0,
+                backgroundImage:
+                  "linear-gradient(135deg, #FCFAF5 50%, transparent 50%), linear-gradient(-135deg, #FCFAF5 50%, transparent 50%)",
+                backgroundSize: "16px 16px",
+                backgroundRepeat: "repeat-x",
+                backgroundPosition: "bottom",
+                backgroundColor: "#F2E9D8",
+              }}
+            />
             <div style={{ padding: "20px", flex: 1, overflowY: "auto" }}>
               <OrderColumn
                 cart={cart}
@@ -241,7 +261,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
             position: "fixed",
             bottom: 20,
             right: 20,
-            background: "#B8763E",
+            background: "#B23A1E",
             color: "#FFF",
             border: "none",
             borderRadius: 50,
@@ -251,7 +271,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
             alignItems: "center",
             justifyContent: "center",
             cursor: "pointer",
-            boxShadow: "0 4px 12px rgba(184, 118, 62, 0.4)",
+            boxShadow: "0 4px 12px rgba(178, 58, 30, 0.35)",
             zIndex: 100,
           }}
         >
@@ -265,7 +285,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
               position: "absolute",
               top: -4,
               right: -4,
-              background: "#2B1B12",
+              background: "#241A12",
               color: "#FFF",
               borderRadius: "50%",
               width: 22,
