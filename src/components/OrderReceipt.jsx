@@ -5,45 +5,107 @@ import { peso } from "../utils/format";
 
 export default function OrderReceipt({ orderPlaced, onNewOrder }) {
   return (
-    <div style={{ textAlign: "center", padding: "10px 0" }}>
-      <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#EAF3E6", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
-        <Check size={24} color="#4C7A3D" />
+    <div style={{ textAlign: "center", padding: "6px 0" }}>
+      {/* stamped approval mark */}
+      <div
+        style={{
+          width: 64,
+          height: 64,
+          borderRadius: "50%",
+          border: "3px solid #4C7A3D",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 14px",
+          transform: "rotate(-8deg)",
+        }}
+      >
+        <Check size={26} color="#4C7A3D" strokeWidth={3} />
       </div>
-      <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 700 }}>
-        Order placed
+      <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 16, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#241A12" }}>
+        Order Placed
       </div>
-      <div style={{ fontSize: 12, color: "#9A8770", marginBottom: 16 }}>
-        {orderPlaced.time} · Order #{orderPlaced.orderNo}
+      <div style={{ fontSize: 11, fontFamily: "'Space Mono', monospace", color: "#8A7F6C", marginBottom: 16, letterSpacing: 0.5 }}>
+        {orderPlaced.time} · NO. {orderPlaced.orderNo}
       </div>
 
       {/* Customer Name */}
       {orderPlaced.customerName && (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 12, fontSize: 14, color: "#5C4A38" }}>
-          <User size={14} color="#B8763E" />
-          <span style={{ fontWeight: 600 }}>{orderPlaced.customerName}</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 14, fontSize: 13, color: "#5C5140", fontFamily: "'Space Mono', monospace" }}>
+          <User size={13} color="#B23A1E" />
+          <span style={{ fontWeight: 700 }}>{orderPlaced.customerName}</span>
         </div>
       )}
 
-      <div style={{ textAlign: "left", background: "#FBF7EE", border: "1px dashed #D8C9AF", borderRadius: 10, padding: "14px 16px", fontFamily: "'Space Mono', monospace", fontSize: 12 }}>
-        {orderPlaced.items.map((c) => (
-          <div key={c.key} style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-            <span>{c.qty}× {c.name} ({c.size})</span>
-            <span>{peso(c.price * c.qty)}</span>
+      {/* the ticket */}
+      <div style={{ position: "relative", boxShadow: "0 6px 16px rgba(36,26,18,0.12)" }}>
+        <div
+          style={{
+            height: 8,
+            backgroundImage:
+              "linear-gradient(135deg, #FCFAF5 50%, transparent 50%), linear-gradient(-135deg, #FCFAF5 50%, transparent 50%)",
+            backgroundSize: "12px 12px",
+            backgroundRepeat: "repeat-x",
+            backgroundPosition: "bottom",
+            backgroundColor: "#F2E9D8",
+          }}
+        />
+        <div style={{ textAlign: "left", background: "#FCFAF5", padding: "16px 18px", fontFamily: "'Space Mono', monospace", fontSize: 12 }}>
+          {orderPlaced.items.map((c) => (
+            <div key={c.key} style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, color: "#241A12" }}>
+              <span>{c.qty}× {c.name} ({c.size})</span>
+              <span>{peso(c.price * c.qty)}</span>
+            </div>
+          ))}
+          <div style={{ borderTop: "1.5px dashed #C9BB9E", marginTop: 10, paddingTop: 10, display: "flex", justifyContent: "space-between", fontWeight: 700, color: "#241A12", textTransform: "uppercase" }}>
+            <span>Total</span>
+            <span>{peso(orderPlaced.total)}</span>
           </div>
-        ))}
-        <div style={{ borderTop: "1px dashed #D8C9AF", marginTop: 8, paddingTop: 8, display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
-          <span>Total</span>
-          <span>{peso(orderPlaced.total)}</span>
+          <div style={{ marginTop: 8, color: "#8A7F6C", fontSize: 11 }}>
+            Paid via {PAYMENTS.find((p) => p.id === orderPlaced.payment)?.label}
+          </div>
+          {/* barcode */}
+          <div
+            style={{
+              height: 20,
+              marginTop: 14,
+              background:
+                "repeating-linear-gradient(90deg, #241A12 0px, #241A12 2px, transparent 2px, transparent 4px, #241A12 4px, #241A12 5px, transparent 5px, transparent 9px)",
+              opacity: 0.8,
+            }}
+          />
         </div>
-        <div style={{ marginTop: 6, color: "#7A6650" }}>
-          Paid via {PAYMENTS.find((p) => p.id === orderPlaced.payment)?.label}
-        </div>
+        <div
+          style={{
+            height: 8,
+            backgroundImage:
+              "linear-gradient(45deg, #FCFAF5 50%, transparent 50%), linear-gradient(-45deg, #FCFAF5 50%, transparent 50%)",
+            backgroundSize: "12px 12px",
+            backgroundRepeat: "repeat-x",
+            backgroundPosition: "top",
+            backgroundColor: "#F2E9D8",
+          }}
+        />
       </div>
 
       <button
         onClick={onNewOrder}
         className="cos-btn"
-        style={{ width: "100%", marginTop: 16, padding: "12px", borderRadius: 10, border: "1px solid #2B1B12", background: "#FFF", color: "#2B1B12", fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+        style={{
+          width: "100%",
+          marginTop: 18,
+          padding: "13px",
+          borderRadius: 6,
+          border: "2px solid #241A12",
+          background: "transparent",
+          color: "#241A12",
+          fontSize: 12,
+          fontFamily: "'Space Mono', monospace",
+          fontWeight: 700,
+          letterSpacing: 1,
+          textTransform: "uppercase",
+          cursor: "pointer",
+        }}
       >
         Start new order
       </button>
