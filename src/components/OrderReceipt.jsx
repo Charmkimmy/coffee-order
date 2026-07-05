@@ -1,5 +1,5 @@
 import React from "react";
-import { Check, User } from "lucide-react";
+import { Check, User, FileText } from "lucide-react";
 import { PAYMENTS } from "../data/payments";
 import { peso } from "../utils/format";
 
@@ -64,6 +64,16 @@ export default function OrderReceipt({ orderPlaced, onNewOrder }) {
           <div style={{ marginTop: 8, color: "#8A7F6C", fontSize: 11 }}>
             Paid via {PAYMENTS.find((p) => p.id === orderPlaced.payment)?.label}
           </div>
+          {/* Order Notes */}
+          {orderPlaced.notes && (
+            <div style={{ marginTop: 14, padding: "10px 12px", background: "#F2E9D8", borderRadius: 6, borderLeft: "3px solid #B23A1E" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
+                <FileText size={11} color="#B23A1E" />
+                <span style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1, color: "#8A7F6C" }}>Notes</span>
+              </div>
+              <div style={{ fontSize: 13, color: "#241A12", fontStyle: "italic" }}>{orderPlaced.notes}</div>
+            </div>
+          )}
           {/* barcode */}
           <div
             style={{

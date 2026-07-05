@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
+import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText } from "lucide-react";
 import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
@@ -38,7 +38,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
     return orderHistory.filter((order) =>
       (order.customerName && order.customerName.toLowerCase().includes(query)) ||
       order.orderNo.toString().includes(query) ||
-      order.items.some((item) => item.name.toLowerCase().includes(query))
+      order.items.some((item) => item.name.toLowerCase().includes(query)) ||
+      (order.notes && order.notes.toLowerCase().includes(query))
     );
   }, [orderHistory, searchQuery]);
 
@@ -159,13 +160,14 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
 
   // Export to Excel (HTML table format that Excel can open)
   const exportToExcel = () => {
-    const headers = ["Date", "Time", "Order #", "Customer", "Items", "Payment", "Total"];
+    const headers = ["Date", "Time", "Order #", "Customer", "Items", "Notes", "Payment", "Total"];
     const rows = filteredOrderHistory.map((order) => [
       order.date,
       order.time,
       order.orderNo,
       order.customerName || "Walk-in",
       order.items.map((i) => `${i.qty}x ${i.name} (${i.size})`).join("; "),
+      order.notes || "",
       PAYMENTS.find((p) => p.id === order.payment)?.label || order.payment,
       order.total,
     ]);
@@ -504,6 +506,16 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                           <span>{peso(item.price * item.qty)}</span>
                         </div>
                       ))}
+                      {/* Order Notes */}
+                      {order.notes && (
+                        <div style={{ marginTop: 8, marginBottom: 4, padding: "8px 10px", background: "#F2E9D8", borderRadius: 6, borderLeft: "3px solid #B23A1E", paddingLeft: 34 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
+                            <FileText size={11} color="#B23A1E" />
+                            <span style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1, color: "#8A7F6C" }}>Notes</span>
+                          </div>
+                          <div style={{ fontSize: 13, color: "#241A12", fontStyle: "italic" }}>{order.notes}</div>
+                        </div>
+                      )}
                       <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontSize: 12, color: "#A1887F", paddingLeft: 34 }}>
                         <span>Paid via {PAYMENTS.find((p) => p.id === order.payment)?.label}</span>
                         <span style={{ fontWeight: 700, color: "#3E2723" }}>{peso(order.total)}</span>
