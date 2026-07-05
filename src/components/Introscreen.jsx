@@ -77,7 +77,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
       />
 
       {/* staff tag - top right, styled like a clipped badge */}
-      <div style={{ position: "absolute", top: 100, right: 30, zIndex: 20 }}>
+      <div style={{ position: "absolute", top: 100, right: 30,left:50, zIndex: 20 }}>
         {!showAdminLogin ? (
           <button
             onClick={() => setShowAdminLogin(true)}
