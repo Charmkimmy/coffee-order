@@ -274,7 +274,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
                 textTransform: "uppercase",
               }}
             >
-              Brew &amp; Bean
+              Calma Cafe
             </h1>
           </div>
 
@@ -328,8 +328,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
               letterSpacing: 0.5,
             }}
           >
-            <span>EST. WAIT</span>
-            <span style={{ fontWeight: 700, color: "#6E9C97" }}>~ 2 MIN</span>
+            <span>THANK YOU</span>
           </div>
 
           {/* stamp CTA */}
@@ -373,11 +372,11 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
               marginBottom: 4,
             }}
           >
-            thank you — brew again soon
+            thank you  brew again soon
           </div>
         </div>
 
-        {/* zigzag bottom edge */}
+       
         <div
           style={{
             height: 12,
