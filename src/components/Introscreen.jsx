@@ -1,11 +1,44 @@
-import React, { useState } from "react";
-import { Coffee, ArrowRight, Shield } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Coffee, ArrowRight, Shield, Star } from "lucide-react";
 
 export default function IntroScreen({ onGetStarted, onAdminLogin }) {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminCode, setAdminCode] = useState("");
   const [error, setError] = useState(false);
   const [stamping, setStamping] = useState(false);
+  const [visibleSteps, setVisibleSteps] = useState(0);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const ticketRef = useRef(null);
+  const containerRef = useRef(null);
+
+  // Animate steps appearing one by one
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setVisibleSteps((prev) => {
+        if (prev >= 3) {
+          clearInterval(timer);
+          return 3;
+        }
+        return prev + 1;
+      });
+    }, 600);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Parallax effect on mouse move
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setMousePos({
+          x: (e.clientX - rect.left - rect.width / 2) / 30,
+          y: (e.clientY - rect.top - rect.height / 2) / 30,
+        });
+      }
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const handleAdminSubmit = (e) => {
     e.preventDefault();
@@ -22,7 +55,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
     setStamping(true);
     setTimeout(() => {
       onGetStarted();
-    }, 260);
+    }, 400);
   };
 
   const steps = [
@@ -33,6 +66,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
 
   return (
     <div
+      ref={containerRef}
       style={{
         minHeight: "100vh",
         width: "100%",
@@ -51,33 +85,84 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
         overflowY: "auto",
       }}
     >
-      {/* ambient iced-drink accents */}
+      {/* Animated floating coffee beans */}
+      {[...Array(6)].map((_, i) => (
+        <div
+          key={`bean-${i}`}
+          style={{
+            position: "absolute",
+            width: 8 + i * 3,
+            height: 8 + i * 3,
+            borderRadius: "50% 40%",
+            background: `rgba(178, 58, 30, ${0.08 + i * 0.02})`,
+            top: `${10 + i * 15}%`,
+            left: `${5 + i * 18}%`,
+            animation: `floatBean ${3 + i * 0.5}s ease-in-out infinite`,
+            animationDelay: `${i * 0.4}s`,
+            transform: `translate(${mousePos.x * (0.5 + i * 0.2)}px, ${mousePos.y * (0.5 + i * 0.2)}px)`,
+            pointerEvents: "none",
+          }}
+        />
+      ))}
+
+      {/* Coffee stain watermark */}
       <div
         style={{
           position: "absolute",
-          top: "8%",
-          left: "6%",
-          width: 140,
-          height: 140,
+          top: "15%",
+          right: "10%",
+          width: 200,
+          height: 200,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(110,156,151,0.25), transparent 70%)",
-          filter: "blur(4px)",
+          border: "3px solid rgba(178, 58, 30, 0.06)",
+          transform: `translate(${mousePos.x * 0.3}px, ${mousePos.y * 0.3}px)`,
+          pointerEvents: "none",
         }}
       />
       <div
         style={{
           position: "absolute",
-          bottom: "10%",
-          right: "8%",
-          width: 180,
-          height: 180,
+          top: "15%",
+          right: "10%",
+          width: 160,
+          height: 160,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(178,58,30,0.10), transparent 70%)",
+          border: "2px solid rgba(178, 58, 30, 0.04)",
+          transform: `translate(${mousePos.x * 0.3 + 20}px, ${mousePos.y * 0.3 + 20}px)`,
+          pointerEvents: "none",
         }}
       />
 
-      {/* staff tag - top right, styled like a clipped badge */}
-      <div style={{ position: "absolute", top: 100, right: 30,left:50, zIndex: 20 }}>
+      {/* Steam wisps */}
+      <div
+        style={{
+          position: "absolute",
+          top: "20%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          pointerEvents: "none",
+        }}
+      >
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={`steam-${i}`}
+            style={{
+              position: "absolute",
+              width: 40,
+              height: 80,
+              background: "linear-gradient(180deg, rgba(178,58,30,0.08) 0%, transparent 100%)",
+              borderRadius: "50%",
+              filter: "blur(8px)",
+              left: -20 + i * 20,
+              animation: `steamRise ${2.5 + i * 0.3}s ease-out infinite`,
+              animationDelay: `${i * 0.7}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* staff tag - top right */}
+      <div style={{ position: "absolute", top: 100, right: 30, zIndex: 30 }}>
         {!showAdminLogin ? (
           <button
             onClick={() => setShowAdminLogin(true)}
@@ -97,6 +182,15 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
               padding: "6px 10px",
               transform: "rotate(3deg)",
               boxShadow: "0 2px 4px rgba(0,0,0,0.12)",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "rotate(0deg) scale(1.05)";
+              e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.18)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "rotate(3deg) scale(1)";
+              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.12)";
             }}
           >
             <Shield size={12} />
@@ -112,6 +206,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
               borderRadius: 6,
               padding: 12,
               boxShadow: "0 6px 16px rgba(0,0,0,0.15)",
+              animation: "formPop 0.3s ease-out",
             }}
           >
             <div
@@ -149,7 +244,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
               autoFocus
             />
             {error && (
-              <div style={{ color: "#B23A1E", fontSize: 10, marginBottom: 8, fontFamily: "'Space Mono', monospace" }}>
+              <div style={{ color: "#B23A1E", fontSize: 10, marginBottom: 8, fontFamily: "'Space Mono', monospace", animation: "shake 0.4s ease" }}>
                 DENIED — TRY AGAIN
               </div>
             )}
@@ -166,7 +261,10 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
                   fontSize: 11,
                   fontFamily: "'Space Mono', monospace",
                   cursor: "pointer",
+                  transition: "all 0.2s",
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.background = "#3E2723"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "#241A12"}
               >
                 ENTER
               </button>
@@ -198,13 +296,15 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
 
       {/* THE TICKET */}
       <div
+        ref={ticketRef}
         className="ticket"
         style={{
           position: "relative",
           zIndex: 10,
           width: "100%",
           maxWidth: 380,
-          transform: "rotate(-1.2deg)",
+          transform: `rotate(-1.2deg) translate(${mousePos.x * 0.5}px, ${mousePos.y * 0.5}px)`,
+          transition: "transform 0.1s ease-out",
         }}
       >
         {/* zigzag top edge */}
@@ -224,18 +324,33 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             background: "#FCFAF5",
             padding: "28px 26px 22px",
             boxShadow: "0 18px 40px rgba(36,26,18,0.18)",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
-          {/* barcode strip */}
-          <div
-            style={{
-              height: 22,
-              marginBottom: 16,
-              background:
-                "repeating-linear-gradient(90deg, #241A12 0px, #241A12 2px, transparent 2px, transparent 4px, #241A12 4px, #241A12 5px, transparent 5px, transparent 9px)",
-              opacity: 0.85,
-            }}
-          />
+          {/* Animated scan line on barcode */}
+          <div style={{ position: "relative", marginBottom: 16 }}>
+            <div
+              style={{
+                height: 22,
+                background:
+                  "repeating-linear-gradient(90deg, #241A12 0px, #241A12 2px, transparent 2px, transparent 4px, #241A12 4px, #241A12 5px, transparent 5px, transparent 9px)",
+                opacity: 0.85,
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: 2,
+                height: "100%",
+                background: "rgba(178, 58, 30, 0.6)",
+                animation: "scanLine 2.5s linear infinite",
+                boxShadow: "0 0 6px rgba(178, 58, 30, 0.4)",
+              }}
+            />
+          </div>
 
           <div
             style={{
@@ -253,6 +368,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             </span>
           </div>
 
+          {/* Logo with steam */}
           <div
             style={{
               display: "flex",
@@ -260,9 +376,27 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
               justifyContent: "center",
               gap: 10,
               margin: "10px 0 6px",
+              position: "relative",
             }}
           >
-            <Coffee size={26} color="#241A12" />
+            <div style={{ position: "relative" }}>
+              <Coffee size={26} color="#241A12" />
+              {/* Mini steam from cup */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: -8,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: 8,
+                  height: 12,
+                  background: "linear-gradient(180deg, rgba(178,58,30,0.15), transparent)",
+                  borderRadius: "50%",
+                  filter: "blur(2px)",
+                  animation: "miniSteam 1.5s ease-out infinite",
+                }}
+              />
+            </div>
             <h1
               style={{
                 fontFamily: "'Space Mono', monospace",
@@ -292,7 +426,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
 
           <div style={{ borderTop: "1.5px dashed #C9BB9E", marginBottom: 16 }} />
 
-          {/* receipt line items = the steps */}
+          {/* receipt line items = the steps with typewriter effect */}
           <div style={{ marginBottom: 16 }}>
             {steps.map((s, i) => (
               <div
@@ -303,6 +437,10 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
                   gap: 6,
                   marginBottom: 10,
                   fontFamily: "'Space Mono', monospace",
+                  opacity: visibleSteps > i ? 1 : 0,
+                  transform: visibleSteps > i ? "translateX(0)" : "translateX(-20px)",
+                  transition: "all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                  transitionDelay: `${i * 0.15}s`,
                 }}
               >
                 <span style={{ fontSize: 12, color: "#B23A1E", fontWeight: 700 }}>{i + 1}</span>
@@ -329,9 +467,16 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             }}
           >
             <span>THANK YOU</span>
+            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <Star size={10} fill="#B23A1E" color="#B23A1E" />
+              <Star size={10} fill="#B23A1E" color="#B23A1E" />
+              <Star size={10} fill="#B23A1E" color="#B23A1E" />
+              <Star size={10} fill="#B23A1E" color="#B23A1E" />
+              <Star size={10} color="#C9BB9E" />
+            </span>
           </div>
 
-          {/* stamp CTA */}
+          {/* stamp CTA with enhanced animation */}
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}>
             <button
               onClick={handleGetStarted}
@@ -352,14 +497,42 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
-                transform: stamping ? "rotate(-8deg) scale(0.94)" : "rotate(-4deg) scale(1)",
-                transition: "transform 0.18s ease-out",
-                boxShadow: "0 0 0 1px #B23A1E inset",
+                transform: stamping ? "rotate(-12deg) scale(0.85)" : "rotate(-4deg) scale(1)",
+                transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                boxShadow: stamping
+                  ? "0 0 0 1px #B23A1E inset, 0 8px 20px rgba(178,58,30,0.3)"
+                  : "0 0 0 1px #B23A1E inset",
                 touchAction: "manipulation",
+                position: "relative",
+                overflow: "hidden",
+              }}
+              onMouseEnter={(e) => {
+                if (!stamping) {
+                  e.currentTarget.style.transform = "rotate(-2deg) scale(1.05)";
+                  e.currentTarget.style.boxShadow = "0 0 0 1px #B23A1E inset, 0 6px 16px rgba(178,58,30,0.2)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!stamping) {
+                  e.currentTarget.style.transform = "rotate(-4deg) scale(1)";
+                  e.currentTarget.style.boxShadow = "0 0 0 1px #B23A1E inset";
+                }
               }}
             >
-              Start Order
-              <ArrowRight size={16} />
+              {/* Stamp ink splash effect */}
+              {stamping && (
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: -10,
+                    background: "radial-gradient(circle, rgba(178,58,30,0.15) 0%, transparent 70%)",
+                    borderRadius: "50%",
+                    animation: "inkSplash 0.4s ease-out",
+                  }}
+                />
+              )}
+              <span style={{ position: "relative", zIndex: 1 }}>Start Order</span>
+              <ArrowRight size={16} style={{ position: "relative", zIndex: 1 }} />
             </button>
           </div>
 
@@ -370,13 +543,13 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
               fontStyle: "italic",
               color: "#8A7F6C",
               marginBottom: 4,
+              animation: "fadeInUp 1s ease 2s both",
             }}
           >
-            thank you  brew again soon
+            thank you · brew again soon
           </div>
         </div>
 
-       
         <div
           style={{
             height: 12,
@@ -389,12 +562,48 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
         />
       </div>
 
+      {/* CSS Animations */}
       <style>{`
+        @keyframes floatBean {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        @keyframes steamRise {
+          0% { opacity: 0; transform: translateY(10px) scale(0.8); }
+          50% { opacity: 1; }
+          100% { opacity: 0; transform: translateY(-40px) scale(1.2); }
+        }
+        @keyframes miniSteam {
+          0% { opacity: 0; transform: translateX(-50%) translateY(2px) scale(0.8); }
+          50% { opacity: 1; }
+          100% { opacity: 0; transform: translateX(-50%) translateY(-6px) scale(1.2); }
+        }
+        @keyframes scanLine {
+          0% { left: 0; }
+          100% { left: 100%; }
+        }
+        @keyframes inkSplash {
+          0% { transform: scale(0); opacity: 1; }
+          100% { transform: scale(2); opacity: 0; }
+        }
+        @keyframes formPop {
+          0% { transform: scale(0.9); opacity: 0; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
         .stamp-btn:active {
           transform: rotate(-4deg) scale(0.95) !important;
         }
         @media (prefers-reduced-motion: reduce) {
-          .ticket * { transition: none !important; }
+          .ticket * { transition: none !important; animation: none !important; }
         }
       `}</style>
     </div>
