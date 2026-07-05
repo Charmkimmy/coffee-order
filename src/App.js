@@ -20,9 +20,8 @@ function App() {
   const handleAdminLogin = () => {
     setScreen("admin");
   };
-  const handleBack = () => {
+   const handleBack = () => {
     setScreen("intro");
-    setIsAdmin(false);
   };
   const handleLogout = () => {
     setScreen("intro");
