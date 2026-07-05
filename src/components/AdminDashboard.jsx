@@ -156,9 +156,9 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         <meta charset="UTF-8">
         <style>
           table { border-collapse: collapse; font-family: Arial, sans-serif; }
-          th { background: #3E2723; color: #EFEBE9; font-weight: bold; padding: 10px; border: 1px solid #D7CCC8; }
-          td { padding: 8px; border: 1px solid #D7CCC8; color: #3E2723; }
-          tr:nth-child(even) { background: #F5F0EB; }
+          th { background: #241A12; color: #F2E9D8; font-weight: bold; padding: 10px; border: 1px solid #C9BB9E; }
+          td { padding: 8px; border: 1px solid #C9BB9E; color: #241A12; }
+          tr:nth-child(even) { background: #EFE6D3; }
         </style>
       </head>
       <body>
@@ -183,65 +183,78 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
     <div
       style={{
         minHeight: "100vh",
-        background: "#EFEBE9",
+        background: "#F2E9D8",
         fontFamily: "'Public Sans', sans-serif",
-        color: "#3E2723",
+        color: "#241A12",
       }}
     >
       {/* Header */}
-      <div
-        style={{
-          background: "#3E2723",
-          color: "#EFEBE9",
-          padding: "20px 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button
-            onClick={onBack}
-            className="cos-btn"
-            style={{
-              background: "none",
-              border: "none",
-              color: "#A1887F",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              padding: 4,
-            }}
-          >
-            <ArrowLeft size={20} />
-          </button>
-          <div>
-            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 19, fontWeight: 600 }}>
-              Admin Dashboard
-            </div>
-            <div style={{ fontSize: 11, color: "#A1887F", letterSpacing: 1.5, textTransform: "uppercase" }}>
-              Sales History
+      <div>
+        <div
+          style={{
+            background: "#241A12",
+            color: "#F2E9D8",
+            padding: "20px 24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <button
+              onClick={onBack}
+              className="cos-btn"
+              style={{
+                background: "none",
+                border: "none",
+                color: "#8A7F6C",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                padding: 4,
+              }}
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div>
+              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 15, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase" }}>
+                Admin Dashboard
+              </div>
+              <div style={{ fontSize: 11, color: "#8A7F6C", letterSpacing: 1.5, textTransform: "uppercase", fontFamily: "'Space Mono', monospace" }}>
+                Sales History
+              </div>
             </div>
           </div>
         </div>
+        <div
+          style={{
+            height: 10,
+            backgroundImage:
+              "linear-gradient(45deg, #241A12 50%, transparent 50%), linear-gradient(-45deg, #241A12 50%, transparent 50%)",
+            backgroundSize: "16px 16px",
+            backgroundRepeat: "repeat-x",
+            backgroundPosition: "top",
+            backgroundColor: "#F2E9D8",
+          }}
+        />
       </div>
 
       {/* Summary Cards */}
       <div style={{ padding: "24px", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, maxWidth: 900, margin: "0 auto" }}>
-        <div style={{ background: "#FFFDF9", border: "1px solid #D7CCC8", borderRadius: 12, padding: "20px", textAlign: "center" }}>
-          <DollarSign size={24} color="#8D6E63" style={{ marginBottom: 8 }} />
-          <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 700 }}>{peso(grandTotal)}</div>
-          <div style={{ fontSize: 12, color: "#A1887F", marginTop: 4 }}>Total Sales</div>
+        <div style={{ background: "#FCFAF5", border: "1px solid #C9BB9E", borderRadius: 6, padding: "20px", textAlign: "center" }}>
+          <DollarSign size={24} color="#B23A1E" style={{ marginBottom: 8 }} />
+          <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 22, fontWeight: 700 }}>{peso(grandTotal)}</div>
+          <div style={{ fontSize: 12, color: "#8A7F6C", marginTop: 4 }}>Total Sales</div>
         </div>
-        <div style={{ background: "#FFFDF9", border: "1px solid #D7CCC8", borderRadius: 12, padding: "20px", textAlign: "center" }}>
-          <ShoppingBag size={24} color="#8D6E63" style={{ marginBottom: 8 }} />
-          <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 700 }}>{orderHistory.length}</div>
-          <div style={{ fontSize: 12, color: "#A1887F", marginTop: 4 }}>Total Orders</div>
+        <div style={{ background: "#FCFAF5", border: "1px solid #C9BB9E", borderRadius: 6, padding: "20px", textAlign: "center" }}>
+          <ShoppingBag size={24} color="#B23A1E" style={{ marginBottom: 8 }} />
+          <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 22, fontWeight: 700 }}>{orderHistory.length}</div>
+          <div style={{ fontSize: 12, color: "#8A7F6C", marginTop: 4 }}>Total Orders</div>
         </div>
-        <div style={{ background: "#FFFDF9", border: "1px solid #D7CCC8", borderRadius: 12, padding: "20px", textAlign: "center" }}>
-          <Calendar size={24} color="#8D6E63" style={{ marginBottom: 8 }} />
-          <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 700 }}>{dailyTotals.length}</div>
-          <div style={{ fontSize: 12, color: "#A1887F", marginTop: 4 }}>Days Active</div>
+        <div style={{ background: "#FCFAF5", border: "1px solid #C9BB9E", borderRadius: 6, padding: "20px", textAlign: "center" }}>
+          <Calendar size={24} color="#B23A1E" style={{ marginBottom: 8 }} />
+          <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 22, fontWeight: 700 }}>{dailyTotals.length}</div>
+          <div style={{ fontSize: 12, color: "#8A7F6C", marginTop: 4 }}>Days Active</div>
         </div>
       </div>
 
@@ -249,7 +262,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
       <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "space-between" }}>
         {/* Search - Mobile responsive */}
         <div style={{ position: "relative", flex: 1, minWidth: 140, maxWidth: 280 }}>
-          <Search size={14} color="#A1887F" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
+          <Search size={14} color="#8A7F6C" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
           <input
             type="text"
             placeholder="Search..."
@@ -261,12 +274,12 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
             style={{
               width: "100%",
               padding: "8px 12px 8px 32px",
-              borderRadius: 8,
-              border: "1px solid #D7CCC8",
-              background: "#FFFDF9",
+              borderRadius: 6,
+              border: "1px solid #C9BB9E",
+              background: "#FCFAF5",
               fontSize: 12,
               fontFamily: "'Public Sans', sans-serif",
-              color: "#3E2723",
+              color: "#241A12",
               outline: "none",
               boxSizing: "border-box",
             }}
@@ -281,10 +294,10 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
             alignItems: "center",
             gap: 5,
             background: "transparent",
-            border: "1px solid #8D6E63",
-            color: "#8D6E63",
+            border: "1px solid #B23A1E",
+            color: "#B23A1E",
             padding: "7px 12px",
-            borderRadius: 8,
+            borderRadius: 6,
             fontSize: 12,
             cursor: "pointer",
             whiteSpace: "nowrap",
@@ -306,10 +319,10 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
               alignItems: "center",
               gap: 6,
               background: "transparent",
-              border: "1px solid #8D6E63",
-              color: "#8D6E63",
+              border: "1px solid #B23A1E",
+              color: "#B23A1E",
               padding: "6px 14px",
-              borderRadius: 8,
+              borderRadius: 6,
               fontSize: 12,
               cursor: "pointer",
             }}
@@ -328,7 +341,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                 border: "1px solid #C62828",
                 color: "#C62828",
                 padding: "6px 14px",
-                borderRadius: 8,
+                borderRadius: 6,
                 fontSize: 12,
                 cursor: "pointer",
               }}
@@ -337,7 +350,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
               Delete Selected ({selectedOrders.size})
             </button>
           )}
-          <span style={{ fontSize: 12, color: "#A1887F", marginLeft: "auto" }}>
+          <span style={{ fontSize: 12, color: "#8A7F6C", marginLeft: "auto" }}>
             {filteredOrderHistory.length} order{filteredOrderHistory.length !== 1 ? "s" : ""} found
           </span>
         </div>
@@ -345,23 +358,23 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
 
       {/* Daily Sales */}
       <div style={{ padding: "0 24px 24px", maxWidth: 900, margin: "0 auto" }}>
-        <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 700, marginBottom: 16 }}>
+        <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 14, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 16 }}>
           Daily Sales
         </div>
 
         {paginatedDailyTotals.length === 0 ? (
-          <div style={{ background: "#FFFDF9", border: "1px dashed #D7CCC8", borderRadius: 12, padding: "40px", textAlign: "center", color: "#A1887F" }}>
+          <div style={{ background: "#FCFAF5", border: "1px dashed #C9BB9E", borderRadius: 6, padding: "40px", textAlign: "center", color: "#8A7F6C" }}>
             {searchQuery ? "No orders match your search." : "No sales yet. Orders will appear here once customers start ordering."}
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {paginatedDailyTotals.map((day) => (
-              <div key={day.date} style={{ background: "#FFFDF9", border: "1px solid #D7CCC8", borderRadius: 12, overflow: "hidden" }}>
+              <div key={day.date} style={{ background: "#FCFAF5", border: "1px solid #C9BB9E", borderRadius: 6, overflow: "hidden" }}>
                 {/* Day Header */}
                 <div
                   style={{
-                    background: "#3E2723",
-                    color: "#EFEBE9",
+                    background: "#241A12",
+                    color: "#F2E9D8",
                     padding: "14px 20px",
                     display: "flex",
                     justifyContent: "space-between",
@@ -369,12 +382,12 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <Calendar size={16} color="#A1887F" />
+                    <Calendar size={16} color="#8A7F6C" />
                     <span style={{ fontWeight: 600, fontSize: 15 }}>{day.date}</span>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 13 }}>
                     <span>{day.orders.length} orders</span>
-                    <span style={{ fontFamily: "'Space Mono', monospace", color: "#A1887F", fontWeight: 700 }}>
+                    <span style={{ fontFamily: "'Space Mono', monospace", color: "#8A7F6C", fontWeight: 700 }}>
                       {peso(day.totalSales)}
                     </span>
                   </div>
@@ -386,7 +399,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                     <div
                       key={order.id}
                       style={{
-                        borderBottom: "1px dashed #D7CCC8",
+                        borderBottom: "1px dashed #C9BB9E",
                         padding: "12px 0",
                         position: "relative",
                       }}
@@ -398,7 +411,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                             background: "none",
                             border: "none",
                             cursor: "pointer",
-                            color: "#8D6E63",
+                            color: "#B23A1E",
                             padding: 2,
                             display: "flex",
                             alignItems: "center",
@@ -407,7 +420,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                           {selectedOrders.has(order.id) ? <CheckSquare size={16} /> : <Square size={16} />}
                         </button>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flex: 1, paddingRight: 20 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6D4C41" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#5C5140" }}>
                             <Clock size={12} />
                             {order.time}
                           </div>
@@ -421,17 +434,17 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                 style={{
                                   padding: "4px 8px",
                                   borderRadius: 6,
-                                  border: "1px solid #8D6E63",
+                                  border: "1px solid #B23A1E",
                                   fontSize: 12,
                                   fontFamily: "'Public Sans', sans-serif",
-                                  color: "#3E2723",
+                                  color: "#241A12",
                                   outline: "none",
                                 }}
                                 autoFocus
                               />
                             ) : (
                               order.customerName && (
-                                <span style={{ fontSize: 11, color: "#8D6E63", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                                <span style={{ fontSize: 11, color: "#B23A1E", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
                                   <User size={11} />
                                   {order.customerName}
                                 </span>
@@ -444,14 +457,14 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                         </div>
                       </div>
                       {order.items.map((item) => (
-                        <div key={item.key} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#5D4037", marginBottom: 2, paddingLeft: 34 }}>
+                        <div key={item.key} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#5C5140", marginBottom: 2, paddingLeft: 34 }}>
                           <span>{item.qty}× {item.name} ({item.size})</span>
                           <span>{peso(item.price * item.qty)}</span>
                         </div>
                       ))}
-                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontSize: 12, color: "#A1887F", paddingLeft: 34 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontSize: 12, color: "#8A7F6C", paddingLeft: 34 }}>
                         <span>Paid via {PAYMENTS.find((p) => p.id === order.payment)?.label}</span>
-                        <span style={{ fontWeight: 700, color: "#3E2723" }}>{peso(order.total)}</span>
+                        <span style={{ fontWeight: 700, color: "#241A12" }}>{peso(order.total)}</span>
                       </div>
                       {/* Edit & Delete Buttons */}
                       <div style={{ display: "flex", gap: 8, marginTop: 8, paddingLeft: 34 }}>
@@ -463,7 +476,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                 display: "flex",
                                 alignItems: "center",
                                 gap: 4,
-                                background: "#8D6E63",
+                                background: "#B23A1E",
                                 border: "none",
                                 color: "#FFF",
                                 padding: "4px 10px",
@@ -481,8 +494,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                 alignItems: "center",
                                 gap: 4,
                                 background: "transparent",
-                                border: "1px solid #A1887F",
-                                color: "#A1887F",
+                                border: "1px solid #8A7F6C",
+                                color: "#8A7F6C",
                                 padding: "4px 10px",
                                 borderRadius: 6,
                                 fontSize: 11,
@@ -501,8 +514,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                 alignItems: "center",
                                 gap: 4,
                                 background: "transparent",
-                                border: "1px solid #8D6E63",
-                                color: "#8D6E63",
+                                border: "1px solid #B23A1E",
+                                color: "#B23A1E",
                                 padding: "4px 10px",
                                 borderRadius: 6,
                                 fontSize: 11,
@@ -544,16 +557,16 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                 {/* Day Footer */}
                 <div
                   style={{
-                    background: "#F5F0EB",
+                    background: "#EFE6D3",
                     padding: "12px 20px",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    borderTop: "1px solid #D7CCC8",
+                    borderTop: "1px solid #C9BB9E",
                   }}
                 >
-                  <span style={{ fontSize: 12, color: "#6D4C41" }}>{day.itemCount} items sold</span>
-                  <span style={{ fontFamily: "'Fraunces', serif", fontSize: 16, fontWeight: 700 }}>
+                  <span style={{ fontSize: 12, color: "#5C5140" }}>{day.itemCount} items sold</span>
+                  <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 13, fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase" }}>
                     Day Total: {peso(day.totalSales)}
                   </span>
                 </div>
@@ -570,10 +583,10 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
               disabled={currentPage === 1}
               style={{
                 background: "transparent",
-                border: "1px solid #D7CCC8",
-                color: currentPage === 1 ? "#D7CCC8" : "#8D6E63",
+                border: "1px solid #C9BB9E",
+                color: currentPage === 1 ? "#C9BB9E" : "#B23A1E",
                 padding: "6px 12px",
-                borderRadius: 8,
+                borderRadius: 6,
                 cursor: currentPage === 1 ? "not-allowed" : "pointer",
                 display: "flex",
                 alignItems: "center",
@@ -581,7 +594,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
             >
               <ChevronLeft size={16} />
             </button>
-            <span style={{ fontSize: 13, color: "#6D4C41" }}>
+            <span style={{ fontSize: 13, color: "#5C5140" }}>
               Page {currentPage} of {totalPages}
             </span>
             <button
@@ -589,10 +602,10 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
               disabled={currentPage === totalPages}
               style={{
                 background: "transparent",
-                border: "1px solid #D7CCC8",
-                color: currentPage === totalPages ? "#D7CCC8" : "#8D6E63",
+                border: "1px solid #C9BB9E",
+                color: currentPage === totalPages ? "#C9BB9E" : "#B23A1E",
                 padding: "6px 12px",
-                borderRadius: 8,
+                borderRadius: 6,
                 cursor: currentPage === totalPages ? "not-allowed" : "pointer",
                 display: "flex",
                 alignItems: "center",
