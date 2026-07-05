@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { ArrowLeft, Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
+import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
@@ -220,21 +220,6 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button
-            onClick={onBack}
-            className="cos-btn"
-            style={{
-              background: "none",
-              border: "none",
-              color: "#A1887F",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              padding: 4,
-            }}
-          >
-            <ArrowLeft size={20} />
-          </button>
           <div>
             <div style={{ fontFamily: "'Fraunces', serif", fontSize: 19, fontWeight: 600 }}>
               Admin Dashboard
