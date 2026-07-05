@@ -7,8 +7,8 @@ export default function HistoryPanel({ orderHistory, onClose, onDeleteOrder, onC
   return (
     <div
       style={{
-        background: "#FFFDF9",
-        borderBottom: "2px solid #E7DCC7",
+        background: "#FCFAF5",
+        borderBottom: "2px solid #C9BB9E",
         padding: "20px 24px",
         maxHeight: 400,
         overflowY: "auto",
@@ -16,7 +16,7 @@ export default function HistoryPanel({ orderHistory, onClose, onDeleteOrder, onC
       className="cos-scroll"
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-        <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 700 }}>
+        <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 14, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: "#241A12" }}>
           Order History
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -29,8 +29,8 @@ export default function HistoryPanel({ orderHistory, onClose, onDeleteOrder, onC
                 alignItems: "center",
                 gap: 4,
                 background: "transparent",
-                border: "1px solid #C08A5A",
-                color: "#C08A5A",
+                border: "1px solid #B23A1E",
+                color: "#B23A1E",
                 padding: "4px 10px",
                 borderRadius: 6,
                 fontSize: 11,
@@ -49,7 +49,7 @@ export default function HistoryPanel({ orderHistory, onClose, onDeleteOrder, onC
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "#9A8770",
+              color: "#8A7F6C",
               padding: 4,
             }}
           >
@@ -59,24 +59,33 @@ export default function HistoryPanel({ orderHistory, onClose, onDeleteOrder, onC
       </div>
 
       {orderHistory.length === 0 ? (
-        <div style={{ color: "#B0A088", fontSize: 13, textAlign: "center", padding: "20px 0" }}>
+        <div style={{ color: "#8A7F6C", fontSize: 13, textAlign: "center", padding: "20px 0" }}>
           No orders yet. Place your first order to see it here!
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {orderHistory.map((order) => (
-            <div
-              key={order.timestamp}
-              style={{
-                background: "#FBF7EE",
-                border: "1px dashed #D8C9AF",
-                borderRadius: 10,
-                padding: "14px 16px",
-                fontFamily: "'Space Mono', monospace",
-                fontSize: 12,
-                position: "relative",
-              }}
-            >
+            <div key={order.timestamp} style={{ position: "relative" }}>
+              <div
+                style={{
+                  height: 6,
+                  backgroundImage:
+                    "linear-gradient(135deg, #F2E9D8 50%, transparent 50%), linear-gradient(-135deg, #F2E9D8 50%, transparent 50%)",
+                  backgroundSize: "10px 10px",
+                  backgroundRepeat: "repeat-x",
+                  backgroundPosition: "bottom",
+                  backgroundColor: "#FCFAF5",
+                }}
+              />
+              <div
+                style={{
+                  background: "#F2E9D8",
+                  padding: "14px 16px",
+                  fontFamily: "'Space Mono', monospace",
+                  fontSize: 12,
+                  position: "relative",
+                }}
+              >
               <button
                 onClick={() => onDeleteOrder(order.timestamp)}
                 className="cos-btn"
@@ -87,7 +96,7 @@ export default function HistoryPanel({ orderHistory, onClose, onDeleteOrder, onC
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "#C08A5A",
+                  color: "#B23A1E",
                   padding: 2,
                 }}
                 aria-label="Delete order"
@@ -95,25 +104,37 @@ export default function HistoryPanel({ orderHistory, onClose, onDeleteOrder, onC
                 <X size={14} />
               </button>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, paddingRight: 20 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#7A6650" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#8A7F6C" }}>
                   <Clock size={12} />
                   <span>{order.date} · {order.time}</span>
                 </div>
-                <span style={{ fontWeight: 700, color: "#2B1B12" }}>Order #{order.orderNo}</span>
+                <span style={{ fontWeight: 700, color: "#241A12" }}>Order #{order.orderNo}</span>
               </div>
               {order.items.map((c) => (
-                <div key={c.key} style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, color: "#5C4A38" }}>
+                <div key={c.key} style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, color: "#5C5140" }}>
                   <span>{c.qty}× {c.name} ({c.size})</span>
                   <span>{peso(c.price * c.qty)}</span>
                 </div>
               ))}
-              <div style={{ borderTop: "1px dashed #D8C9AF", marginTop: 8, paddingTop: 8, display: "flex", justifyContent: "space-between", fontWeight: 700, color: "#2B1B12" }}>
+              <div style={{ borderTop: "1px dashed #C9BB9E", marginTop: 8, paddingTop: 8, display: "flex", justifyContent: "space-between", fontWeight: 700, color: "#241A12" }}>
                 <span>Total</span>
                 <span>{peso(order.total)}</span>
               </div>
-              <div style={{ marginTop: 6, color: "#7A6650", fontSize: 11 }}>
+              <div style={{ marginTop: 6, color: "#8A7F6C", fontSize: 11 }}>
                 Paid via {PAYMENTS.find((p) => p.id === order.payment)?.label}
               </div>
+              </div>
+              <div
+                style={{
+                  height: 6,
+                  backgroundImage:
+                    "linear-gradient(45deg, #F2E9D8 50%, transparent 50%), linear-gradient(-45deg, #F2E9D8 50%, transparent 50%)",
+                  backgroundSize: "10px 10px",
+                  backgroundRepeat: "repeat-x",
+                  backgroundPosition: "top",
+                  backgroundColor: "#FCFAF5",
+                }}
+              />
             </div>
           ))}
         </div>
