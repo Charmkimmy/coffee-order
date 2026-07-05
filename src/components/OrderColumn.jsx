@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Minus, Plus, Trash2, Check, X, User } from "lucide-react";
+import { Minus, Plus, Trash2, Check, X, User, FileText } from "lucide-react";
 import { PAYMENTS } from "../data/payments";
 import { peso } from "../utils/format";
 import OrderReceipt from "./OrderReceipt";
@@ -13,6 +13,8 @@ export default function OrderColumn({
   orderPlaced,
   customerName,
   setCustomerName,
+  orderNotes,
+  setOrderNotes,
   onChangeQty,
   onRemoveItem,
   onPlaceOrder,
@@ -117,6 +119,40 @@ export default function OrderColumn({
               {!customerName.trim() && cart.length > 0 && (
                 <div style={{ fontSize: 11, color: "#B23A1E", marginTop: 6 }}>
                   Please enter your name before placing order
+                </div>
+              )}
+            </div>
+
+            {/* Order Notes */}
+            <div style={{ marginTop: 16, marginBottom: 16 }}>
+              <div style={{ fontSize: 11, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1.2, color: "#8A7F6C", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                <FileText size={14} />
+                Order Notes
+              </div>
+              <textarea
+                value={orderNotes}
+                onChange={(e) => setOrderNotes(e.target.value)}
+                placeholder="e.g. Less sugar, extra ice, no lid..."
+                style={{
+                  width: "100%",
+                  minHeight: 64,
+                  padding: "10px 14px",
+                  borderRadius: 6,
+                  border: orderNotes.trim() ? "1.5px solid #B23A1E" : "1px solid #C9BB9E",
+                  background: "#FCFAF5",
+                  fontSize: 14,
+                  fontFamily: "'Public Sans', sans-serif",
+                  color: "#241A12",
+                  outline: "none",
+                  resize: "vertical",
+                  boxSizing: "border-box",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#8A7F6C")}
+                onBlur={(e) => (e.target.style.borderColor = orderNotes.trim() ? "#B23A1E" : "#C9BB9E")}
+              />
+              {orderNotes.trim() && (
+                <div style={{ fontSize: 11, color: "#8A7F6C", marginTop: 6 }}>
+                  Staff will see this when preparing your order
                 </div>
               )}
             </div>
