@@ -11,7 +11,8 @@ export default function CoffeeOrderingSystem({ onBack }) {
   const [orderPlaced, setOrderPlaced] = useState(null);
   const [showCart, setShowCart] = useState(false);
   const [customerName, setCustomerName] = useState("");
-  
+  const [orderNotes, setOrderNotes] = useState("");
+
   const { addOrder } = useFirebaseOrders();
 
   const addToCart = (item, selectedSize) => {
@@ -55,6 +56,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
       total,
       payment,
       customerName: customerName.trim(),
+      notes: orderNotes.trim(),
     };
 
     addOrder(orderData);
@@ -70,6 +72,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
     setPayment(null);
     setOrderPlaced(null);
     setCustomerName("");
+    setOrderNotes("");
   };
 
   return (
@@ -132,6 +135,8 @@ export default function CoffeeOrderingSystem({ onBack }) {
             orderPlaced={orderPlaced}
             customerName={customerName}
             setCustomerName={setCustomerName}
+            orderNotes={orderNotes}
+            setOrderNotes={setOrderNotes}
             onChangeQty={changeQty}
             onRemoveItem={removeItem}
             onPlaceOrder={placeOrder}
@@ -213,6 +218,8 @@ export default function CoffeeOrderingSystem({ onBack }) {
                 orderPlaced={orderPlaced}
                 customerName={customerName}
                 setCustomerName={setCustomerName}
+                orderNotes={orderNotes}
+                setOrderNotes={setOrderNotes}
                 onChangeQty={changeQty}
                 onRemoveItem={removeItem}
                 onPlaceOrder={placeOrder}
