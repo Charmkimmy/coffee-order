@@ -7,6 +7,7 @@ import "./styles/global.css";
 
 function App() {
   const [screen, setScreen] = useState("intro");
+  const [isAdmin, setIsAdmin] = useState(false);
   const {
     orderHistory,
     loading,
@@ -17,8 +18,18 @@ function App() {
   } = useFirebaseOrders();
 
   const handleGetStarted = () => setScreen("order");
-  const handleAdminLogin = () => setScreen("admin");
-  const handleBack = () => setScreen("intro");
+  const handleAdminLogin = () => {
+    setIsAdmin(true);
+    setScreen("admin");
+  };
+  const handleBack = () => {
+    setScreen("intro");
+    setIsAdmin(false);
+  };
+  const handleLogout = () => {
+    setIsAdmin(false);
+    setScreen("intro");
+  };
 
   if (loading) {
     return (
@@ -71,6 +82,7 @@ function App() {
           onDeleteOrder={deleteOrder}
           onEditOrder={(id, updates) => { /* update in Firebase */ }}
           onBack={handleBack}
+          onLogout={handleLogout}
         />
       )}
     </>

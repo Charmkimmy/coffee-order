@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { ArrowLeft, Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
-export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, onDeleteOrder, onBack, onEditOrder }) {
+export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, onDeleteOrder, onBack, onEditOrder, onLogout }) {
   const [selectedOrders, setSelectedOrders] = useState(new Set());
   const [editingOrder, setEditingOrder] = useState(null);
   const [editCustomerName, setEditCustomerName] = useState("");
@@ -244,6 +244,33 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
             </div>
           </div>
         </div>
+
+        {/* Logout Button */}
+        <button
+          onClick={onLogout}
+          style={{
+            background: "none",
+            border: "1px solid #A1887F",
+            color: "#A1887F",
+            padding: "6px 12px",
+            borderRadius: 8,
+            fontSize: 12,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(161, 136, 127, 0.15)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "none";
+          }}
+        >
+          <LogOut size={14} />
+          Logout
+        </button>
       </div>
 
       {/* Summary Cards */}
