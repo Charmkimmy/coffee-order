@@ -1,12 +1,32 @@
 import React from "react";
-import { Coffee, ShoppingBag, ArrowLeft, ShoppingCart } from "lucide-react";
+import { ShoppingBag, ArrowLeft, ShoppingCart } from "lucide-react";
+
+// Inline SVG coffee bean logo matching Calma Cafe brand
+const CalmaLogo = ({ size = 28 }) => (
+  <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+    {/* Outer ring */}
+    <circle cx="50" cy="50" r="45" stroke="#D8A15C" strokeWidth="3" fill="none" />
+    {/* Inner ring */}
+    <circle cx="50" cy="50" r="32" stroke="#D8A15C" strokeWidth="2.5" fill="none" />
+    {/* Coffee bean shape */}
+    <ellipse cx="50" cy="50" rx="18" ry="26" stroke="#D8A15C" strokeWidth="2.5" fill="none" transform="rotate(-15 50 50)" />
+    {/* Bean center line */}
+    <path
+      d="M42 38 Q50 50 42 62"
+      stroke="#D8A15C"
+      strokeWidth="2"
+      fill="none"
+      strokeLinecap="round"
+    />
+  </svg>
+);
 
 export default function Header({ itemCount, onBack, isCustomer, onCartToggle, showCart }) {
   return (
     <div
       style={{
-        background: "#2B1B12",
-        color: "#F7F2E9",
+        background: "#3E2723",
+        color: "#EFEBE9",
         padding: "16px 20px",
         display: "flex",
         alignItems: "center",
@@ -24,7 +44,7 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
             style={{
               background: "none",
               border: "none",
-              color: "#D8A15C",
+              color: "#A1887F",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
@@ -35,18 +55,18 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
           </button>
         )}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Coffee size={22} color="#D8A15C" />
+          <CalmaLogo size={28} />
           <div>
-            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 600, letterSpacing: 0.3 }}>
-              OUR MENU
+            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 16, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase" }}>
+              Calma Cafe
             </div>
-            <div style={{ fontSize: 10, color: "#C6B49A", letterSpacing: 1.5, textTransform: "uppercase" }}>
-              Iced Coffee
+            <div style={{ fontSize: 9, color: "#A1887F", letterSpacing: 2, textTransform: "uppercase" }}>
+              Brewed with Calm
             </div>
           </div>
         </div>
       </div>
-      
+
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         {/* Mobile cart toggle button */}
         <button
@@ -56,7 +76,7 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
             display: "none",
             background: "none",
             border: "none",
-            color: "#D8A15C",
+            color: "#A1887F",
             cursor: "pointer",
             position: "relative",
             padding: 4,
@@ -69,7 +89,7 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
                 position: "absolute",
                 top: -4,
                 right: -4,
-                background: "#B8763E",
+                background: "#8D6E63",
                 color: "#FFF",
                 borderRadius: "50%",
                 width: 18,
@@ -85,7 +105,7 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
             </span>
           )}
         </button>
-        
+
         <div
           className="desktop-item-count"
           style={{
@@ -93,7 +113,7 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
             alignItems: "center",
             gap: 6,
             fontSize: 13,
-            color: "#D8A15C",
+            color: "#A1887F",
             fontFamily: "'Space Mono', monospace",
           }}
         >
