@@ -7,7 +7,6 @@ import "./styles/global.css";
 
 function App() {
   const [screen, setScreen] = useState("intro");
-  const [isAdmin, setIsAdmin] = useState(false);
   const {
     orderHistory,
     loading,
@@ -19,7 +18,6 @@ function App() {
 
   const handleGetStarted = () => setScreen("order");
   const handleAdminLogin = () => {
-    setIsAdmin(true);
     setScreen("admin");
   };
   const handleBack = () => {
@@ -27,7 +25,6 @@ function App() {
     setIsAdmin(false);
   };
   const handleLogout = () => {
-    setIsAdmin(false);
     setScreen("intro");
   };
 
