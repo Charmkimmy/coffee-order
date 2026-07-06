@@ -1,24 +1,18 @@
 import React from "react";
 import { ShoppingBag, ArrowLeft, ShoppingCart } from "lucide-react";
 
-// Inline SVG coffee bean logo matching Calma Cafe brand
 const CalmaLogo = ({ size = 28 }) => (
-  <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
-    {/* Outer ring */}
-    <circle cx="50" cy="50" r="45" stroke="#D8A15C" strokeWidth="3" fill="none" />
-    {/* Inner ring */}
-    <circle cx="50" cy="50" r="32" stroke="#D8A15C" strokeWidth="2.5" fill="none" />
-    {/* Coffee bean shape */}
-    <ellipse cx="50" cy="50" rx="18" ry="26" stroke="#D8A15C" strokeWidth="2.5" fill="none" transform="rotate(-15 50 50)" />
-    {/* Bean center line */}
-    <path
-      d="M42 38 Q50 50 42 62"
-      stroke="#D8A15C"
-      strokeWidth="2"
-      fill="none"
-      strokeLinecap="round"
-    />
-  </svg>
+  <div
+    style={{
+      width: size,
+      height: size,
+      borderRadius: '50%',
+      backgroundImage: 'url(/logo192.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      border: '2px solid #D8A15C', // gold border matching your brand
+    }}
+  />
 );
 
 export default function Header({ itemCount, onBack, isCustomer, onCartToggle, showCart }) {
