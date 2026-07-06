@@ -1,4 +1,4 @@
-{
+﻿{
   "short_name": "Calma Cafe",
   "name": "Calma Cafe - Order & Pay",
   "id": "calma-cafe-pos-v2",
@@ -10,13 +10,13 @@
       "type": "image/x-icon"
     },
     {
-      "src": "calma-icon-192.png",
+      "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "calma-icon-512.png",
+      "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
