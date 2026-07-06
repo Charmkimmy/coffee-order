@@ -1,7 +1,7 @@
 import React from "react";
 import { ShoppingBag, ArrowLeft, ShoppingCart } from "lucide-react";
 
-const CalmaLogo = ({ size = 60 }) => (
+const CalmaLogo = ({ size = 80 }) => (
   <img 
     src="/logo192.png" 
     alt="Calma Cafe" 
@@ -9,7 +9,7 @@ const CalmaLogo = ({ size = 60 }) => (
     height={size} 
     style={{ 
       objectFit: 'contain',
-      borderRadius: '50%',
+      borderRadius: '70%',
     }}
 
   />
