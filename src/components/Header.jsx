@@ -1,7 +1,7 @@
 import React from "react";
 import { ShoppingBag, ArrowLeft, ShoppingCart } from "lucide-react";
 
-const CalmaLogo = ({ size = 40 }) => (
+const CalmaLogo = ({ size = 60 }) => (
   <img 
     src="/logo192.png" 
     alt="Calma Cafe" 
