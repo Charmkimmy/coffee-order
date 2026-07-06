@@ -368,7 +368,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             </span>
           </div>
 
-          {/* Logo - rendered as if stamped/printed in the same ink as the rest of the ticket */}
+          {/* Logo badge - stands alone since it already contains the name + tagline */}
           <div
             style={{
               display: "flex",
@@ -379,25 +379,34 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             <div
               style={{
                 position: "relative",
-                width: 108,
-                height: 108,
+                width: 116,
+                height: 116,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 transform: "rotate(-2deg)",
               }}
             >
+              {/* dashed ring echoing the ticket's dashed dividers */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: "50%",
+                  border: "1.5px dashed #C9BB9E",
+                }}
+              />
               <img
                 src="/logo512.png"
                 alt="Calma Cafe"
                 style={{
-                  width: "100%",
-                  height: "100%",
+                  width: 96,
+                  height: 96,
                   objectFit: "contain",
                   display: "block",
-                  filter: "grayscale(1) contrast(1.15) brightness(0.9)",
-                  mixBlendMode: "multiply",
-                  opacity: 0.92,
+                  borderRadius: "50%",
+                  boxShadow: "0 6px 16px rgba(36,26,18,0.28)",
+                  border: "2px solid #FCFAF5",
                 }}
               />
             </div>
