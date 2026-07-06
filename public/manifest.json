@@ -1,6 +1,7 @@
 {
   "short_name": "Calma Cafe",
   "name": "Calma Cafe - Order & Pay",
+  "id": "calma-cafe-pos-v2",
   "description": "Order your favorite coffee, pay, and skip the line",
   "icons": [
     {
@@ -9,17 +10,19 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "calma-icon-192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
-      "src": "logo512.png",
+      "src": "calma-icon-512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": "/",
+  "start_url": "/?v=2",
   "display": "standalone",
   "theme_color": "#3E2723",
   "background_color": "#3E2723",
