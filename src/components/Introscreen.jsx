@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Coffee, ArrowRight, Shield, Star } from "lucide-react";
+import { ArrowRight, Shield, Star } from "lucide-react";
 
 export default function IntroScreen({ onGetStarted, onAdminLogin }) {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
@@ -368,60 +368,26 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             </span>
           </div>
 
-          {/* Logo with steam */}
+          {/* Logo badge - stands alone since it already contains the name + tagline */}
           <div
             style={{
               display: "flex",
-              alignItems: "center",
               justifyContent: "center",
-              gap: 10,
-              margin: "10px 0 6px",
-              position: "relative",
+              margin: "6px 0 14px",
             }}
           >
-            <div style={{ position: "relative" }}>
-              <Coffee size={26} color="#241A12" />
-              {/* Mini steam from cup */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: -8,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  width: 8,
-                  height: 12,
-                  background: "linear-gradient(180deg, rgba(178,58,30,0.15), transparent)",
-                  borderRadius: "50%",
-                  filter: "blur(2px)",
-                  animation: "miniSteam 1.5s ease-out infinite",
-                }}
-              />
-            </div>
-            <h1
+            <img
+              src="/logo192.png"
+              alt="Calma Cafe"
               style={{
-                fontFamily: "'Space Mono', monospace",
-                fontWeight: 700,
-                fontSize: "clamp(24px, 7vw, 30px)",
-                letterSpacing: 2,
-                color: "#241A12",
-                margin: 0,
-                textTransform: "uppercase",
+                width: 108,
+                height: 108,
+                objectFit: "contain",
+                display: "block",
+                borderRadius: "50%",
+                boxShadow: "0 4px 14px rgba(36,26,18,0.25)",
               }}
-            >
-              Calma Cafe
-            </h1>
-          </div>
-
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: 12,
-              color: "#5C5140",
-              marginBottom: 18,
-              lineHeight: 1.6,
-            }}
-          >
-            iced coffee, no line, no wait
+            />
           </div>
 
           <div style={{ borderTop: "1.5px dashed #C9BB9E", marginBottom: 16 }} />
