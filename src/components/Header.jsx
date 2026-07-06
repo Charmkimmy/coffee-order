@@ -1,17 +1,17 @@
 import React from "react";
 import { ShoppingBag, ArrowLeft, ShoppingCart } from "lucide-react";
 
-const CalmaLogo = ({ size = 28 }) => (
-  <div
-    style={{
-      width: size,
-      height: size,
+const CalmaLogo = ({ size = 40 }) => (
+  <img 
+    src="/logo192.png" 
+    alt="Calma Cafe" 
+    width={size} 
+    height={size} 
+    style={{ 
+      objectFit: 'contain',
       borderRadius: '50%',
-      backgroundImage: 'url(/logo192.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      border: '2px solid #D8A15C', // gold border matching your brand
     }}
+
   />
 );
 
