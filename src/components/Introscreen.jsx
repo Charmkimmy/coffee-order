@@ -377,7 +377,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             }}
           >
             <img
-              src="/logo192.png"
+              src="/logo512.png"
               alt="Calma Cafe"
               style={{
                 width: 108,
