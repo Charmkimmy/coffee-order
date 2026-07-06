@@ -373,21 +373,43 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             style={{
               display: "flex",
               justifyContent: "center",
-              margin: "6px 0 14px",
+              margin: "6px 0 16px",
             }}
           >
-            <img
-              src="/logo512.png"
-              alt="Calma Cafe"
+            <div
               style={{
-                width: 108,
-                height: 108,
-                objectFit: "contain",
-                display: "block",
-                borderRadius: "50%",
-                boxShadow: "0 4px 14px rgba(36,26,18,0.25)",
+                position: "relative",
+                width: 116,
+                height: 116,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transform: "rotate(-2deg)",
               }}
-            />
+            >
+              {/* dashed ring echoing the ticket's dashed dividers */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: "50%",
+                  border: "1.5px dashed #C9BB9E",
+                }}
+              />
+              <img
+                src="/logo512.png"
+                alt="Calma Cafe"
+                style={{
+                  width: 96,
+                  height: 96,
+                  objectFit: "contain",
+                  display: "block",
+                  borderRadius: "50%",
+                  boxShadow: "0 6px 16px rgba(36,26,18,0.28)",
+                  border: "2px solid #FCFAF5",
+                }}
+              />
+            </div>
           </div>
 
           <div style={{ borderTop: "1.5px dashed #C9BB9E", marginBottom: 16 }} />
