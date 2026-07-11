@@ -33,9 +33,9 @@ export default function OrderColumn({
     }
   };
 
-  const handlePayMayaConfirm = () => {
+  const handlePayMayaConfirm = (paymentData = {}) => {
     setShowPayMayaModal(false);
-    onPlaceOrder();
+    onPlaceOrder(paymentData);
   };
 
   return (
