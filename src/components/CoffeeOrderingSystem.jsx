@@ -46,26 +46,29 @@ export default function CoffeeOrderingSystem({ onBack }) {
   );
 
   const itemCount = useMemo(() => cart.reduce((s, c) => s + c.qty, 0), [cart]);
-  const placeOrder = () => {
-  if (cart.length === 0 || !payment || !customerName.trim()) return;
-  
-  const orderNo = Math.floor(100 + Math.random() * 900);
-  const orderData = {
-    orderNo,
-    items: [...cart],
-    total,
-    payment,
-    customerName: customerName.trim(),
-    notes: orderNotes.trim(),
-  };
 
-  addOrder(orderData);
-  setOrderPlaced({
-    ...orderData,
-    time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-  });
-  setShowCart(false);
-};
+  const placeOrder = (paymentData = {}) => {
+    if (cart.length === 0 || !payment || !customerName.trim()) return;
+
+    const orderNo = Math.floor(100 + Math.random() * 900);
+    const orderData = {
+      orderNo,
+      items: [...cart],
+      total,
+      payment,
+      customerName: customerName.trim(),
+      notes: orderNotes.trim(),
+      referenceNo: paymentData.referenceNo || null,
+      verified: !!paymentData.referenceNo,
+    };
+
+    addOrder(orderData);
+    setOrderPlaced({
+      ...orderData,
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    });
+    setShowCart(false);
+  };
 
   const newOrder = () => {
     setCart([]);
