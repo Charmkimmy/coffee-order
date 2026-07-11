@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ArrowRight, Shield } from "lucide-react";
+
 export default function IntroScreen({ onGetStarted, onAdminLogin }) {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminCode, setAdminCode] = useState("");
@@ -41,7 +42,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
   const steps = [
     { label: "Choose your drink", note: "5 flavors on tap" },
     { label: "Pick your size", note: "16oz or 22oz" },
-    { label: "Pay & enjoy", note: "Cash · Maya" },
+    { label: "Pay & enjoy", note: "Cash · InstaPay" },
   ];
 
   return (
@@ -191,49 +192,33 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
 
         .beanito-header { text-align: center; margin-bottom: clamp(20px, 5vw, 32px); position: relative; z-index: 2; }
 
+        /* LOGO: No circular clipping — show full image */
         .beanito-badge {
-          width: clamp(120px, 32vw, 160px);
-          height: clamp(120px, 32vw, 160px);
+          width: clamp(160px, 45vw, 240px);
+          height: auto;
           margin: 0 auto 18px;
-          border-radius: 50%;
           position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
         }
 
-        .beanito-badge-ring-outer {
-          position: absolute;
-          inset: 0;
-          border-radius: 50%;
-          border: 1px solid rgba(245,230,200,0.35);
-        }
-
-        .beanito-badge-ring-inner {
-          position: absolute;
-          inset: 6px;
-          border-radius: 50%;
-          border: 2px solid #F5E6C8;
-        }
-          .beanito-badge {
-          width: clamp(160px, 42vw, 220px);   /* bigger badge */
-          height: clamp(160px, 42vw, 220px);
-          margin: 0 auto 18px;
-          border-radius: 50%;
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: visible;       /* allow image to spill out slightly */
-          }
-          .beanito-badge-img {
-          width: 120%;               /* larger than container */
-          height: 120%;
+        .beanito-badge-img {
+          width: 100%;
+          height: auto;
           object-fit: contain;
           display: block;
-          position: relative;
-          top: 10%;                  /* shift down to center the circle part */
-          }
+          border-radius: 16px;  /* soft rounded corners, not a circle */
+        }
+
+        /* Optional: subtle ring behind the logo */
+        .beanito-badge-ring-outer {
+          position: absolute;
+          inset: -8px;
+          border-radius: 24px;
+          border: 1px solid rgba(245,230,200,0.2);
+          pointer-events: none;
+        }
 
         .beanito-wordmark {
           font-size: clamp(28px, 8vw, 38px);
@@ -402,11 +387,10 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
         )}
       </div>
 
-      {/* Header / logo */}
+      {/* Header / logo — NO circular rings, show full logo */}
       <div className="beanito-header">
         <div className="beanito-badge">
           <div className="beanito-badge-ring-outer" />
-          <div className="beanito-badge-ring-inner" />
           <img src="/beanito.png" alt="Beanito Coffee Shop" className="beanito-badge-img" />
         </div>
 
