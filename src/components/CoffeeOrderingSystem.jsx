@@ -76,20 +76,113 @@ export default function CoffeeOrderingSystem({ onBack }) {
   };
 
   return (
-    <div
-      style={{
-        fontFamily: "'Public Sans', sans-serif",
-        background: "#F2E9D8",
-        backgroundImage:
-          "radial-gradient(#E4D7BC 1px, transparent 1px), radial-gradient(#E4D7BC 1px, transparent 1px)",
-        backgroundSize: "24px 24px",
-        backgroundPosition: "0 0, 12px 12px",
-        minHeight: "100vh",
-        color: "#241A12",
-        padding: "0",
-        overflow: "hidden",
-      }}
-    >
+    <div className="calma-cos">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+        .calma-cos {
+          font-family: 'Montserrat', sans-serif;
+          background: #0B0805;
+          background-image: radial-gradient(rgba(198,162,101,0.10) 1px, transparent 1px);
+          background-size: 22px 22px;
+          min-height: 100dvh;
+          color: #F2EAD9;
+          overflow-x: hidden;
+        }
+
+        .calma-size-label {
+          font-size: 11px;
+          font-family: 'Montserrat', sans-serif;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          color: #8A7554;
+        }
+
+        .calma-size-toggle {
+          display: flex;
+          background: rgba(198,162,101,0.08);
+          border: 1px solid rgba(198,162,101,0.18);
+          border-radius: 999px;
+          padding: 4px;
+          gap: 4px;
+        }
+
+        .calma-size-btn {
+          border: none;
+          padding: 7px 18px;
+          border-radius: 999px;
+          font-size: 12px;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+          cursor: pointer;
+          min-height: 32px;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        .calma-divider {
+          border-top: 1px solid rgba(198,162,101,0.18);
+          margin-bottom: 18px;
+        }
+
+        .calma-panel {
+          background: #100A06;
+          border-left: 1px solid rgba(198,162,101,0.18);
+        }
+
+        .calma-cart-panel {
+          background: #0B0805;
+          box-shadow: -4px 0 24px rgba(0,0,0,0.45);
+        }
+
+        .calma-cart-backdrop {
+          background: rgba(0,0,0,0.6);
+        }
+
+        .calma-cart-fab {
+          background: #C6A265;
+          color: #0B0805;
+          border: none;
+          border-radius: 50%;
+          width: 56px;
+          height: 56px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 4px 16px rgba(198,162,101,0.35);
+          -webkit-tap-highlight-color: transparent;
+          transition: transform 0.15s ease;
+        }
+        .calma-cart-fab:active { transform: scale(0.94); }
+        @media (hover: hover) {
+          .calma-cart-fab:hover { background: #d6b578; }
+        }
+
+        .calma-cart-fab-badge {
+          position: absolute;
+          top: -4px;
+          right: -4px;
+          background: #0B0805;
+          border: 1.5px solid #C6A265;
+          color: #F2EAD9;
+          border-radius: 50%;
+          width: 22px;
+          height: 22px;
+          font-size: 11px;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .calma-panel-lip {
+          height: 6px;
+          background: linear-gradient(90deg, transparent, #C6A265 20%, #C6A265 80%, transparent);
+          opacity: 0.35;
+          flex-shrink: 0;
+        }
+      `}</style>
+
       <Header
         itemCount={itemCount}
         onBack={onBack}
@@ -102,25 +195,16 @@ export default function CoffeeOrderingSystem({ onBack }) {
       <div className="desktop-layout" style={{ display: "grid", gridTemplateColumns: "1fr 340px" }}>
         <div style={{ padding: "24px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-            <span style={{ fontSize: 11, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1.5, color: "#8A7F6C" }}>
-              Size
-            </span>
-            <div style={{ display: "flex", background: "#EFE6D3", borderRadius: 999, padding: 4, gap: 4 }}>
+            <span className="calma-size-label">Size</span>
+            <div className="calma-size-toggle">
               {["16oz", "22oz"].map((s) => (
                 <button
                   key={s}
                   onClick={() => setSize(s)}
-                  className="cos-btn"
+                  className="calma-size-btn cos-btn"
                   style={{
-                    border: "none",
-                    padding: "6px 18px",
-                    borderRadius: 999,
-                    fontSize: 12,
-                    fontFamily: "'Space Mono', monospace",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    background: size === s ? "#241A12" : "transparent",
-                    color: size === s ? "#FCFAF5" : "#5C5140",
+                    background: size === s ? "#C6A265" : "transparent",
+                    color: size === s ? "#0B0805" : "#8A7554",
                   }}
                 >
                   {s}
@@ -128,11 +212,11 @@ export default function CoffeeOrderingSystem({ onBack }) {
               ))}
             </div>
           </div>
-          <div style={{ borderTop: "1.5px dashed #C9BB9E", marginBottom: 18 }} />
+          <div className="calma-divider" />
           <MenuColumn size={size} setSize={setSize} onAddToCart={addToCart} />
         </div>
 
-        <div style={{ position: "sticky", top: 0, background: "#FCFAF5", borderLeft: "1px solid #C9BB9E", minHeight: "600px", padding: "24px 20px" }}>
+        <div className="calma-panel" style={{ position: "sticky", top: 0, minHeight: "600px", padding: "24px 20px" }}>
           <OrderColumn
             cart={cart}
             total={total}
@@ -153,27 +237,18 @@ export default function CoffeeOrderingSystem({ onBack }) {
       </div>
 
       {/* Mobile: Menu always visible, cart slides from right */}
-      <div className="mobile-layout" style={{ position: "relative", padding: "16px", paddingBottom: "80px" }}>
+      <div className="mobile-layout" style={{ position: "relative", padding: "16px", paddingBottom: "max(80px, calc(64px + env(safe-area-inset-bottom)))" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-          <span style={{ fontSize: 11, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1.5, color: "#8A7F6C" }}>
-            Size
-          </span>
-          <div style={{ display: "flex", background: "#EFE6D3", borderRadius: 999, padding: 4, gap: 4 }}>
+          <span className="calma-size-label">Size</span>
+          <div className="calma-size-toggle">
             {["16oz", "22oz"].map((s) => (
               <button
                 key={s}
                 onClick={() => setSize(s)}
-                className="cos-btn"
+                className="calma-size-btn cos-btn"
                 style={{
-                  border: "none",
-                  padding: "6px 18px",
-                  borderRadius: 999,
-                  fontSize: 12,
-                  fontFamily: "'Space Mono', monospace",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  background: size === s ? "#241A12" : "transparent",
-                  color: size === s ? "#FCFAF5" : "#5C5140",
+                  background: size === s ? "#C6A265" : "transparent",
+                  color: size === s ? "#0B0805" : "#8A7554",
                 }}
               >
                 {s}
@@ -181,7 +256,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
             ))}
           </div>
         </div>
-        <div style={{ borderTop: "1.5px dashed #C9BB9E", marginBottom: 18 }} />
+        <div className="calma-divider" />
         <MenuColumn size={size} setSize={setSize} onAddToCart={addToCart} />
       </div>
 
@@ -189,7 +264,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
       {showCart && (
         <>
           <div
-            className="mobile-cart-backdrop"
+            className="mobile-cart-backdrop calma-cart-backdrop"
             onClick={() => setShowCart(false)}
             style={{
               position: "fixed",
@@ -197,12 +272,11 @@ export default function CoffeeOrderingSystem({ onBack }) {
               left: 0,
               right: 0,
               bottom: 0,
-              background: "rgba(43, 27, 18, 0.5)",
               zIndex: 150,
             }}
           />
           <div
-            className="mobile-cart-panel"
+            className="mobile-cart-panel calma-cart-panel"
             style={{
               position: "fixed",
               top: 0,
@@ -210,26 +284,19 @@ export default function CoffeeOrderingSystem({ onBack }) {
               bottom: 0,
               width: "85%",
               maxWidth: 380,
-              background: "#FCFAF5",
               zIndex: 200,
-              boxShadow: "-4px 0 20px rgba(0,0,0,0.15)",
               display: "flex",
               flexDirection: "column",
             }}
           >
+            <div className="calma-panel-lip" />
             <div
               style={{
-                height: 10,
-                flexShrink: 0,
-                backgroundImage:
-                  "linear-gradient(135deg, #FCFAF5 50%, transparent 50%), linear-gradient(-135deg, #FCFAF5 50%, transparent 50%)",
-                backgroundSize: "16px 16px",
-                backgroundRepeat: "repeat-x",
-                backgroundPosition: "bottom",
-                backgroundColor: "#F2E9D8",
+                padding: "20px 20px max(20px, env(safe-area-inset-bottom))",
+                flex: 1,
+                overflowY: "auto",
               }}
-            />
-            <div style={{ padding: "20px", flex: 1, overflowY: "auto" }}>
+            >
               <OrderColumn
                 cart={cart}
                 total={total}
@@ -256,22 +323,11 @@ export default function CoffeeOrderingSystem({ onBack }) {
       {itemCount > 0 && !showCart && (
         <button
           onClick={() => setShowCart(true)}
-          className="mobile-cart-fab cos-btn"
+          className="mobile-cart-fab calma-cart-fab cos-btn"
           style={{
             position: "fixed",
-            bottom: 20,
+            bottom: "max(20px, calc(12px + env(safe-area-inset-bottom)))",
             right: 20,
-            background: "#B23A1E",
-            color: "#FFF",
-            border: "none",
-            borderRadius: 50,
-            width: 56,
-            height: 56,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            boxShadow: "0 4px 12px rgba(178, 58, 30, 0.35)",
             zIndex: 100,
           }}
         >
@@ -280,25 +336,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
             <circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
           </svg>
-          <span
-            style={{
-              position: "absolute",
-              top: -4,
-              right: -4,
-              background: "#241A12",
-              color: "#FFF",
-              borderRadius: "50%",
-              width: 22,
-              height: 22,
-              fontSize: 11,
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {itemCount}
-          </span>
+          <span className="calma-cart-fab-badge">{itemCount}</span>
         </button>
       )}
     </div>
