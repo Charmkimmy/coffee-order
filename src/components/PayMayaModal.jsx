@@ -1,17 +1,24 @@
 import React, { useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import { X, Smartphone, Copy, CheckCircle, Camera, ShieldCheck, AlertCircle, Download, Upload } from "lucide-react";
+import { X, Smartphone, Copy, CheckCircle, Camera, ShieldCheck, AlertCircle, Download, Upload, Ban } from "lucide-react";
 import { peso } from "../utils/format";
 
 const OWNER_PHONE = "09493008592";
 const OWNER_NAME = "ALLAN SEPNO";
 
-export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
+export default function PayMayaModal({ 
+  total, 
+  onClose, 
+  onConfirmPayment,
+  onCancelOrder,
+  orderStatus,
+  existingReferenceNo,
+}) {
   const [copied, setCopied] = useState(false);
-  const [referenceNo, setReferenceNo] = useState("");
+  const [referenceNo, setReferenceNo] = useState(existingReferenceNo || "");
   const [screenshot, setScreenshot] = useState(null);
   const [screenshotPreview, setScreenshotPreview] = useState(null);
-  const [step, setStep] = useState("pay");
+  const [step, setStep] = useState(orderStatus === "rejected" ? "verify" : "pay");
   const fileInputRef = useRef(null);
 
   const handleCopy = () => {
@@ -31,7 +38,6 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
     const file = e.target.files[0];
     if (!file) return;
     
-    // Validate file type and size
     if (!file.type.startsWith("image/")) {
       alert("Please upload an image file");
       return;
@@ -43,7 +49,6 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
 
     setScreenshot(file);
     
-    // Create preview
     const reader = new FileReader();
     reader.onload = (e) => setScreenshotPreview(e.target.result);
     reader.readAsDataURL(file);
@@ -66,7 +71,8 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
       onConfirmPayment({ 
         referenceNo: referenceNo.trim(),
         screenshot: screenshot,
-        screenshotPreview: screenshotPreview
+        screenshotPreview: screenshotPreview,
+        isResubmit: orderStatus === "rejected",
       });
     }, 1500);
   };
@@ -75,6 +81,11 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
     setStep("pay");
     setReferenceNo("");
     handleRemoveScreenshot();
+  };
+
+  const handleCancelOrder = () => {
+    if (!window.confirm("Cancel this order? This cannot be undone.")) return;
+    onCancelOrder?.();
   };
 
   return createPortal(
@@ -244,6 +255,13 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
           color: #C6A265;
         }
         .calma-maya-btn.secondary:active { background: rgba(198,162,101,0.1); }
+        .calma-maya-btn.danger {
+          background: transparent;
+          border: 1px solid rgba(220, 80, 80, 0.4);
+          color: #DC5050;
+          margin-top: 10px;
+        }
+        .calma-maya-btn.danger:active { background: rgba(220, 80, 80, 0.1); }
         .calma-verify-badge {
           display: flex;
           align-items: center;
@@ -253,6 +271,19 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
           background: rgba(198,162,101,0.08);
           border: 1px solid rgba(198,162,101,0.2);
           margin-bottom: 16px;
+        }
+        .calma-rejection-banner {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          padding: 12px 14px;
+          border-radius: 8px;
+          background: rgba(220, 80, 80, 0.08);
+          border: 1px solid rgba(220, 80, 80, 0.25);
+          margin-bottom: 20px;
+          font-size: 12px;
+          color: #E8A0A0;
+          line-height: 1.5;
         }
         .calma-requirement-list {
           margin-bottom: 16px;
@@ -358,6 +389,17 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
 
         {step === "verify" && (
           <>
+            {/* Rejection banner */}
+            {orderStatus === "rejected" && (
+              <div className="calma-rejection-banner">
+                <AlertCircle size={16} color="#DC5050" style={{ flexShrink: 0, marginTop: 2 }} />
+                <div>
+                  <strong style={{ color: "#F2EAD9" }}>Payment proof rejected</strong>
+                  <div>Your screenshot was invalid or unclear. Please upload a valid payment confirmation.</div>
+                </div>
+              </div>
+            )}
+
             <div style={{ textAlign: "center", marginBottom: 24 }}>
               <div style={{
                 width: 56, height: 56, borderRadius: "50%",
@@ -368,10 +410,12 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
                 <ShieldCheck size={28} color="#C6A265" />
               </div>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#F2EAD9" }}>
-                Verify payment
+                {orderStatus === "rejected" ? "Re-submit proof" : "Verify payment"}
               </div>
               <div style={{ fontSize: 13, color: "#8A7554", marginTop: 4, fontFamily: "'Montserrat', sans-serif" }}>
-                Upload proof of payment for verification
+                {orderStatus === "rejected" 
+                  ? "Upload a valid payment confirmation for re-verification" 
+                  : "Upload proof of payment for verification"}
               </div>
             </div>
 
@@ -382,7 +426,6 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
               </div>
             </div>
 
-            {/* Requirements checklist */}
             <div className="calma-requirement-list">
               <div className={`calma-requirement-item ${referenceNo.length >= 6 ? "met" : ""}`}>
                 <CheckCircle size={14} />
@@ -394,7 +437,6 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
               </div>
             </div>
 
-            {/* Reference Number */}
             <div style={{ marginBottom: 16 }}>
               <div style={{ fontSize: 11, color: "#8A7554", marginBottom: 8, textTransform: "uppercase", letterSpacing: 1, fontFamily: "'Montserrat', sans-serif" }}>
                 InstaPay reference number *
@@ -412,7 +454,6 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
               </div>
             </div>
 
-            {/* Screenshot Upload */}
             <div style={{ marginBottom: 16 }}>
               <div style={{ fontSize: 11, color: "#8A7554", marginBottom: 8, textTransform: "uppercase", letterSpacing: 1, fontFamily: "'Montserrat', sans-serif" }}>
                 Payment screenshot *
@@ -461,12 +502,21 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
               <ShieldCheck size={18} />
               {referenceNo.length < 6 || !screenshot 
                 ? "Complete all requirements above" 
-                : "Submit for verification"}
+                : orderStatus === "rejected" 
+                  ? "Re-submit for verification" 
+                  : "Submit for verification"}
             </button>
 
             <button onClick={handleBackToPay} className="calma-maya-btn secondary cos-btn">
               Back to QR
             </button>
+
+            {onCancelOrder && (
+              <button onClick={handleCancelOrder} className="calma-maya-btn danger cos-btn">
+                <Ban size={16} />
+                Cancel Order
+              </button>
+            )}
           </>
         )}
 
@@ -482,7 +532,7 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
               <CheckCircle size={32} color="#7FAE68" />
             </div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#F2EAD9" }}>
-              Payment submitted
+              {orderStatus === "rejected" ? "Proof re-submitted" : "Payment submitted"}
             </div>
             <div style={{ fontSize: 13, color: "#8A7554", marginTop: 6, fontFamily: "'Montserrat', sans-serif" }}>
               Ref: {referenceNo}
