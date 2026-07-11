@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Smartphone, Copy, CheckCircle, Camera, ShieldCheck, AlertCircle } from "lucide-react";
+import { X, Smartphone, Copy, CheckCircle, Camera, ShieldCheck, AlertCircle, Download } from "lucide-react";
 import { peso } from "../utils/format";
 
 const OWNER_PHONE = "09493008592";
@@ -15,6 +15,13 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
     navigator.clipboard.writeText(OWNER_PHONE);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSaveQR = () => {
+    const link = document.createElement("a");
+    link.href = "/QR.jpg";
+    link.download = "instapay-qr-allan-sepno.jpg";
+    link.click();
   };
 
   const handlePaidClick = () => {
@@ -77,7 +84,7 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
           flex-direction: column;
           align-items: center;
           gap: 10px;
-          margin-bottom: 20px;
+          margin-bottom: 16px;
         }
         .calma-maya-qr {
           width: 220px;
@@ -92,6 +99,21 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
           align-items: center;
           gap: 6px;
         }
+        .calma-save-qr-btn {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 14px;
+          border-radius: 6px;
+          border: 1px solid rgba(198,162,101,0.3);
+          background: rgba(198,162,101,0.06);
+          color: #C6A265;
+          font-size: 11px;
+          font-family: 'Montserrat', sans-serif;
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .calma-save-qr-btn:active { background: rgba(198,162,101,0.12); }
         .calma-ref-input {
           width: 100%;
           padding: 12px 14px;
@@ -208,6 +230,10 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
                 <Camera size={12} />
                 Open your camera or bank app to scan
               </div>
+              <button onClick={handleSaveQR} className="calma-save-qr-btn cos-btn">
+                <Download size={12} />
+                Save QR to gallery
+              </button>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
