@@ -48,7 +48,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
   return (
     <div className="beanito-intro">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Montserrat:wght@400;500;600;700&display=swap');
 
         .beanito-intro * { box-sizing: border-box; }
 
@@ -216,6 +216,12 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           display: block;
           border-radius: 18px;
           filter: drop-shadow(0 0 26px rgba(230,166,84,0.22));
+          animation: badgeFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes badgeFloat {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
         }
 
         /* Faint warm ring, like the glow bleeding past the sign's edge */
@@ -227,21 +233,61 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           pointer-events: none;
         }
 
+        /* Three rising wisps, echoing the beans/steam curling above the cup in the mark */
+        .beanito-steam { position: absolute; top: -6px; left: 0; right: 0; height: 40px; pointer-events: none; z-index: 3; }
+
+        .beanito-steam-wisp {
+          position: absolute;
+          bottom: 0;
+          width: 3px;
+          height: 26px;
+          border-radius: 3px;
+          background: linear-gradient(180deg, rgba(240,206,151,0) 0%, rgba(240,206,151,0.55) 45%, rgba(230,166,84,0.35) 100%);
+          transform-origin: bottom center;
+          opacity: 0;
+        }
+        .beanito-steam-wisp.w1 { left: 32%; animation: steamRise 3.4s ease-in-out infinite 0.2s; }
+        .beanito-steam-wisp.w2 { left: 49%; height: 32px; animation: steamRise 3.8s ease-in-out infinite 1.1s; }
+        .beanito-steam-wisp.w3 { left: 66%; animation: steamRise 3.2s ease-in-out infinite 2s; }
+
+        @keyframes steamRise {
+          0% { transform: translateY(4px) scaleY(0.7) rotate(0deg); opacity: 0; }
+          20% { opacity: 0.7; }
+          55% { opacity: 0.4; transform: translateY(-14px) scaleY(1.1) rotate(-3deg); }
+          100% { transform: translateY(-30px) scaleY(1.25) rotate(3deg); opacity: 0; }
+        }
+
         .beanito-wordmark {
-          font-size: clamp(40px, 12vw, 58px);
-          line-height: 1.15;
+          font-size: clamp(48px, 14vw, 68px);
+          line-height: 1.05;
           letter-spacing: 0.5px;
-          margin-bottom: 6px;
-          font-family: 'Kaushan Script', cursive;
+          margin-bottom: 4px;
+          font-family: 'Grand Hotel', cursive;
           font-weight: 400;
           color: #F0CE97;
           text-shadow: 0 0 14px rgba(230,166,84,0.55), 0 0 34px rgba(200,130,50,0.28);
-          animation: signFlicker 4.5s ease-in-out infinite;
+          animation: neonIgnite 1.8s ease-out 1, signBreathe 4.5s ease-in-out infinite 1.8s;
         }
 
-        @keyframes signFlicker {
+        @keyframes neonIgnite {
+          0% { opacity: 0; text-shadow: none; }
+          4% { opacity: 1; text-shadow: none; }
+          8% { opacity: 0.25; }
+          13% { opacity: 1; text-shadow: 0 0 6px rgba(230,166,84,0.3); }
+          21% { opacity: 0.3; text-shadow: none; }
+          28% { opacity: 1; text-shadow: 0 0 10px rgba(230,166,84,0.4); }
+          38% { opacity: 0.6; text-shadow: 0 0 4px rgba(230,166,84,0.2); }
+          46% { opacity: 1; text-shadow: 0 0 14px rgba(230,166,84,0.55), 0 0 34px rgba(200,130,50,0.28); }
+          100% { opacity: 1; text-shadow: 0 0 14px rgba(230,166,84,0.55), 0 0 34px rgba(200,130,50,0.28); }
+        }
+
+        @keyframes signBreathe {
           0%, 100% { text-shadow: 0 0 14px rgba(230,166,84,0.55), 0 0 34px rgba(200,130,50,0.28); }
-          50% { text-shadow: 0 0 18px rgba(230,166,84,0.7), 0 0 42px rgba(200,130,50,0.36); }
+          50% { text-shadow: 0 0 20px rgba(230,166,84,0.75), 0 0 44px rgba(200,130,50,0.4); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .beanito-badge-img, .beanito-steam-wisp, .beanito-wordmark, .beanito-glow-top { animation: none !important; }
         }
 
         .beanito-tagline {
@@ -301,7 +347,8 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
 
         .beanito-step-label {
           font-size: 15px;
-          font-weight: 600;
+          font-weight: 500;
+          font-style: italic;
           color: #F2EAD9;
           font-family: 'Fraunces', serif;
           margin-bottom: 2px;
@@ -405,6 +452,11 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
       <div className="beanito-header">
         <div className="beanito-badge">
           <div className="beanito-badge-ring-outer" />
+          <div className="beanito-steam">
+            <span className="beanito-steam-wisp w1" />
+            <span className="beanito-steam-wisp w2" />
+            <span className="beanito-steam-wisp w3" />
+          </div>
           <img src="/beanito.png" alt="Beanito Coffee Shop" className="beanito-badge-img" />
         </div>
 
