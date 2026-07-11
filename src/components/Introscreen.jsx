@@ -51,7 +51,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
   const steps = [
     { label: "Choose your drink", note: "5 flavors on tap" },
     { label: "Pick your size", note: "16oz or 22oz" },
-    { label: "Pay & enjoy", note: "Cash · GCash" },
+    { label: "Pay & enjoy", note: "Cash · Maya" },
   ];
 
   return (

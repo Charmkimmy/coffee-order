@@ -3,14 +3,14 @@ import { createPortal } from "react-dom";
 import { X, Smartphone, Copy, CheckCircle, QrCode } from "lucide-react";
 import { peso } from "../utils/format";
 
-const OWNER_GCASH_NUMBER = "0968-304-5499";
-const OWNER_GCASH_NAME = "REALYN RILE";
-export default function GCashModal({ total, onClose, onConfirmPayment }) {
+const OWNER_MAYA_NUMBER = "0968-304-5499";
+const OWNER_MAYA_NAME = "REALYN RILE";
+export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
   const [copied, setCopied] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(OWNER_GCASH_NUMBER);
+    navigator.clipboard.writeText(OWNER_MAYA_NUMBER);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -23,9 +23,9 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
   };
 
   return createPortal(
-    <div className="calma-gcash-overlay">
+    <div className="calma-maya-overlay">
       <style>{`
-        .calma-gcash-overlay {
+        .calma-maya-overlay {
           position: fixed;
           top: 0;
           left: 0;
@@ -39,7 +39,7 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
           padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
         }
 
-        .calma-gcash-card {
+        .calma-maya-card {
           background: #100A06;
           border: 1px solid rgba(198,162,101,0.2);
           border-radius: 16px;
@@ -52,7 +52,7 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
           box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
 
-        .calma-gcash-close {
+        .calma-maya-close {
           position: absolute;
           top: 16px;
           right: 16px;
@@ -63,9 +63,9 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
           padding: 6px;
           -webkit-tap-highlight-color: transparent;
         }
-        .calma-gcash-close:active { color: #C6A265; }
+        .calma-maya-close:active { color: #C6A265; }
 
-        .calma-gcash-copy {
+        .calma-maya-copy {
           margin-top: 10px;
           display: inline-flex;
           align-items: center;
@@ -78,24 +78,24 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
           -webkit-tap-highlight-color: transparent;
           min-height: 36px;
         }
-        .calma-gcash-copy.copied {
+        .calma-maya-copy.copied {
           background: rgba(127,174,104,0.12);
           border: 1px solid #7FAE68;
           color: #7FAE68;
         }
-        .calma-gcash-copy.idle {
+        .calma-maya-copy.idle {
           background: rgba(198,162,101,0.06);
           border: 1px solid rgba(198,162,101,0.3);
           color: #C9BB9E;
         }
 
-        .calma-gcash-confirm {
+        .calma-maya-confirm {
           width: 100%;
           padding: 14px;
           border-radius: 10px;
           border: none;
-          background: #0070E0;
-          color: #FFF;
+          background: #4FBF3F;
+          color: #0B0805;
           font-size: 14px;
           font-weight: 700;
           cursor: pointer;
@@ -106,12 +106,12 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
           min-height: 48px;
           -webkit-tap-highlight-color: transparent;
         }
-        .calma-gcash-confirm:active { background: #005bb8; }
+        .calma-maya-confirm:active { background: #45a838; }
       `}</style>
 
-      <div className="calma-gcash-card">
+      <div className="calma-maya-card">
         {/* Close button */}
-        <button onClick={onClose} className="calma-gcash-close">
+        <button onClick={onClose} className="calma-maya-close">
           <X size={20} />
         </button>
 
@@ -124,17 +124,17 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
                   width: 56,
                   height: 56,
                   borderRadius: "50%",
-                  background: "#0070E0",
+                  background: "#4FBF3F",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   margin: "0 auto 12px",
                 }}
               >
-                <Smartphone size={28} color="#FFF" />
+                <Smartphone size={28} color="#0B0805" />
               </div>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#F2EAD9" }}>
-                GCash payment
+                Maya payment
               </div>
               <div style={{ fontSize: 13, color: "#8A7554", marginTop: 4, fontFamily: "'Montserrat', sans-serif" }}>
                 Scan QR or send to number
@@ -154,7 +154,7 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
             >
               <QrCode size={80} color="#C6A265" style={{ marginBottom: 12 }} />
               <div style={{ fontSize: 12, color: "#8A7554", fontFamily: "'Montserrat', sans-serif" }}>
-                [Owner's GCash QR]
+                [Owner's Maya QR]
               </div>
             </div>
 
@@ -165,7 +165,7 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
               <div style={{ flex: 1, height: 1, background: "rgba(198,162,101,0.2)" }}></div>
             </div>
 
-            {/* GCash Number */}
+            {/* Maya Number */}
             <div
               style={{
                 background: "rgba(198,162,101,0.04)",
@@ -177,13 +177,13 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
               }}
             >
               <div style={{ fontSize: 11, color: "#8A7554", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1, fontFamily: "'Montserrat', sans-serif" }}>
-                Send to GCash number
+                Send to Maya number
               </div>
               <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 22, fontWeight: 700, color: "#F2EAD9", marginBottom: 4 }}>
-                {OWNER_GCASH_NUMBER}
+                {OWNER_MAYA_NUMBER}
               </div>
-              <div style={{ fontSize: 12, color: "#8A7554", fontFamily: "'Montserrat', sans-serif" }}>{OWNER_GCASH_NAME}</div>
-              <button onClick={handleCopy} className={`calma-gcash-copy cos-btn ${copied ? "copied" : "idle"}`}>
+              <div style={{ fontSize: 12, color: "#8A7554", fontFamily: "'Montserrat', sans-serif" }}>{OWNER_MAYA_NAME}</div>
+              <button onClick={handleCopy} className={`calma-maya-copy cos-btn ${copied ? "copied" : "idle"}`}>
                 {copied ? <CheckCircle size={14} /> : <Copy size={14} />}
                 {copied ? "Copied!" : "Copy number"}
               </button>
@@ -210,9 +210,9 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
             </div>
 
             {/* Confirm Button */}
-            <button onClick={handleConfirm} className="calma-gcash-confirm cos-btn">
+            <button onClick={handleConfirm} className="calma-maya-confirm cos-btn">
               <CheckCircle size={18} />
-              I've paid via GCash
+              I've paid via Maya
             </button>
             <div style={{ textAlign: "center", marginTop: 10, fontSize: 11, color: "#5C4E3C", fontFamily: "'Montserrat', sans-serif" }}>
               Tap confirm after sending payment

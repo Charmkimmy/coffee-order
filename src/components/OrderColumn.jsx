@@ -3,7 +3,7 @@ import { Minus, Plus, Trash2, Check, X, User, FileText } from "lucide-react";
 import { PAYMENTS } from "../data/payments";
 import { peso } from "../utils/format";
 import OrderReceipt from "./OrderReceipt";
-import GCashModal from "./GCashModal";
+import PayMayaModal from "./PayMayaModal";
 
 export default function OrderColumn({
   cart,
@@ -22,19 +22,19 @@ export default function OrderColumn({
   isMobile,
   onCloseCart,
 }) {
-  const [showGCashModal, setShowGCashModal] = useState(false);
+  const [showPayMayaModal, setShowPayMayaModal] = useState(false);
 
   const handlePlaceOrder = () => {
     if (cart.length === 0 || !payment || !customerName.trim()) return;
-    if (payment === "gcash") {
-      setShowGCashModal(true);
+    if (payment === "paymaya") {
+      setShowPayMayaModal(true);
     } else {
       onPlaceOrder();
     }
   };
 
-  const handleGCashConfirm = () => {
-    setShowGCashModal(false);
+  const handlePayMayaConfirm = () => {
+    setShowPayMayaModal(false);
     onPlaceOrder();
   };
 
@@ -303,7 +303,7 @@ export default function OrderColumn({
                 : !payment
                 ? "Choose a payment method"
                 : payment === "paymaya"
-                ? `Pay with PayMaya · ${peso(total)}`
+                ? `Pay with Maya · ${peso(total)}`
                 : `Place order · ${peso(total)}`}
             </button>
           </>
@@ -312,8 +312,8 @@ export default function OrderColumn({
         )}
       </div>
 
-      {showGCashModal && (
-        <GCashModal total={total} onClose={() => setShowGCashModal(false)} onConfirmPayment={handleGCashConfirm} />
+      {showPayMayaModal && (
+        <PayMayaModal total={total} onClose={() => setShowPayMayaModal(false)} onConfirmPayment={handlePayMayaConfirm} />
       )}
     </>
   );
