@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Minus, Plus, Trash2, Check, X, User, FileText, Clock, AlertCircle, CheckCircle, Ban, Upload } from "lucide-react";
-import { PAYMENTS } from "../data/payments";
+import { Minus, Plus, Trash2, Check, X, User, FileText, Clock, AlertCircle, Ban, Upload } from "lucide-react";import { PAYMENTS } from "../data/payments";
 import { peso } from "../utils/format";
 import OrderReceipt from "./OrderReceipt";
 import PayMayaModal from "./PayMayaModal";
