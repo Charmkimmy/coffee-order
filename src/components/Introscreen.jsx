@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { ArrowRight, Shield } from "lucide-react";
-
-/**
- * BEANITO COFFEE SHOP — Intro Screen
- * Palette pulled from the neon logo:
- *   - Dark charcoal ground     #1A1A1A / #0D0D0D
- *   - Warm cream neon text     #F5E6C8
- *   - Soft gold accent         #D4A574
- *   - Muted bronze             #8B7355
- *   - Coffee brown             #4A3728
- */
 export default function IntroScreen({ onGetStarted, onAdminLogin }) {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminCode, setAdminCode] = useState("");
@@ -225,14 +215,16 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           border-radius: 50%;
           border: 2px solid #F5E6C8;
         }
-
-        .beanito-badge-img {
-          width: calc(100% - 20px);
-          height: calc(100% - 20px);
-          border-radius: 50%;
-          object-fit: cover;
-          display: block;
-        }
+          .beanito-badge {
+           width: clamp(140px, 36vw, 180px);   /* was 120px-160px */
+           height: clamp(140px, 36vw, 180px);
+           margin: 0 auto 18px;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center
+            }
 
         .beanito-wordmark {
           font-size: clamp(28px, 8vw, 38px);
