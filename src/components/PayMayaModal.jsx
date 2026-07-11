@@ -249,3 +249,4 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
     document.body
   );
 }
+
