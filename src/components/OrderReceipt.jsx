@@ -4,7 +4,7 @@ import { PAYMENTS } from "../data/payments";
 import { peso } from "../utils/format";
 
 export default function OrderReceipt({ orderPlaced, onNewOrder }) {
-  // Don't show receipt for unverified Maya payments
+  // Safety: don't show receipt for unverified Maya payments
   if (orderPlaced.payment === "paymaya" && orderPlaced.status !== "confirmed") {
     return null;
   }
