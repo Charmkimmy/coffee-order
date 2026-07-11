@@ -8,6 +8,7 @@ import {
   query,
   orderBy,
   serverTimestamp,
+  updateDoc, // ← ADD THIS
 } from "firebase/firestore";
 import { db } from "../firebase/config";
 
@@ -54,6 +55,15 @@ export function useFirebaseOrders() {
 
     const docRef = await addDoc(collection(db, ORDERS_COLLECTION), newOrder);
     return { id: docRef.id, ...newOrder };
+  }, []);
+
+  // ← ADD THIS FUNCTION
+  const editOrder = useCallback(async (orderId, updates) => {
+    const orderRef = doc(db, ORDERS_COLLECTION, orderId);
+    await updateDoc(orderRef, {
+      ...updates,
+      updatedAt: serverTimestamp(),
+    });
   }, []);
 
   const deleteOrder = useCallback(async (orderId) => {
@@ -103,6 +113,7 @@ export function useFirebaseOrders() {
     orderHistory,
     loading,
     addOrder,
+    editOrder,      // ← ADD THIS
     deleteOrder,
     clearHistory,
     dailyTotals,
