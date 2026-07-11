@@ -33,7 +33,7 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
   return (
     <div className="beanito-header-wrap" style={{ position: "sticky", top: 0, zIndex: 50 }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Montserrat:wght@400;500;600;700&display=swap');
 
         .beanito-header-bar {
           background: #0B0805;
@@ -89,8 +89,8 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
             <div>
               <div
                 style={{
-                  fontFamily: "'Kaushan Script', cursive",
-                  fontSize: 22,
+                  fontFamily: "'Grand Hotel', cursive",
+                  fontSize: 27,
                   fontWeight: 400,
                   letterSpacing: 0.3,
                   color: "#F0CE97",

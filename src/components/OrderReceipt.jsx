@@ -12,7 +12,7 @@ export default function OrderReceipt({ orderPlaced, onNewOrder }) {
   return (
     <div className="beanito-receipt" style={{ textAlign: "center", padding: "6px 0" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Montserrat:wght@400;500;600;700&display=swap');
 
         .beanito-receipt-newbtn {
           width: 100%;
@@ -62,7 +62,7 @@ export default function OrderReceipt({ orderPlaced, onNewOrder }) {
       >
         <Check size={26} color="#7FAE68" strokeWidth={3} />
       </div>
-      <div style={{ fontFamily: "'Kaushan Script', cursive", fontSize: 28, fontWeight: 400, color: "#F0CE97", textShadow: "0 0 10px rgba(230,166,84,0.4)" }}>
+      <div style={{ fontFamily: "'Grand Hotel', cursive", fontSize: 32, fontWeight: 400, color: "#F0CE97", textShadow: "0 0 10px rgba(230,166,84,0.4)" }}>
         Order placed
       </div>
       <div style={{ fontSize: 11, fontFamily: "'Montserrat', sans-serif", color: "#8A7554", marginBottom: 16, letterSpacing: 0.5, marginTop: 4 }}>
