@@ -40,45 +40,163 @@ export default function OrderColumn({
 
   return (
     <>
-      <div style={{ width: "100%" }}>
+      <style>{`
+        .calma-oc * { box-sizing: border-box; }
+
+        .calma-oc-input {
+          width: 100%;
+          padding: 12px 14px;
+          border-radius: 6px;
+          background: rgba(198,162,101,0.06);
+          font-size: 16px;
+          font-family: 'Montserrat', sans-serif;
+          color: #F2EAD9;
+          outline: none;
+        }
+        .calma-oc-input::placeholder { color: #5C4E3C; }
+        .calma-oc-input.filled { border: 1.5px solid #C6A265; }
+        .calma-oc-input.empty { border: 1px solid rgba(198,162,101,0.25); }
+        .calma-oc-input:focus { border-color: #E8D5A3; }
+
+        .calma-qty-btn {
+          border: 1px solid rgba(198,162,101,0.3);
+          background: rgba(198,162,101,0.06);
+          color: #F2EAD9;
+          border-radius: 8px;
+          width: 32px;
+          height: 32px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .calma-qty-btn:active { background: rgba(198,162,101,0.16); }
+        @media (hover: hover) {
+          .calma-qty-btn:hover { border-color: #C6A265; }
+        }
+
+        .calma-remove-btn {
+          border: none;
+          background: none;
+          cursor: pointer;
+          color: #C2453A;
+          margin-left: 4px;
+          padding: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .calma-close-btn {
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: #8A7554;
+          padding: 8px;
+        }
+
+        .calma-payment-btn {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          text-align: left;
+          padding: 12px 14px;
+          border-radius: 6px;
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+          min-height: 44px;
+        }
+        .calma-payment-btn.active {
+          border: 1.5px solid #C6A265;
+          background: rgba(198,162,101,0.1);
+        }
+        .calma-payment-btn.inactive {
+          border: 1px solid rgba(198,162,101,0.25);
+          background: rgba(198,162,101,0.03);
+        }
+
+        .calma-place-order {
+          width: 100%;
+          margin-top: 20px;
+          padding: 16px;
+          border-radius: 8px;
+          border: none;
+          font-size: 14px;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          min-height: 52px;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .calma-place-order.disabled {
+          color: #6b5c46;
+          background: rgba(198,162,101,0.08);
+          cursor: not-allowed;
+        }
+        .calma-place-order.enabled {
+          color: #0B0805;
+          background: #C6A265;
+          cursor: pointer;
+        }
+        @media (hover: hover) {
+          .calma-place-order.enabled:hover { background: #d6b578; }
+        }
+      `}</style>
+
+      <div className="calma-oc" style={{ width: "100%" }}>
         {!orderPlaced ? (
           <>
             {isMobile && onCloseCart && (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 15, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: "#241A12" }}>Your Order</div>
-                <button onClick={onCloseCart} style={{ background: "none", border: "none", cursor: "pointer", color: "#8A7F6C", padding: 4 }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: "#F2EAD9" }}>
+                  Your order
+                </div>
+                <button onClick={onCloseCart} className="calma-close-btn">
                   <X size={20} />
                 </button>
               </div>
             )}
 
             {!isMobile && (
-              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, letterSpacing: 2, color: "#8A7F6C", textTransform: "uppercase", marginBottom: 12, borderBottom: "1px dashed #C9BB9E", paddingBottom: 10 }}>
-                Your Order
+              <div
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: 11,
+                  letterSpacing: 2,
+                  color: "#C6A265",
+                  textTransform: "uppercase",
+                  marginBottom: 12,
+                  borderBottom: "1px solid rgba(198,162,101,0.18)",
+                  paddingBottom: 10,
+                }}
+              >
+                Your order
               </div>
             )}
 
             {cart.length === 0 ? (
-              <div style={{ color: "#8A7F6C", fontSize: 13, padding: "20px 0", textAlign: "center" }}>
+              <div style={{ color: "#8A7554", fontSize: 13, padding: "20px 0", textAlign: "center" }}>
                 Nothing added yet. Tap + on a drink to start your order.
               </div>
             ) : (
               <div className="cos-scroll" style={{ maxHeight: isMobile ? "35vh" : 240, overflowY: "auto", marginBottom: 14 }}>
                 {cart.map((c) => (
-                  <div key={c.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px dashed #DCCFB0", fontSize: 14 }}>
+                  <div key={c.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid rgba(198,162,101,0.12)", fontSize: 14 }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontFamily: "'Space Mono', monospace", fontWeight: 700, color: "#241A12", marginBottom: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{c.name}</div>
-                      <div style={{ color: "#8A7F6C", fontSize: 11, fontFamily: "'Space Mono', monospace" }}>{c.size} · {peso(c.price)} each</div>
+                      <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, color: "#F2EAD9", marginBottom: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{c.name}</div>
+                      <div style={{ color: "#8A7554", fontSize: 11, fontFamily: "'Montserrat', sans-serif" }}>{c.size} · {peso(c.price)} each</div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-                      <button onClick={() => onChangeQty(c.key, -1)} className="cos-btn" style={{ border: "1px solid #C9BB9E", background: "#FCFAF5", borderRadius: 8, width: 32, height: 32, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <button onClick={() => onChangeQty(c.key, -1)} className="calma-qty-btn cos-btn">
                         <Minus size={14} />
                       </button>
-                      <span style={{ width: 24, textAlign: "center", fontFamily: "'Space Mono', monospace", fontSize: 15 }}>{c.qty}</span>
-                      <button onClick={() => onChangeQty(c.key, 1)} className="cos-btn" style={{ border: "1px solid #C9BB9E", background: "#FCFAF5", borderRadius: 8, width: 32, height: 32, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ width: 24, textAlign: "center", fontFamily: "'Montserrat', sans-serif", fontSize: 15, color: "#F2EAD9" }}>{c.qty}</span>
+                      <button onClick={() => onChangeQty(c.key, 1)} className="calma-qty-btn cos-btn">
                         <Plus size={14} />
                       </button>
-                      <button onClick={() => onRemoveItem(c.key)} className="cos-btn" style={{ border: "none", background: "none", cursor: "pointer", color: "#B23A1E", marginLeft: 4, padding: 4 }} aria-label={`Remove ${c.name}`}>
+                      <button onClick={() => onRemoveItem(c.key)} className="calma-remove-btn cos-btn" aria-label={`Remove ${c.name}`}>
                         <Trash2 size={16} />
                       </button>
                     </div>
@@ -87,37 +205,40 @@ export default function OrderColumn({
               </div>
             )}
 
-            <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "'Space Mono', monospace", fontSize: 18, fontWeight: 700, padding: "14px 0", borderTop: "2px solid #241A12", marginTop: 4, textTransform: "uppercase", letterSpacing: 0.5 }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: 18,
+                fontWeight: 700,
+                padding: "14px 0",
+                borderTop: "2px solid #C6A265",
+                marginTop: 4,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+                color: "#F2EAD9",
+              }}
+            >
               <span>Total</span>
               <span>{peso(total)}</span>
             </div>
 
             {/* Customer Name Input */}
             <div style={{ marginTop: 16, marginBottom: 16 }}>
-              <div style={{ fontSize: 11, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1.2, color: "#8A7F6C", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ fontSize: 11, fontFamily: "'Montserrat', sans-serif", textTransform: "uppercase", letterSpacing: 1.2, color: "#8A7554", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
                 <User size={14} />
-                Your Name
+                Your name
               </div>
               <input
                 type="text"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Enter your name..."
-                style={{
-                  width: "100%",
-                  padding: "12px 14px",
-                  borderRadius: 6,
-                  border: customerName.trim() ? "1.5px solid #B23A1E" : "1px solid #C9BB9E",
-                  background: "#FCFAF5",
-                  fontSize: 14,
-                  fontFamily: "'Public Sans', sans-serif",
-                  color: "#241A12",
-                  outline: "none",
-                  boxSizing: "border-box",
-                }}
+                className={`calma-oc-input ${customerName.trim() ? "filled" : "empty"}`}
               />
               {!customerName.trim() && cart.length > 0 && (
-                <div style={{ fontSize: 11, color: "#B23A1E", marginTop: 6 }}>
+                <div style={{ fontSize: 11, color: "#C2453A", marginTop: 6 }}>
                   Please enter your name before placing order
                 </div>
               )}
@@ -125,33 +246,19 @@ export default function OrderColumn({
 
             {/* Order Notes */}
             <div style={{ marginTop: 16, marginBottom: 16 }}>
-              <div style={{ fontSize: 11, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1.2, color: "#8A7F6C", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ fontSize: 11, fontFamily: "'Montserrat', sans-serif", textTransform: "uppercase", letterSpacing: 1.2, color: "#8A7554", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
                 <FileText size={14} />
-                Order Notes
+                Order notes
               </div>
               <textarea
                 value={orderNotes}
                 onChange={(e) => setOrderNotes(e.target.value)}
                 placeholder="e.g. Less sugar, extra ice, no lid..."
-                style={{
-                  width: "100%",
-                  minHeight: 64,
-                  padding: "10px 14px",
-                  borderRadius: 6,
-                  border: orderNotes.trim() ? "1.5px solid #B23A1E" : "1px solid #C9BB9E",
-                  background: "#FCFAF5",
-                  fontSize: 14,
-                  fontFamily: "'Public Sans', sans-serif",
-                  color: "#241A12",
-                  outline: "none",
-                  resize: "vertical",
-                  boxSizing: "border-box",
-                }}
-                onFocus={(e) => (e.target.style.borderColor = "#8A7F6C")}
-                onBlur={(e) => (e.target.style.borderColor = orderNotes.trim() ? "#B23A1E" : "#C9BB9E")}
+                className={`calma-oc-input ${orderNotes.trim() ? "filled" : "empty"}`}
+                style={{ minHeight: 64, resize: "vertical" }}
               />
               {orderNotes.trim() && (
-                <div style={{ fontSize: 11, color: "#8A7F6C", marginTop: 6 }}>
+                <div style={{ fontSize: 11, color: "#8A7554", marginTop: 6 }}>
                   Staff will see this when preparing your order
                 </div>
               )}
@@ -159,7 +266,7 @@ export default function OrderColumn({
 
             {/* Payment method */}
             <div style={{ marginTop: 16 }}>
-              <div style={{ fontSize: 11, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1.2, color: "#8A7F6C", marginBottom: 10 }}>
+              <div style={{ fontSize: 11, fontFamily: "'Montserrat', sans-serif", textTransform: "uppercase", letterSpacing: 1.2, color: "#8A7554", marginBottom: 10 }}>
                 Payment method
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -170,25 +277,14 @@ export default function OrderColumn({
                     <button
                       key={p.id}
                       onClick={() => setPayment(p.id)}
-                      className="cos-btn"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        textAlign: "left",
-                        padding: "12px 14px",
-                        borderRadius: 6,
-                        border: active ? "1.5px solid #B23A1E" : "1px solid #C9BB9E",
-                        background: active ? "#F2E9D8" : "#FCFAF5",
-                        cursor: "pointer",
-                      }}
+                      className={`calma-payment-btn cos-btn ${active ? "active" : "inactive"}`}
                     >
-                      <Icon size={20} color={active ? "#B23A1E" : "#8A7F6C"} />
+                      <Icon size={20} color={active ? "#C6A265" : "#8A7554"} />
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14, fontWeight: 600 }}>{p.label}</div>
-                        <div style={{ fontSize: 12, color: "#8A7F6C" }}>{p.sub}</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: "#F2EAD9" }}>{p.label}</div>
+                        <div style={{ fontSize: 12, color: "#8A7554" }}>{p.sub}</div>
                       </div>
-                      {active && <Check size={18} color="#B23A1E" />}
+                      {active && <Check size={18} color="#C6A265" />}
                     </button>
                   );
                 })}
@@ -198,22 +294,7 @@ export default function OrderColumn({
             <button
               onClick={handlePlaceOrder}
               disabled={cart.length === 0 || !payment || !customerName.trim()}
-              className="cos-btn"
-              style={{
-                width: "100%",
-                marginTop: 20,
-                padding: "16px",
-                borderRadius: 8,
-                border: "none",
-                fontSize: 14,
-                fontFamily: "'Space Mono', monospace",
-                fontWeight: 700,
-                letterSpacing: 1,
-                textTransform: "uppercase",
-                color: cart.length === 0 || !payment || !customerName.trim() ? "#8A7F6C" : "#FCFAF5",
-                background: cart.length === 0 || !payment || !customerName.trim() ? "#EFE6D3" : "#241A12",
-                cursor: cart.length === 0 || !payment || !customerName.trim() ? "not-allowed" : "pointer",
-              }}
+              className={`calma-place-order cos-btn ${cart.length === 0 || !payment || !customerName.trim() ? "disabled" : "enabled"}`}
             >
               {cart.length === 0
                 ? "Add items to order"
