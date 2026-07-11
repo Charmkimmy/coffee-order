@@ -98,6 +98,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
     setOrderPlaced(null);
     setCustomerName("");
     setOrderNotes("");
+    setShowCart(false);
   };
 
   return (

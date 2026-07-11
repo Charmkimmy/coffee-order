@@ -37,6 +37,11 @@ export default function OrderColumn({
     onPlaceOrder(paymentData);
   };
 
+  const handleCancelOrder = () => {
+    setShowPayMayaModal(false);
+    onNewOrder();
+  };
+
   // Determine what screen to show after order is placed
   const getOrderScreen = () => {
     if (!orderPlaced) return null;
@@ -485,7 +490,7 @@ export default function OrderColumn({
           total={total} 
           onClose={() => setShowPayMayaModal(false)} 
           onConfirmPayment={handlePayMayaConfirm}
-          onCancelOrder={onNewOrder}
+          onCancelOrder={handleCancelOrder}
           orderStatus={orderPlaced?.status}
           existingReferenceNo={orderPlaced?.referenceNo}
         />
