@@ -302,8 +302,8 @@ export default function OrderColumn({
                 ? "Enter your name"
                 : !payment
                 ? "Choose a payment method"
-                : payment === "gcash"
-                ? `Pay with GCash · ${peso(total)}`
+                : payment === "paymaya"
+                ? `Pay with PayMaya · ${peso(total)}`
                 : `Place order · ${peso(total)}`}
             </button>
           </>
