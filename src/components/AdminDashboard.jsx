@@ -1,16 +1,15 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff, AlertCircle, CheckCircle, Smartphone } from "lucide-react";
+import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff, AlertCircle, CheckCircle } from "lucide-react";
 import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
-export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, onDeleteOrder, onBack, onEditOrder, onLogout, unmatchedPayments = [], onVerifyPayment }) {
+export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, onDeleteOrder, onBack, onEditOrder, onLogout, onVerifyPayment }) {
   const [selectedOrders, setSelectedOrders] = useState(new Set());
   const [editingOrder, setEditingOrder] = useState(null);
   const [editCustomerName, setEditCustomerName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [activeTab, setActiveTab] = useState("orders");
   const [previewImage, setPreviewImage] = useState(null);
   const [rejectingOrder, setRejectingOrder] = useState(null);
   const [rejectReason, setRejectReason] = useState("");
@@ -174,17 +173,6 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
     orderHistory.filter((o) => o.status === "pending_verification"),
     [orderHistory]
   );
-
-  // Find matching order for a payment
-  const findMatchingOrder = (payment) => {
-    const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
-    return orderHistory.find((o) => 
-      o.payment === "instapay" && 
-      !o.verified && 
-      Math.abs(o.total - payment.amount) < 1 &&
-      (o.timestamp || 0) > fiveMinutesAgo
-    );
-  };
 
   const handleApproveOrder = (orderId) => {
     if (onEditOrder) {
@@ -365,35 +353,6 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         .beanito-search-input::placeholder { color: #5C4E3C; }
         .beanito-search-input:focus { border-color: #D4A574; }
 
-        .beanito-tab-bar {
-          display: flex;
-          gap: 4px;
-          padding: 0 24px;
-          max-width: 900px;
-          margin: 0 auto 16px;
-          border-bottom: 1px solid rgba(245,230,200,0.15);
-        }
-        .beanito-tab {
-          padding: 10px 18px;
-          border: none;
-          background: none;
-          color: #8B7355;
-          font-size: 13px;
-          font-family: 'Montserrat', sans-serif;
-          font-weight: 600;
-          cursor: pointer;
-          border-bottom: 2px solid transparent;
-          margin-bottom: -1px;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          -webkit-tap-highlight-color: transparent;
-        }
-        .beanito-tab.active {
-          color: #D4A574;
-          border-bottom-color: #D4A574;
-        }
-
         .beanito-day-card { background: #141414; border: 1px solid rgba(245,230,200,0.15); border-radius: 12px; overflow: hidden; }
         .beanito-day-header { background: #0D0D0D; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(245,230,200,0.12); }
         .beanito-day-footer { background: rgba(212,165,116,0.05); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(245,230,200,0.12); }
@@ -446,21 +405,6 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         .beanito-page-btn:not(:disabled) { color: #D4A574; cursor: pointer; }
         .beanito-page-btn:disabled { color: #4a3f30; cursor: not-allowed; }
 
-        .beanito-payment-card {
-          background: #141414;
-          border: 1px solid rgba(245,230,200,0.15);
-          border-radius: 12px;
-          padding: 16px;
-          margin-bottom: 10px;
-        }
-        .beanito-payment-match {
-          background: rgba(79,191,63,0.08);
-          border: 1px solid rgba(79,191,63,0.25);
-          border-radius: 8px;
-          padding: 10px 12px;
-          margin-top: 10px;
-        }
-
         .beanito-pending-badge {
           display: inline-flex;
           align-items: center;
@@ -494,20 +438,6 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           background: rgba(220, 140, 60, 0.15);
           color: #DC8C3C;
           border: 1px solid rgba(220, 140, 60, 0.3);
-        }
-        .beanito-cancelled-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 10px;
-          border-radius: 999px;
-          font-size: 10px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          background: rgba(100, 100, 100, 0.15);
-          color: #8B7355;
-          border: 1px solid rgba(100, 100, 100, 0.3);
         }
         @keyframes pulse {
           0%, 100% { opacity: 1; }
@@ -701,50 +631,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="beanito-tab-bar">
-        <button 
-          onClick={() => setActiveTab("orders")}
-          className={`beanito-tab ${activeTab === "orders" ? "active" : ""}`}
-        >
-          <ShoppingBag size={14} />
-          Orders
-          {pendingOrders.length > 0 && (
-            <span style={{
-              background: "#C2453A",
-              color: "#F5E6C8",
-              borderRadius: 999,
-              padding: "2px 8px",
-              fontSize: 10,
-              fontWeight: 700,
-            }}>
-              {pendingOrders.length}
-            </span>
-          )}
-        </button>
-        <button 
-          onClick={() => setActiveTab("payments")}
-          className={`beanito-tab ${activeTab === "payments" ? "active" : ""}`}
-        >
-          <Smartphone size={14} />
-          Unmatched Payments
-          {unmatchedPayments.length > 0 && (
-            <span style={{
-              background: "#C2453A",
-              color: "#F5E6C8",
-              borderRadius: 999,
-              padding: "2px 8px",
-              fontSize: 10,
-              fontWeight: 700,
-            }}>
-              {unmatchedPayments.length}
-            </span>
-          )}
-        </button>
-      </div>
-
       {/* Sound Toggle */}
-      <div style={{ padding: "0 24px 8px", maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "flex-end" }}>
+      <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "flex-end" }}>
         <button
           onClick={() => setSoundEnabled(!soundEnabled)}
           className={`beanito-ad-btn ${soundEnabled ? "" : "muted"}`}
@@ -756,402 +644,322 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         </button>
       </div>
 
-      {/* ORDERS TAB */}
-      {activeTab === "orders" && (
-        <>
-          {/* Search & Actions Bar */}
-          <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "space-between" }}>
-            <div className="beanito-search-wrap">
-              <Search size={14} color="#8B7355" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="beanito-search-input"
-              />
-            </div>
+      {/* Search & Actions Bar */}
+      <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "space-between" }}>
+        <div className="beanito-search-wrap">
+          <Search size={14} color="#8B7355" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="beanito-search-input"
+          />
+        </div>
 
-            <button onClick={exportToExcel} className="beanito-ad-btn">
-              <Download size={14} />
-              <span>Export Excel</span>
+        <button onClick={exportToExcel} className="beanito-ad-btn">
+          <Download size={14} />
+          <span>Export Excel</span>
+        </button>
+      </div>
+
+      {/* Select All / Delete Selected Bar */}
+      {filteredOrderHistory.length > 0 && (
+        <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <button onClick={allSelected ? deselectAll : selectAll} className="beanito-ad-btn">
+            {allSelected ? <CheckSquare size={14} /> : <Square size={14} />}
+            {allSelected ? "Deselect all" : "Select all"}
+          </button>
+          {selectedOrders.size > 0 && (
+            <button onClick={deleteSelected} className="beanito-ad-btn danger">
+              <Trash2 size={14} />
+              Delete selected ({selectedOrders.size})
             </button>
-          </div>
-
-          {/* Select All / Delete Selected Bar */}
-          {filteredOrderHistory.length > 0 && (
-            <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-              <button onClick={allSelected ? deselectAll : selectAll} className="beanito-ad-btn">
-                {allSelected ? <CheckSquare size={14} /> : <Square size={14} />}
-                {allSelected ? "Deselect all" : "Select all"}
-              </button>
-              {selectedOrders.size > 0 && (
-                <button onClick={deleteSelected} className="beanito-ad-btn danger">
-                  <Trash2 size={14} />
-                  Delete selected ({selectedOrders.size})
-                </button>
-              )}
-              <span style={{ fontSize: 12, color: "#8B7355", marginLeft: "auto" }}>
-                {filteredOrderHistory.length} order{filteredOrderHistory.length !== 1 ? "s" : ""} found
-              </span>
-            </div>
           )}
-
-          {/* Daily Sales */}
-          <div style={{ padding: "0 24px 32px", maxWidth: 900, margin: "0 auto" }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, marginBottom: 16, color: "#F5E6C8" }}>
-              Daily sales
-            </div>
-
-            {paginatedDailyTotals.length === 0 ? (
-              <div style={{ background: "#141414", border: "1px dashed rgba(245,230,200,0.3)", borderRadius: 12, padding: "40px", textAlign: "center", color: "#8B7355" }}>
-                {searchQuery ? "No orders match your search." : "No sales yet. Orders will appear here once customers start ordering."}
-              </div>
-            ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                {paginatedDailyTotals.map((day) => (
-                  <div key={day.date} className="beanito-day-card">
-                    {/* Day Header */}
-                    <div className="beanito-day-header">
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <Calendar size={16} color="#D4A574" />
-                        <span style={{ fontWeight: 600, fontSize: 15, color: "#F5E6C8" }}>{day.date}</span>
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 13 }}>
-                        <span style={{ color: "#8B7355" }}>{day.orders.length} orders</span>
-                        <span style={{ fontFamily: "'Montserrat', sans-serif", color: "#D4A574", fontWeight: 700 }}>
-                          {peso(day.totalSales)}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Orders List */}
-                    <div style={{ padding: "16px 20px" }}>
-                      {day.orders.map((order) => (
-                        <div key={order.id} className="beanito-order-row">
-                          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                            <button onClick={() => toggleSelect(order.id)} className="beanito-check-btn">
-                              {selectedOrders.has(order.id) ? <CheckSquare size={16} /> : <Square size={16} color="#8B7355" />}
-                            </button>
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flex: 1, paddingRight: 20, flexWrap: "wrap", gap: 6 }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#8B7355" }}>
-                                <Clock size={12} />
-                                {order.time}
-                              </div>
-                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                {editingOrder === order.id ? (
-                                  <input
-                                    type="text"
-                                    value={editCustomerName}
-                                    onChange={(e) => setEditCustomerName(e.target.value)}
-                                    placeholder="Customer name..."
-                                    className="beanito-edit-input"
-                                    autoFocus
-                                  />
-                                ) : (
-                                  order.customerName && (
-                                    <span style={{ fontSize: 11, color: "#D4A574", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
-                                      <User size={11} />
-                                      {order.customerName}
-                                    </span>
-                                  )
-                                )}
-                                <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, fontWeight: 700, color: "#F5E6C8" }}>
-                                  Order #{order.orderNo}
-                                </span>
-                                {/* Status badges */}
-                                {order.status === "pending_verification" && (
-                                  <span className="beanito-pending-badge urgent">
-                                    <Clock size={10} />
-                                    Pending
-                                  </span>
-                                )}
-                                {order.status === "rejected" && (
-                                  <span className="beanito-rejected-badge">
-                                    <AlertCircle size={10} />
-                                    Rejected
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                          {order.items.map((item) => (
-                            <div key={item.key} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#C9BB9E", marginBottom: 2, paddingLeft: 34 }}>
-                              <span>{item.qty}× {item.name} ({item.size})</span>
-                              <span>{peso(item.price * item.qty)}</span>
-                            </div>
-                          ))}
-                          {/* Order Notes */}
-                          {order.notes && (
-                            <div style={{ marginTop: 8, marginBottom: 4, marginLeft: 34, padding: "8px 10px", background: "rgba(212,165,116,0.06)", borderRadius: 6, borderLeft: "3px solid #D4A574" }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
-                                <FileText size={11} color="#D4A574" />
-                                <span style={{ fontSize: 10, fontFamily: "'Montserrat', sans-serif", textTransform: "uppercase", letterSpacing: 1, color: "#8B7355" }}>Notes</span>
-                              </div>
-                              <div style={{ fontSize: 13, color: "#F5E6C8", fontStyle: "italic" }}>{order.notes}</div>
-                            </div>
-                          )}
-                          {/* Pending Verification Section */}
-                          {order.status === "pending_verification" && (
-                            <div style={{ marginTop: 8, marginLeft: 34, padding: "12px", background: "rgba(212,165,116,0.06)", borderRadius: 8, border: "1px solid rgba(212,165,116,0.2)" }}>
-                              <div style={{ fontSize: 11, color: "#D4A574", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
-                                <Clock size={11} />
-                                Awaiting verification
-                              </div>
-                              {order.screenshotPreview && (
-                                <>
-                                  <div style={{ fontSize: 10, color: "#8B7355", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>
-                                    Payment Screenshot
-                                  </div>
-                                  <img 
-                                    src={order.screenshotPreview} 
-                                    alt="Payment proof" 
-                                    className="beanito-screenshot-thumb"
-                                    onClick={() => setPreviewImage(order.screenshotPreview)}
-                                  />
-                                </>
-                              )}
-                              {order.referenceNo && (
-                                <div style={{ fontSize: 12, color: "#C9BB9E", marginTop: 8, marginBottom: 8 }}>
-                                  Ref: <strong style={{ color: "#F5E6C8" }}>{order.referenceNo}</strong>
-                                </div>
-                              )}
-                              <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
-                                <button 
-                                  onClick={() => handleApproveOrder(order.id)}
-                                  className="beanito-mini-btn green"
-                                  style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
-                                >
-                                  <CheckCircle size={14} />
-                                  Approve Order
-                                </button>
-                                <button 
-                                  onClick={() => startReject(order.id)}
-                                  className="beanito-mini-btn danger"
-                                  style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
-                                >
-                                  <X size={14} />
-                                  Reject Proof
-                                </button>
-                                <button 
-                                  onClick={() => handleCancelOrder(order.id)}
-                                  className="beanito-mini-btn danger"
-                                  style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
-                                >
-                                  <Trash2 size={14} />
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                          {/* Rejected Order Section */}
-                          {order.status === "rejected" && (
-                            <div style={{ marginTop: 8, marginLeft: 34, padding: "12px", background: "rgba(220, 140, 60, 0.06)", borderRadius: 8, border: "1px solid rgba(220, 140, 60, 0.2)" }}>
-                              <div style={{ fontSize: 11, color: "#DC8C3C", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
-                                <AlertCircle size={11} />
-                                Proof rejected
-                              </div>
-                              {order.rejectReasonLabel && (
-                                <div style={{ fontSize: 12, color: "#E8A0A0", marginBottom: 8, padding: "8px 10px", background: "rgba(220, 80, 80, 0.06)", borderRadius: 6 }}>
-                                  <strong>Reason:</strong> {order.rejectReasonLabel}
-                                </div>
-                              )}
-                              {order.referenceNo && (
-                                <div style={{ fontSize: 12, color: "#C9BB9E", marginBottom: 8 }}>
-                                  Previous ref: <strong style={{ color: "#F5E6C8" }}>{order.referenceNo}</strong>
-                                </div>
-                              )}
-                              <div style={{ display: "flex", gap: 8 }}>
-                                <button 
-                                  onClick={() => handleCancelOrder(order.id)}
-                                  className="beanito-mini-btn danger"
-                                  style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
-                                >
-                                  <Trash2 size={14} />
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                          {/* Reference Number if verified */}
-                          {order.referenceNo && order.status !== "pending_verification" && order.status !== "rejected" && (
-                            <div style={{ marginTop: 6, marginLeft: 34, padding: "6px 10px", background: "rgba(79,191,63,0.08)", borderRadius: 6, border: "1px solid rgba(79,191,63,0.2)" }}>
-                              <div style={{ fontSize: 11, color: "#4FBF3F", display: "flex", alignItems: "center", gap: 4 }}>
-                                <CheckCircle size={11} />
-                                Verified · Ref: {order.referenceNo}
-                              </div>
-                            </div>
-                          )}
-                          {/* Payment Badge */}
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, paddingLeft: 34 }}>
-                            <span style={{ 
-                              fontSize: 11, 
-                              fontWeight: 700,
-                              textTransform: "uppercase",
-                              letterSpacing: 0.5,
-                              padding: "3px 10px",
-                              borderRadius: 999,
-                              ...(order.payment === "instapay" 
-                                ? { background: "rgba(79,191,63,0.15)", color: "#4FBF3F", border: "1px solid rgba(79,191,63,0.3)" }
-                                : { background: "rgba(212,165,116,0.08)", color: "#8B7355", border: "1px solid rgba(212,165,116,0.15)" }
-                              )
-                            }}>
-                              {order.payment === "instapay" ? "✓ InstaPay" : `Paid via ${PAYMENTS.find((p) => p.id === order.payment)?.label || order.payment}`}
-                            </span>
-                            <span style={{ fontWeight: 700, color: "#F5E6C8", fontSize: 14 }}>{peso(order.total)}</span>
-                          </div>
-                          {/* Edit & Delete Buttons - hide for pending and rejected */}
-                          {order.status !== "pending_verification" && order.status !== "rejected" && (
-                            <div style={{ display: "flex", gap: 8, marginTop: 8, paddingLeft: 34 }}>
-                              {editingOrder === order.id ? (
-                                <>
-                                  <button onClick={() => saveEdit(order.id)} className="beanito-mini-btn gold-fill">
-                                    Save
-                                  </button>
-                                  <button onClick={cancelEdit} className="beanito-mini-btn neutral">
-                                    Cancel
-                                  </button>
-                                </>
-                              ) : (
-                                <>
-                                  <button onClick={() => startEdit(order)} className="beanito-mini-btn gold">
-                                    <Pencil size={12} />
-                                    Edit
-                                  </button>
-                                  <button
-                                    onClick={() => {
-                                      if (window.confirm("Delete this order? This cannot be undone.")) {
-                                        onDeleteOrder(order.id);
-                                      }
-                                    }}
-                                    className="beanito-mini-btn danger"
-                                  >
-                                    <X size={12} />
-                                    Delete
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Day Footer */}
-                    <div className="beanito-day-footer">
-                      <span style={{ fontSize: 12, color: "#8B7355" }}>{day.itemCount} items sold</span>
-                      <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 17, fontWeight: 700, color: "#F5E6C8" }}>
-                        Day total: {peso(day.totalSales)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: 24 }}>
-                <button
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="beanito-page-btn"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <span style={{ fontSize: 13, color: "#8B7355" }}>
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="beanito-page-btn"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            )}
-          </div>
-        </>
-      )}
-
-      {/* PAYMENTS TAB */}
-      {activeTab === "payments" && (
-        <div style={{ padding: "0 24px 32px", maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, marginBottom: 16, color: "#F5E6C8", display: "flex", alignItems: "center", gap: 8 }}>
-            <Smartphone size={20} color="#D4A574" />
-            Unmatched InstaPay Payments
-          </div>
-
-          {unmatchedPayments.length === 0 ? (
-            <div style={{ background: "#141414", border: "1px dashed rgba(245,230,200,0.3)", borderRadius: 12, padding: "40px", textAlign: "center", color: "#8B7355" }}>
-              <Smartphone size={32} color="#5C4E3C" style={{ marginBottom: 12 }} />
-              <div style={{ fontSize: 14, marginBottom: 4 }}>No unmatched payments</div>
-              <div style={{ fontSize: 12 }}>Payments received via SMS will appear here for manual matching.</div>
-            </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {unmatchedPayments.map((payment) => {
-                const match = findMatchingOrder(payment);
-                return (
-                  <div key={payment.id} className="beanito-payment-card">
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                      <span style={{ fontSize: 22, fontWeight: 700, color: "#4FBF3F" }}>{peso(payment.amount)}</span>
-                      <span style={{ fontSize: 11, color: "#8B7355" }}>
-                        {new Date(payment.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                      </span>
-                    </div>
-                    
-                    <div style={{ fontSize: 13, color: "#C9BB9E", marginBottom: 4 }}>
-                      From: <strong style={{ color: "#F5E6C8" }}>{payment.senderName || "Unknown sender"}</strong>
-                    </div>
-                    
-                    {payment.refNo && (
-                      <div style={{ fontSize: 12, color: "#8B7355", marginBottom: 8 }}>
-                        Ref: {payment.refNo}
-                      </div>
-                    )}
-                    
-                    {payment.smsBody && (
-                      <div style={{ fontSize: 11, color: "#5C4E3C", fontStyle: "italic", marginBottom: 10, padding: "8px 10px", background: "rgba(212,165,116,0.04)", borderRadius: 6 }}>
-                        "{payment.smsBody}"
-                      </div>
-                    )}
-
-                    {match ? (
-                      <div className="beanito-payment-match">
-                        <div style={{ fontSize: 12, color: "#4FBF3F", fontWeight: 600, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
-                          <CheckCircle size={14} />
-                          Possible match found
-                        </div>
-                        <div style={{ fontSize: 13, color: "#C9BB9E", marginBottom: 8 }}>
-                          Order <strong style={{ color: "#F5E6C8" }}>#{match.orderNo}</strong> · {match.customerName} · {peso(match.total)}
-                        </div>
-                        <button 
-                          onClick={() => onVerifyPayment && onVerifyPayment(payment.id, match.id)}
-                          className="beanito-mini-btn green"
-                          style={{ width: "100%", justifyContent: "center", minHeight: 36 }}
-                        >
-                          <CheckCircle size={14} />
-                          Confirm & verify this order
-                        </button>
-                      </div>
-                    ) : (
-                      <div style={{ fontSize: 12, color: "#8B7355", marginTop: 8, padding: "8px 10px", background: "rgba(212,165,116,0.04)", borderRadius: 6 }}>
-                        <AlertCircle size={12} style={{ marginRight: 6, display: "inline" }} />
-                        No matching order found. Amount or time doesn't match any pending order.
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          <span style={{ fontSize: 12, color: "#8B7355", marginLeft: "auto" }}>
+            {filteredOrderHistory.length} order{filteredOrderHistory.length !== 1 ? "s" : ""} found
+          </span>
         </div>
       )}
+
+      {/* Daily Sales */}
+      <div style={{ padding: "0 24px 32px", maxWidth: 900, margin: "0 auto" }}>
+        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, marginBottom: 16, color: "#F5E6C8" }}>
+          Daily sales
+        </div>
+
+        {paginatedDailyTotals.length === 0 ? (
+          <div style={{ background: "#141414", border: "1px dashed rgba(245,230,200,0.3)", borderRadius: 12, padding: "40px", textAlign: "center", color: "#8B7355" }}>
+            {searchQuery ? "No orders match your search." : "No sales yet. Orders will appear here once customers start ordering."}
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {paginatedDailyTotals.map((day) => (
+              <div key={day.date} className="beanito-day-card">
+                {/* Day Header */}
+                <div className="beanito-day-header">
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <Calendar size={16} color="#D4A574" />
+                    <span style={{ fontWeight: 600, fontSize: 15, color: "#F5E6C8" }}>{day.date}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 13 }}>
+                    <span style={{ color: "#8B7355" }}>{day.orders.length} orders</span>
+                    <span style={{ fontFamily: "'Montserrat', sans-serif", color: "#D4A574", fontWeight: 700 }}>
+                      {peso(day.totalSales)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Orders List */}
+                <div style={{ padding: "16px 20px" }}>
+                  {day.orders.map((order) => (
+                    <div key={order.id} className="beanito-order-row">
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                        <button onClick={() => toggleSelect(order.id)} className="beanito-check-btn">
+                          {selectedOrders.has(order.id) ? <CheckSquare size={16} /> : <Square size={16} color="#8B7355" />}
+                        </button>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flex: 1, paddingRight: 20, flexWrap: "wrap", gap: 6 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#8B7355" }}>
+                            <Clock size={12} />
+                            {order.time}
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            {editingOrder === order.id ? (
+                              <input
+                                type="text"
+                                value={editCustomerName}
+                                onChange={(e) => setEditCustomerName(e.target.value)}
+                                placeholder="Customer name..."
+                                className="beanito-edit-input"
+                                autoFocus
+                              />
+                            ) : (
+                              order.customerName && (
+                                <span style={{ fontSize: 11, color: "#D4A574", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                                  <User size={11} />
+                                  {order.customerName}
+                                </span>
+                              )
+                            )}
+                            <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, fontWeight: 700, color: "#F5E6C8" }}>
+                              Order #{order.orderNo}
+                            </span>
+                            {/* Status badges */}
+                            {order.status === "pending_verification" && (
+                              <span className="beanito-pending-badge urgent">
+                                <Clock size={10} />
+                                Pending
+                              </span>
+                            )}
+                            {order.status === "rejected" && (
+                              <span className="beanito-rejected-badge">
+                                <AlertCircle size={10} />
+                                Rejected
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      {order.items.map((item) => (
+                        <div key={item.key} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#C9BB9E", marginBottom: 2, paddingLeft: 34 }}>
+                          <span>{item.qty}× {item.name} ({item.size})</span>
+                          <span>{peso(item.price * item.qty)}</span>
+                        </div>
+                      ))}
+                      {/* Order Notes */}
+                      {order.notes && (
+                        <div style={{ marginTop: 8, marginBottom: 4, marginLeft: 34, padding: "8px 10px", background: "rgba(212,165,116,0.06)", borderRadius: 6, borderLeft: "3px solid #D4A574" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
+                            <FileText size={11} color="#D4A574" />
+                            <span style={{ fontSize: 10, fontFamily: "'Montserrat', sans-serif", textTransform: "uppercase", letterSpacing: 1, color: "#8B7355" }}>Notes</span>
+                          </div>
+                          <div style={{ fontSize: 13, color: "#F5E6C8", fontStyle: "italic" }}>{order.notes}</div>
+                        </div>
+                      )}
+                      {/* Pending Verification Section */}
+                      {order.status === "pending_verification" && (
+                        <div style={{ marginTop: 8, marginLeft: 34, padding: "12px", background: "rgba(212,165,116,0.06)", borderRadius: 8, border: "1px solid rgba(212,165,116,0.2)" }}>
+                          <div style={{ fontSize: 11, color: "#D4A574", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
+                            <Clock size={11} />
+                            Awaiting verification
+                          </div>
+                          {order.screenshotPreview && (
+                            <>
+                              <div style={{ fontSize: 10, color: "#8B7355", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>
+                                Payment Screenshot
+                              </div>
+                              <img 
+                                src={order.screenshotPreview} 
+                                alt="Payment proof" 
+                                className="beanito-screenshot-thumb"
+                                onClick={() => setPreviewImage(order.screenshotPreview)}
+                              />
+                            </>
+                          )}
+                          {order.referenceNo && (
+                            <div style={{ fontSize: 12, color: "#C9BB9E", marginTop: 8, marginBottom: 8 }}>
+                              Ref: <strong style={{ color: "#F5E6C8" }}>{order.referenceNo}</strong>
+                            </div>
+                          )}
+                          <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+                            <button 
+                              onClick={() => handleApproveOrder(order.id)}
+                              className="beanito-mini-btn green"
+                              style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
+                            >
+                              <CheckCircle size={14} />
+                              Approve Order
+                            </button>
+                            <button 
+                              onClick={() => startReject(order.id)}
+                              className="beanito-mini-btn danger"
+                              style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
+                            >
+                              <X size={14} />
+                              Reject Proof
+                            </button>
+                            <button 
+                              onClick={() => handleCancelOrder(order.id)}
+                              className="beanito-mini-btn danger"
+                              style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
+                            >
+                              <Trash2 size={14} />
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      {/* Rejected Order Section */}
+                      {order.status === "rejected" && (
+                        <div style={{ marginTop: 8, marginLeft: 34, padding: "12px", background: "rgba(220, 140, 60, 0.06)", borderRadius: 8, border: "1px solid rgba(220, 140, 60, 0.2)" }}>
+                          <div style={{ fontSize: 11, color: "#DC8C3C", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
+                            <AlertCircle size={11} />
+                            Proof rejected
+                          </div>
+                          {order.rejectReasonLabel && (
+                            <div style={{ fontSize: 12, color: "#E8A0A0", marginBottom: 8, padding: "8px 10px", background: "rgba(220, 80, 80, 0.06)", borderRadius: 6 }}>
+                              <strong>Reason:</strong> {order.rejectReasonLabel}
+                            </div>
+                          )}
+                          {order.referenceNo && (
+                            <div style={{ fontSize: 12, color: "#C9BB9E", marginBottom: 8 }}>
+                              Previous ref: <strong style={{ color: "#F5E6C8" }}>{order.referenceNo}</strong>
+                            </div>
+                          )}
+                          <div style={{ display: "flex", gap: 8 }}>
+                            <button 
+                              onClick={() => handleCancelOrder(order.id)}
+                              className="beanito-mini-btn danger"
+                              style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
+                            >
+                              <Trash2 size={14} />
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      {/* Reference Number if verified */}
+                      {order.referenceNo && order.status !== "pending_verification" && order.status !== "rejected" && (
+                        <div style={{ marginTop: 6, marginLeft: 34, padding: "6px 10px", background: "rgba(79,191,63,0.08)", borderRadius: 6, border: "1px solid rgba(79,191,63,0.2)" }}>
+                          <div style={{ fontSize: 11, color: "#4FBF3F", display: "flex", alignItems: "center", gap: 4 }}>
+                            <CheckCircle size={11} />
+                            Verified · Ref: {order.referenceNo}
+                          </div>
+                        </div>
+                      )}
+                      {/* Payment Badge */}
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, paddingLeft: 34 }}>
+                        <span style={{ 
+                          fontSize: 11, 
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: 0.5,
+                          padding: "3px 10px",
+                          borderRadius: 999,
+                          ...(order.payment === "instapay" 
+                            ? { background: "rgba(79,191,63,0.15)", color: "#4FBF3F", border: "1px solid rgba(79,191,63,0.3)" }
+                            : { background: "rgba(212,165,116,0.08)", color: "#8B7355", border: "1px solid rgba(212,165,116,0.15)" }
+                          )
+                        }}>
+                          {order.payment === "instapay" ? "✓ InstaPay" : `Paid via ${PAYMENTS.find((p) => p.id === order.payment)?.label || order.payment}`}
+                        </span>
+                        <span style={{ fontWeight: 700, color: "#F5E6C8", fontSize: 14 }}>{peso(order.total)}</span>
+                      </div>
+                      {/* Edit & Delete Buttons - hide for pending and rejected */}
+                      {order.status !== "pending_verification" && order.status !== "rejected" && (
+                        <div style={{ display: "flex", gap: 8, marginTop: 8, paddingLeft: 34 }}>
+                          {editingOrder === order.id ? (
+                            <>
+                              <button onClick={() => saveEdit(order.id)} className="beanito-mini-btn gold-fill">
+                                Save
+                              </button>
+                              <button onClick={cancelEdit} className="beanito-mini-btn neutral">
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button onClick={() => startEdit(order)} className="beanito-mini-btn gold">
+                                <Pencil size={12} />
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => {
+                                  if (window.confirm("Delete this order? This cannot be undone.")) {
+                                    onDeleteOrder(order.id);
+                                  }
+                                }}
+                                className="beanito-mini-btn danger"
+                              >
+                                <X size={12} />
+                                Delete
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Day Footer */}
+                <div className="beanito-day-footer">
+                  <span style={{ fontSize: 12, color: "#8B7355" }}>{day.itemCount} items sold</span>
+                  <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 17, fontWeight: 700, color: "#F5E6C8" }}>
+                    Day total: {peso(day.totalSales)}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: 24 }}>
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="beanito-page-btn"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <span style={{ fontSize: 13, color: "#8B7355" }}>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="beanito-page-btn"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
