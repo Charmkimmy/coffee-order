@@ -19,11 +19,9 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
     const prevCount = prevOrderCountRef.current;
 
     if (currentCount > prevCount && soundEnabled && prevCount > 0) {
-      // New order arrived - play sound
       const audio = new Audio('/notification.mp3');
       audio.volume = 0.5;
       audio.play().catch((err) => {
-        // Auto-play blocked or file missing - silent fail
         console.log('Sound notification blocked or missing:', err);
       });
     }
@@ -158,7 +156,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
 
   const allSelected = selectedOrders.size === filteredOrderHistory.length && filteredOrderHistory.length > 0;
 
-  // Export to Excel (HTML table format that Excel can open)
+  // Export to Excel
   const exportToExcel = () => {
     const headers = ["Date", "Time", "Order #", "Customer", "Items", "Notes", "Payment", "Total"];
     const rows = filteredOrderHistory.map((order) => [
@@ -511,9 +509,23 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                           <div style={{ fontSize: 13, color: "#F2EAD9", fontStyle: "italic" }}>{order.notes}</div>
                         </div>
                       )}
-                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontSize: 12, color: "#8A7554", paddingLeft: 34 }}>
-                        <span>Paid via {PAYMENTS.find((p) => p.id === order.payment)?.label}</span>
-                        <span style={{ fontWeight: 700, color: "#F2EAD9" }}>{peso(order.total)}</span>
+                      {/* Payment Badge - Maya highlighted */}
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, paddingLeft: 34 }}>
+                        <span style={{ 
+                          fontSize: 11, 
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: 0.5,
+                          padding: "3px 10px",
+                          borderRadius: 999,
+                          ...(order.payment === "paymaya" 
+                            ? { background: "rgba(79,191,63,0.15)", color: "#4FBF3F", border: "1px solid rgba(79,191,63,0.3)" }
+                            : { background: "rgba(198,162,101,0.08)", color: "#8A7554", border: "1px solid rgba(198,162,101,0.15)" }
+                          )
+                        }}>
+                          {order.payment === "paymaya" ? "✓ Maya" : `Paid via ${PAYMENTS.find((p) => p.id === order.payment)?.label || order.payment}`}
+                        </span>
+                        <span style={{ fontWeight: 700, color: "#F2EAD9", fontSize: 14 }}>{peso(order.total)}</span>
                       </div>
                       {/* Edit & Delete Buttons */}
                       <div style={{ display: "flex", gap: 8, marginTop: 8, paddingLeft: 34 }}>
