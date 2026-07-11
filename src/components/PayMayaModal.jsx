@@ -1,16 +1,7 @@
-import React, { useState } from "react";
-import { createPortal } from "react-dom";
-import { X, Smartphone, Copy, CheckCircle, Camera, ShieldCheck, AlertCircle } from "lucide-react";
-import { peso } from "../utils/format";
-
-const OWNER_PHONE = "09493008592";
-const OWNER_NAME = "ALLAN SEPNO";
-
 export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
   const [copied, setCopied] = useState(false);
   const [referenceNo, setReferenceNo] = useState("");
   const [step, setStep] = useState("pay"); // "pay" | "verify" | "confirmed"
-  const [verified, setVerified] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(OWNER_PHONE);
@@ -24,7 +15,6 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
 
   const handleVerify = () => {
     if (!referenceNo.trim()) return;
-    setVerified(true);
     setStep("confirmed");
     setTimeout(() => {
       onConfirmPayment({ referenceNo: referenceNo.trim() });
