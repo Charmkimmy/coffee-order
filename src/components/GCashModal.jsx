@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import { X, Smartphone, Copy, CheckCircle, QrCode } from "lucide-react";
 import { peso } from "../utils/format";
 
@@ -21,7 +22,7 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
     }, 1500);
   };
 
-  return (
+  return createPortal(
     <div className="calma-gcash-overlay">
       <style>{`
         .calma-gcash-overlay {
@@ -244,6 +245,7 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

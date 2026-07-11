@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { useFirebaseOrders } from "../hooks/useFirebaseOrders";
 import Header from "./Header";
 import MenuColumn from "./MenuColumn";
@@ -261,7 +262,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
       </div>
 
       {/* Mobile Cart Side Panel */}
-      {showCart && (
+      {showCart && createPortal(
         <>
           <div
             className="mobile-cart-backdrop calma-cart-backdrop"
@@ -316,7 +317,8 @@ export default function CoffeeOrderingSystem({ onBack }) {
               />
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
 
       {/* Mobile Floating Cart Button */}
