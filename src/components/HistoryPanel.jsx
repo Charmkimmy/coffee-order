@@ -16,6 +16,8 @@ export default function HistoryPanel({ orderHistory, onClose, onDeleteOrder, onC
       }}
     >
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Montserrat:wght@400;500;600;700&display=swap');
+
         .calma-history-clear {
           display: flex;
           align-items: center;
@@ -54,10 +56,17 @@ export default function HistoryPanel({ orderHistory, onClose, onDeleteOrder, onC
           padding: 6px;
           -webkit-tap-highlight-color: transparent;
         }
+
+        .calma-history-ticket {
+          transition: border-color 0.2s ease;
+        }
+        @media (hover: hover) {
+          .calma-history-ticket:hover { border-color: rgba(198,162,101,0.3); }
+        }
       `}</style>
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: "#F2EAD9" }}>
+        <div style={{ fontFamily: "'Fraunces', serif", fontSize: 17, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: "#F2EAD9" }}>
           Order history
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -93,6 +102,7 @@ export default function HistoryPanel({ orderHistory, onClose, onDeleteOrder, onC
                 }}
               />
               <div
+                className="calma-history-ticket"
                 style={{
                   background: "#150F09",
                   border: "1px solid rgba(198,162,101,0.14)",
