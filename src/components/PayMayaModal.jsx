@@ -1,37 +1,19 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Smartphone, Copy, CheckCircle, ExternalLink } from "lucide-react";
+import { X, Smartphone, Copy, CheckCircle } from "lucide-react";
 import { peso } from "../utils/format";
 
-const OWNER_MAYA_NUMBER = "09493008592";
-const OWNER_MAYA_NAME = "ALLAN SEPNO";
+const OWNER_PHONE = "09493008592";
+const OWNER_NAME = "ALLAN SEPNO";
 
-export default function PayMayaModal({ total, orderNo, onClose, onConfirmPayment }) {
+export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
   const [copied, setCopied] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
-  const [openedApp, setOpenedApp] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(OWNER_MAYA_NUMBER);
+    navigator.clipboard.writeText(OWNER_PHONE);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  // Try to open Maya app directly
-  const handleOpenMaya = () => {
-    // Copy number first so they have it
-    navigator.clipboard.writeText(OWNER_MAYA_NUMBER);
-    
-    // Try Maya app deep link (works on mobile if app installed)
-    const mayaUrl = `mayabank://sendmoney?recipient=${OWNER_MAYA_NUMBER}&amount=${total}`;
-    window.location.href = mayaUrl;
-    
-    // Fallback: open Maya web after 2 seconds if app not installed
-    setTimeout(() => {
-      window.open(`https://maya.ph`, '_blank');
-    }, 2000);
-    
-    setOpenedApp(true);
   };
 
   const handleConfirm = () => {
@@ -76,25 +58,12 @@ export default function PayMayaModal({ total, orderNo, onClose, onConfirmPayment
           -webkit-tap-highlight-color: transparent;
         }
         .calma-maya-close:active { color: #C6A265; }
-        .calma-maya-open-app {
-          width: 100%;
-          padding: 14px;
-          border-radius: 10px;
-          border: none;
-          background: #4FBF3F;
-          color: #0B0805;
-          font-size: 14px;
-          font-weight: 700;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          min-height: 48px;
-          margin-bottom: 12px;
-          -webkit-tap-highlight-color: transparent;
+        .calma-maya-qr {
+          width: 220px;
+          height: 220px;
+          object-fit: contain;
+          border-radius: 8px;
         }
-        .calma-maya-open-app:active { background: #45a838; }
         .calma-maya-copy {
           margin-top: 10px;
           display: inline-flex;
@@ -123,7 +92,7 @@ export default function PayMayaModal({ total, orderNo, onClose, onConfirmPayment
           padding: 14px;
           border-radius: 10px;
           border: none;
-          background: #C6A265;
+          background: #4FBF3F;
           color: #0B0805;
           font-size: 14px;
           font-weight: 700;
@@ -135,32 +104,7 @@ export default function PayMayaModal({ total, orderNo, onClose, onConfirmPayment
           min-height: 48px;
           -webkit-tap-highlight-color: transparent;
         }
-        .calma-maya-confirm:active { background: #d6b578; }
-        .calma-maya-confirm:disabled {
-          background: rgba(198,162,101,0.2);
-          color: #5C4E3C;
-          cursor: not-allowed;
-        }
-        .calma-maya-step {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          padding: 12px 0;
-          border-bottom: 1px solid rgba(198,162,101,0.12);
-        }
-        .calma-maya-step-num {
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: rgba(198,162,101,0.15);
-          color: #C6A265;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 12px;
-          font-weight: 700;
-          flex-shrink: 0;
-        }
+        .calma-maya-confirm:active { background: #45a838; }
       `}</style>
 
       <div className="calma-maya-card">
@@ -171,7 +115,7 @@ export default function PayMayaModal({ total, orderNo, onClose, onConfirmPayment
         {!confirmed ? (
           <>
             {/* Header */}
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <div style={{ textAlign: "center", marginBottom: 20 }}>
               <div style={{
                 width: 56, height: 56, borderRadius: "50%",
                 background: "#4FBF3F",
@@ -181,52 +125,37 @@ export default function PayMayaModal({ total, orderNo, onClose, onConfirmPayment
                 <Smartphone size={28} color="#0B0805" />
               </div>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#F2EAD9" }}>
-                Maya payment
+                Scan to pay
               </div>
               <div style={{ fontSize: 13, color: "#8A7554", marginTop: 4, fontFamily: "'Montserrat', sans-serif" }}>
-                {openedApp ? "Complete payment in the Maya app" : "Open Maya and send payment"}
+                Works with Maya, GCash, BPI, and any InstaPay app
               </div>
             </div>
 
-            {/* Steps */}
-            <div style={{ marginBottom: 20 }}>
-              <div className="calma-maya-step">
-                <div className="calma-maya-step-num">1</div>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: "#F2EAD9" }}>Tap button to open Maya</div>
-                  <div style={{ fontSize: 12, color: "#8A7554", marginTop: 2 }}>Number will be copied automatically</div>
-                </div>
-              </div>
-              <div className="calma-maya-step">
-                <div className="calma-maya-step-num">2</div>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: "#F2EAD9" }}>Send {peso(total)} to {OWNER_MAYA_NUMBER}</div>
-                  <div style={{ fontSize: 12, color: "#8A7554", marginTop: 2 }}>Name: {OWNER_MAYA_NAME}</div>
-                </div>
-              </div>
-              <div className="calma-maya-step" style={{ borderBottom: "none" }}>
-                <div className="calma-maya-step-num">3</div>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: "#F2EAD9" }}>Return here and confirm</div>
-                  <div style={{ fontSize: 12, color: "#8A7554", marginTop: 2 }}>We'll process your order</div>
-                </div>
-              </div>
+            {/* QR Code Image */}
+            <div style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: 20,
+            }}>
+              <img
+                src="/QR.jpg"
+                alt="InstaPay QR Code"
+                className="calma-maya-qr"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
+              />
             </div>
-
-            {/* Open Maya App Button */}
-            <button onClick={handleOpenMaya} className="calma-maya-open-app cos-btn">
-              <ExternalLink size={18} />
-              {openedApp ? "Reopen Maya App" : "Open Maya App"}
-            </button>
 
             {/* OR Divider */}
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
               <div style={{ flex: 1, height: 1, background: "rgba(198,162,101,0.2)" }}></div>
-              <span style={{ fontSize: 11, color: "#8A7554", textTransform: "uppercase", letterSpacing: 1 }}>or copy number</span>
+              <span style={{ fontSize: 11, color: "#8A7554", textTransform: "uppercase", letterSpacing: 1, fontFamily: "'Montserrat', sans-serif" }}>or send to</span>
               <div style={{ flex: 1, height: 1, background: "rgba(198,162,101,0.2)" }}></div>
             </div>
 
-            {/* Number + Copy */}
+            {/* Phone Number */}
             <div style={{
               background: "rgba(198,162,101,0.04)",
               border: "1px solid rgba(198,162,101,0.18)",
@@ -235,10 +164,13 @@ export default function PayMayaModal({ total, orderNo, onClose, onConfirmPayment
               textAlign: "center",
               marginBottom: 20,
             }}>
-              <div style={{ fontSize: 22, fontWeight: 700, color: "#F2EAD9", fontFamily: "'Montserrat', sans-serif" }}>
-                {OWNER_MAYA_NUMBER}
+              <div style={{ fontSize: 11, color: "#8A7554", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1, fontFamily: "'Montserrat', sans-serif" }}>
+                Send to number
               </div>
-              <div style={{ fontSize: 12, color: "#8A7554", marginTop: 4 }}>{OWNER_MAYA_NAME}</div>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 22, fontWeight: 700, color: "#F2EAD9", marginBottom: 4 }}>
+                {OWNER_PHONE}
+              </div>
+              <div style={{ fontSize: 12, color: "#8A7554", fontFamily: "'Montserrat', sans-serif" }}>{OWNER_NAME}</div>
               <button onClick={handleCopy} className={`calma-maya-copy cos-btn ${copied ? "copied" : "idle"}`}>
                 {copied ? <CheckCircle size={14} /> : <Copy size={14} />}
                 {copied ? "Copied!" : "Copy number"}
@@ -247,24 +179,29 @@ export default function PayMayaModal({ total, orderNo, onClose, onConfirmPayment
 
             {/* Amount */}
             <div style={{
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-              background: "#0B0805", border: "1px solid rgba(198,162,101,0.25)",
-              color: "#F2EAD9", padding: "14px 18px", borderRadius: 10, marginBottom: 16,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              background: "#0B0805",
+              border: "1px solid rgba(198,162,101,0.25)",
+              color: "#F2EAD9",
+              padding: "14px 18px",
+              borderRadius: 10,
+              marginBottom: 16,
             }}>
-              <span style={{ fontSize: 13 }}>Amount to pay</span>
-              <span style={{ fontSize: 20, fontWeight: 700, color: "#C6A265" }}>{peso(total)}</span>
+              <span style={{ fontSize: 13, fontFamily: "'Montserrat', sans-serif" }}>Amount to pay</span>
+              <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 20, fontWeight: 700, color: "#C6A265" }}>
+                {peso(total)}
+              </span>
             </div>
 
             {/* Confirm Button */}
-            <button 
-              onClick={handleConfirm} 
-              className="calma-maya-confirm cos-btn"
-            >
+            <button onClick={handleConfirm} className="calma-maya-confirm cos-btn">
               <CheckCircle size={18} />
-              I've paid via Maya
+              I've paid
             </button>
-            <div style={{ textAlign: "center", marginTop: 10, fontSize: 11, color: "#5C4E3C" }}>
-              {openedApp ? "Tap after completing payment in Maya" : "Open Maya first, then confirm here"}
+            <div style={{ textAlign: "center", marginTop: 10, fontSize: 11, color: "#5C4E3C", fontFamily: "'Montserrat', sans-serif" }}>
+              Tap confirm after sending payment
             </div>
           </>
         ) : (
@@ -282,7 +219,7 @@ export default function PayMayaModal({ total, orderNo, onClose, onConfirmPayment
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#F2EAD9" }}>
               Payment confirmed
             </div>
-            <div style={{ fontSize: 13, color: "#8A7554", marginTop: 6 }}>
+            <div style={{ fontSize: 13, color: "#8A7554", marginTop: 6, fontFamily: "'Montserrat', sans-serif" }}>
               Processing your order...
             </div>
           </div>
