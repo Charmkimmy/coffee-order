@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText } from "lucide-react";
+import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff } from "lucide-react";
 import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
@@ -202,88 +202,184 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#EFEBE9",
-        fontFamily: "'Public Sans', sans-serif",
-        color: "#3E2723",
-      }}
-    >
-      {/* Header */}
-      <div
-        style={{
-          background: "#3E2723",
-          color: "#EFEBE9",
-          padding: "20px 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div>
-            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 19, fontWeight: 600 }}>
-              Admin Dashboard
-            </div>
-            <div style={{ fontSize: 11, color: "#A1887F", letterSpacing: 1.5, textTransform: "uppercase" }}>
-              Sales History
-            </div>
-          </div>
-        </div>
+    <div className="calma-admin-dash">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
-        {/* Logout Button */}
-        <button
-          onClick={onLogout}
-          style={{
-            background: "none",
-            border: "1px solid #A1887F",
-            color: "#A1887F",
-            padding: "6px 12px",
-            borderRadius: 8,
-            fontSize: 12,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            transition: "all 0.2s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(161, 136, 127, 0.15)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "none";
-          }}
-        >
+        .calma-admin-dash * { box-sizing: border-box; }
+
+        .calma-admin-dash {
+          min-height: 100dvh;
+          background: #0B0805;
+          background-image: radial-gradient(rgba(198,162,101,0.08) 1px, transparent 1px);
+          background-size: 22px 22px;
+          font-family: 'Montserrat', sans-serif;
+          color: #F2EAD9;
+        }
+
+        .calma-ad-topbar {
+          background: #100A06;
+          border-bottom: 1px solid rgba(198,162,101,0.18);
+          padding: max(18px, env(safe-area-inset-top)) 24px 18px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .calma-ad-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: #F2EAD9; }
+        .calma-ad-subtitle { font-size: 11px; color: #8A7554; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+
+        .calma-ad-btn {
+          background: transparent;
+          border: 1px solid rgba(198,162,101,0.35);
+          color: #C6A265;
+          padding: 8px 14px;
+          border-radius: 8px;
+          font-size: 12px;
+          font-family: 'Montserrat', sans-serif;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          min-height: 36px;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .calma-ad-btn:active { background: rgba(198,162,101,0.12); }
+        @media (hover: hover) {
+          .calma-ad-btn:hover { background: rgba(198,162,101,0.1); }
+        }
+        .calma-ad-btn.danger { border-color: rgba(194,69,58,0.5); color: #d4776c; }
+        @media (hover: hover) {
+          .calma-ad-btn.danger:hover { background: rgba(194,69,58,0.12); }
+        }
+        .calma-ad-btn.muted { border-color: rgba(198,162,101,0.2); color: #8A7554; }
+
+        .calma-summary-grid {
+          padding: 24px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+          max-width: 900px;
+          margin: 0 auto;
+        }
+
+        .calma-summary-card {
+          background: #100A06;
+          border: 1px solid rgba(198,162,101,0.18);
+          border-radius: 12px;
+          padding: 20px;
+          text-align: center;
+        }
+        .calma-summary-value { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: #F2EAD9; }
+        .calma-summary-label { font-size: 12px; color: #8A7554; margin-top: 4px; }
+
+        .calma-search-wrap { position: relative; flex: 1; min-width: 140px; max-width: 280px; }
+        .calma-search-input {
+          width: 100%;
+          padding: 9px 12px 9px 32px;
+          border-radius: 8px;
+          border: 1px solid rgba(198,162,101,0.25);
+          background: rgba(198,162,101,0.04);
+          font-size: 16px;
+          font-family: 'Montserrat', sans-serif;
+          color: #F2EAD9;
+          outline: none;
+        }
+        .calma-search-input::placeholder { color: #5C4E3C; }
+        .calma-search-input:focus { border-color: #C6A265; }
+
+        .calma-day-card { background: #100A06; border: 1px solid rgba(198,162,101,0.18); border-radius: 12px; overflow: hidden; }
+        .calma-day-header { background: #0B0805; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(198,162,101,0.12); }
+        .calma-day-footer { background: rgba(198,162,101,0.05); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(198,162,101,0.12); }
+
+        .calma-order-row { border-bottom: 1px dashed rgba(198,162,101,0.2); padding: 12px 0; position: relative; }
+        .calma-order-row:last-child { border-bottom: none; }
+
+        .calma-check-btn { background: none; border: none; cursor: pointer; color: #C6A265; padding: 4px; display: flex; align-items: center; min-width: 32px; min-height: 32px; justify-content: center; }
+
+        .calma-edit-input {
+          padding: 6px 10px;
+          border-radius: 6px;
+          border: 1px solid #C6A265;
+          background: rgba(198,162,101,0.06);
+          font-size: 13px;
+          font-family: 'Montserrat', sans-serif;
+          color: #F2EAD9;
+          outline: none;
+        }
+
+        .calma-mini-btn {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          background: transparent;
+          padding: 6px 10px;
+          border-radius: 6px;
+          font-size: 11px;
+          cursor: pointer;
+          min-height: 30px;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .calma-mini-btn.gold { border: 1px solid rgba(198,162,101,0.4); color: #C6A265; }
+        .calma-mini-btn.gold-fill { border: none; background: #C6A265; color: #0B0805; font-weight: 700; }
+        .calma-mini-btn.danger { border: 1px solid rgba(194,69,58,0.5); color: #d4776c; }
+        .calma-mini-btn.neutral { border: 1px solid rgba(198,162,101,0.25); color: #8A7554; }
+
+        .calma-page-btn {
+          background: transparent;
+          border: 1px solid rgba(198,162,101,0.25);
+          padding: 6px 12px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          min-height: 36px;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .calma-page-btn:not(:disabled) { color: #C6A265; cursor: pointer; }
+        .calma-page-btn:disabled { color: #4a3f30; cursor: not-allowed; }
+
+        @media (max-width: 640px) {
+          .calma-summary-grid { grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 16px; }
+          .calma-summary-card { padding: 14px 10px; }
+          .calma-summary-value { font-size: 20px; }
+        }
+      `}</style>
+
+      {/* Header */}
+      <div className="calma-ad-topbar">
+        <div>
+          <div className="calma-ad-title">Admin dashboard</div>
+          <div className="calma-ad-subtitle">Sales history</div>
+        </div>
+        <button onClick={onLogout} className="calma-ad-btn muted">
           <LogOut size={14} />
           Logout
         </button>
       </div>
 
       {/* Summary Cards */}
-      <div style={{ padding: "24px", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, maxWidth: 900, margin: "0 auto" }}>
-        <div style={{ background: "#FFFDF9", border: "1px solid #D7CCC8", borderRadius: 12, padding: "20px", textAlign: "center" }}>
-          <DollarSign size={24} color="#8D6E63" style={{ marginBottom: 8 }} />
-          <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 700 }}>{peso(grandTotal)}</div>
-          <div style={{ fontSize: 12, color: "#A1887F", marginTop: 4 }}>Total Sales</div>
+      <div className="calma-summary-grid">
+        <div className="calma-summary-card">
+          <DollarSign size={22} color="#C6A265" style={{ marginBottom: 8 }} />
+          <div className="calma-summary-value">{peso(grandTotal)}</div>
+          <div className="calma-summary-label">Total sales</div>
         </div>
-        <div style={{ background: "#FFFDF9", border: "1px solid #D7CCC8", borderRadius: 12, padding: "20px", textAlign: "center" }}>
-          <ShoppingBag size={24} color="#8D6E63" style={{ marginBottom: 8 }} />
-          <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 700 }}>{orderHistory.length}</div>
-          <div style={{ fontSize: 12, color: "#A1887F", marginTop: 4 }}>Total Orders</div>
+        <div className="calma-summary-card">
+          <ShoppingBag size={22} color="#C6A265" style={{ marginBottom: 8 }} />
+          <div className="calma-summary-value">{orderHistory.length}</div>
+          <div className="calma-summary-label">Total orders</div>
         </div>
-        <div style={{ background: "#FFFDF9", border: "1px solid #D7CCC8", borderRadius: 12, padding: "20px", textAlign: "center" }}>
-          <Calendar size={24} color="#8D6E63" style={{ marginBottom: 8 }} />
-          <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 700 }}>{dailyTotals.length}</div>
-          <div style={{ fontSize: 12, color: "#A1887F", marginTop: 4 }}>Days Active</div>
+        <div className="calma-summary-card">
+          <Calendar size={22} color="#C6A265" style={{ marginBottom: 8 }} />
+          <div className="calma-summary-value">{dailyTotals.length}</div>
+          <div className="calma-summary-label">Days active</div>
         </div>
       </div>
 
       {/* Search & Actions Bar */}
       <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "space-between" }}>
-        {/* Search - Mobile responsive */}
-        <div style={{ position: "relative", flex: 1, minWidth: 140, maxWidth: 280 }}>
-          <Search size={14} color="#A1887F" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
+        <div className="calma-search-wrap">
+          <Search size={14} color="#8A7554" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
           <input
             type="text"
             placeholder="Search..."
@@ -292,41 +388,13 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
               setSearchQuery(e.target.value);
               setCurrentPage(1);
             }}
-            style={{
-              width: "100%",
-              padding: "8px 12px 8px 32px",
-              borderRadius: 8,
-              border: "1px solid #D7CCC8",
-              background: "#FFFDF9",
-              fontSize: 12,
-              fontFamily: "'Public Sans', sans-serif",
-              color: "#3E2723",
-              outline: "none",
-              boxSizing: "border-box",
-            }}
+            className="calma-search-input"
           />
         </div>
 
-        {/* Export Excel - Mobile responsive */}
-        <button
-          onClick={exportToExcel}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 5,
-            background: "transparent",
-            border: "1px solid #8D6E63",
-            color: "#8D6E63",
-            padding: "7px 12px",
-            borderRadius: 8,
-            fontSize: 12,
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-            flexShrink: 0,
-          }}
-        >
+        <button onClick={exportToExcel} className="calma-ad-btn">
           <Download size={14} />
-          <span style={{ display: "inline" }}>Export Excel</span>
+          <span>Export Excel</span>
         </button>
       </div>
 
@@ -334,104 +402,57 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
       <div style={{ padding: "0 24px 8px", maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "flex-end" }}>
         <button
           onClick={() => setSoundEnabled(!soundEnabled)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            background: "transparent",
-            border: "1px solid " + (soundEnabled ? "#8D6E63" : "#A1887F"),
-            color: soundEnabled ? "#8D6E63" : "#A1887F",
-            padding: "4px 10px",
-            borderRadius: 6,
-            fontSize: 11,
-            cursor: "pointer",
-          }}
+          className={`calma-ad-btn ${soundEnabled ? "" : "muted"}`}
+          style={{ fontSize: 11, padding: "6px 12px", minHeight: 32 }}
           title={soundEnabled ? "Sound notifications on" : "Sound notifications off"}
         >
-          {soundEnabled ? "🔔" : "🔕"}
-          {soundEnabled ? "Sound On" : "Sound Off"}
+          {soundEnabled ? <BellRing size={13} /> : <BellOff size={13} />}
+          {soundEnabled ? "Sound on" : "Sound off"}
         </button>
       </div>
 
       {/* Select All / Delete Selected Bar */}
       {filteredOrderHistory.length > 0 && (
-        <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 12 }}>
-          <button
-            onClick={allSelected ? deselectAll : selectAll}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              background: "transparent",
-              border: "1px solid #8D6E63",
-              color: "#8D6E63",
-              padding: "6px 14px",
-              borderRadius: 8,
-              fontSize: 12,
-              cursor: "pointer",
-            }}
-          >
+        <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <button onClick={allSelected ? deselectAll : selectAll} className="calma-ad-btn">
             {allSelected ? <CheckSquare size={14} /> : <Square size={14} />}
-            {allSelected ? "Deselect All" : "Select All"}
+            {allSelected ? "Deselect all" : "Select all"}
           </button>
           {selectedOrders.size > 0 && (
-            <button
-              onClick={deleteSelected}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                background: "transparent",
-                border: "1px solid #C62828",
-                color: "#C62828",
-                padding: "6px 14px",
-                borderRadius: 8,
-                fontSize: 12,
-                cursor: "pointer",
-              }}
-            >
+            <button onClick={deleteSelected} className="calma-ad-btn danger">
               <Trash2 size={14} />
-              Delete Selected ({selectedOrders.size})
+              Delete selected ({selectedOrders.size})
             </button>
           )}
-          <span style={{ fontSize: 12, color: "#A1887F", marginLeft: "auto" }}>
+          <span style={{ fontSize: 12, color: "#8A7554", marginLeft: "auto" }}>
             {filteredOrderHistory.length} order{filteredOrderHistory.length !== 1 ? "s" : ""} found
           </span>
         </div>
       )}
 
       {/* Daily Sales */}
-      <div style={{ padding: "0 24px 24px", maxWidth: 900, margin: "0 auto" }}>
-        <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 700, marginBottom: 16 }}>
-          Daily Sales
+      <div style={{ padding: "0 24px 32px", maxWidth: 900, margin: "0 auto" }}>
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, marginBottom: 16, color: "#F2EAD9" }}>
+          Daily sales
         </div>
 
         {paginatedDailyTotals.length === 0 ? (
-          <div style={{ background: "#FFFDF9", border: "1px dashed #D7CCC8", borderRadius: 12, padding: "40px", textAlign: "center", color: "#A1887F" }}>
+          <div style={{ background: "#100A06", border: "1px dashed rgba(198,162,101,0.3)", borderRadius: 12, padding: "40px", textAlign: "center", color: "#8A7554" }}>
             {searchQuery ? "No orders match your search." : "No sales yet. Orders will appear here once customers start ordering."}
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {paginatedDailyTotals.map((day) => (
-              <div key={day.date} style={{ background: "#FFFDF9", border: "1px solid #D7CCC8", borderRadius: 12, overflow: "hidden" }}>
+              <div key={day.date} className="calma-day-card">
                 {/* Day Header */}
-                <div
-                  style={{
-                    background: "#3E2723",
-                    color: "#EFEBE9",
-                    padding: "14px 20px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
+                <div className="calma-day-header">
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <Calendar size={16} color="#A1887F" />
-                    <span style={{ fontWeight: 600, fontSize: 15 }}>{day.date}</span>
+                    <Calendar size={16} color="#C6A265" />
+                    <span style={{ fontWeight: 600, fontSize: 15, color: "#F2EAD9" }}>{day.date}</span>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 13 }}>
-                    <span>{day.orders.length} orders</span>
-                    <span style={{ fontFamily: "'Space Mono', monospace", color: "#A1887F", fontWeight: 700 }}>
+                    <span style={{ color: "#8A7554" }}>{day.orders.length} orders</span>
+                    <span style={{ fontFamily: "'Montserrat', sans-serif", color: "#C6A265", fontWeight: 700 }}>
                       {peso(day.totalSales)}
                     </span>
                   </div>
@@ -440,31 +461,13 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                 {/* Orders List */}
                 <div style={{ padding: "16px 20px" }}>
                   {day.orders.map((order) => (
-                    <div
-                      key={order.id}
-                      style={{
-                        borderBottom: "1px dashed #D7CCC8",
-                        padding: "12px 0",
-                        position: "relative",
-                      }}
-                    >
+                    <div key={order.id} className="calma-order-row">
                       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                        <button
-                          onClick={() => toggleSelect(order.id)}
-                          style={{
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            color: "#8D6E63",
-                            padding: 2,
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          {selectedOrders.has(order.id) ? <CheckSquare size={16} /> : <Square size={16} />}
+                        <button onClick={() => toggleSelect(order.id)} className="calma-check-btn">
+                          {selectedOrders.has(order.id) ? <CheckSquare size={16} /> : <Square size={16} color="#8A7554" />}
                         </button>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flex: 1, paddingRight: 20 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#6D4C41" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flex: 1, paddingRight: 20, flexWrap: "wrap", gap: 6 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#8A7554" }}>
                             <Clock size={12} />
                             {order.time}
                           </div>
@@ -475,107 +478,57 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                 value={editCustomerName}
                                 onChange={(e) => setEditCustomerName(e.target.value)}
                                 placeholder="Customer name..."
-                                style={{
-                                  padding: "4px 8px",
-                                  borderRadius: 6,
-                                  border: "1px solid #8D6E63",
-                                  fontSize: 12,
-                                  fontFamily: "'Public Sans', sans-serif",
-                                  color: "#3E2723",
-                                  outline: "none",
-                                }}
+                                className="calma-edit-input"
                                 autoFocus
                               />
                             ) : (
                               order.customerName && (
-                                <span style={{ fontSize: 11, color: "#8D6E63", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                                <span style={{ fontSize: 11, color: "#C6A265", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
                                   <User size={11} />
                                   {order.customerName}
                                 </span>
                               )
                             )}
-                            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, fontWeight: 700 }}>
+                            <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, fontWeight: 700, color: "#F2EAD9" }}>
                               Order #{order.orderNo}
                             </span>
                           </div>
                         </div>
                       </div>
                       {order.items.map((item) => (
-                        <div key={item.key} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#5D4037", marginBottom: 2, paddingLeft: 34 }}>
+                        <div key={item.key} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#C9BB9E", marginBottom: 2, paddingLeft: 34 }}>
                           <span>{item.qty}× {item.name} ({item.size})</span>
                           <span>{peso(item.price * item.qty)}</span>
                         </div>
                       ))}
                       {/* Order Notes */}
                       {order.notes && (
-                        <div style={{ marginTop: 8, marginBottom: 4, padding: "8px 10px", background: "#F2E9D8", borderRadius: 6, borderLeft: "3px solid #B23A1E", paddingLeft: 34 }}>
+                        <div style={{ marginTop: 8, marginBottom: 4, marginLeft: 34, padding: "8px 10px", background: "rgba(198,162,101,0.06)", borderRadius: 6, borderLeft: "3px solid #C6A265" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
-                            <FileText size={11} color="#B23A1E" />
-                            <span style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1, color: "#8A7F6C" }}>Notes</span>
+                            <FileText size={11} color="#C6A265" />
+                            <span style={{ fontSize: 10, fontFamily: "'Montserrat', sans-serif", textTransform: "uppercase", letterSpacing: 1, color: "#8A7554" }}>Notes</span>
                           </div>
-                          <div style={{ fontSize: 13, color: "#241A12", fontStyle: "italic" }}>{order.notes}</div>
+                          <div style={{ fontSize: 13, color: "#F2EAD9", fontStyle: "italic" }}>{order.notes}</div>
                         </div>
                       )}
-                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontSize: 12, color: "#A1887F", paddingLeft: 34 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontSize: 12, color: "#8A7554", paddingLeft: 34 }}>
                         <span>Paid via {PAYMENTS.find((p) => p.id === order.payment)?.label}</span>
-                        <span style={{ fontWeight: 700, color: "#3E2723" }}>{peso(order.total)}</span>
+                        <span style={{ fontWeight: 700, color: "#F2EAD9" }}>{peso(order.total)}</span>
                       </div>
                       {/* Edit & Delete Buttons */}
                       <div style={{ display: "flex", gap: 8, marginTop: 8, paddingLeft: 34 }}>
                         {editingOrder === order.id ? (
                           <>
-                            <button
-                              onClick={() => saveEdit(order.id)}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 4,
-                                background: "#8D6E63",
-                                border: "none",
-                                color: "#FFF",
-                                padding: "4px 10px",
-                                borderRadius: 6,
-                                fontSize: 11,
-                                cursor: "pointer",
-                              }}
-                            >
+                            <button onClick={() => saveEdit(order.id)} className="calma-mini-btn gold-fill">
                               Save
                             </button>
-                            <button
-                              onClick={cancelEdit}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 4,
-                                background: "transparent",
-                                border: "1px solid #A1887F",
-                                color: "#A1887F",
-                                padding: "4px 10px",
-                                borderRadius: 6,
-                                fontSize: 11,
-                                cursor: "pointer",
-                              }}
-                            >
+                            <button onClick={cancelEdit} className="calma-mini-btn neutral">
                               Cancel
                             </button>
                           </>
                         ) : (
                           <>
-                            <button
-                              onClick={() => startEdit(order)}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 4,
-                                background: "transparent",
-                                border: "1px solid #8D6E63",
-                                color: "#8D6E63",
-                                padding: "4px 10px",
-                                borderRadius: 6,
-                                fontSize: 11,
-                                cursor: "pointer",
-                              }}
-                            >
+                            <button onClick={() => startEdit(order)} className="calma-mini-btn gold">
                               <Pencil size={12} />
                               Edit
                             </button>
@@ -585,18 +538,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                   onDeleteOrder(order.id);
                                 }
                               }}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 4,
-                                background: "transparent",
-                                border: "1px solid #C62828",
-                                color: "#C62828",
-                                padding: "4px 10px",
-                                borderRadius: 6,
-                                fontSize: 11,
-                                cursor: "pointer",
-                              }}
+                              className="calma-mini-btn danger"
                             >
                               <X size={12} />
                               Delete
@@ -609,19 +551,10 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                 </div>
 
                 {/* Day Footer */}
-                <div
-                  style={{
-                    background: "#F5F0EB",
-                    padding: "12px 20px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderTop: "1px solid #D7CCC8",
-                  }}
-                >
-                  <span style={{ fontSize: 12, color: "#6D4C41" }}>{day.itemCount} items sold</span>
-                  <span style={{ fontFamily: "'Fraunces', serif", fontSize: 16, fontWeight: 700 }}>
-                    Day Total: {peso(day.totalSales)}
+                <div className="calma-day-footer">
+                  <span style={{ fontSize: 12, color: "#8A7554" }}>{day.itemCount} items sold</span>
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontWeight: 700, color: "#F2EAD9" }}>
+                    Day total: {peso(day.totalSales)}
                   </span>
                 </div>
               </div>
@@ -635,35 +568,17 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              style={{
-                background: "transparent",
-                border: "1px solid #D7CCC8",
-                color: currentPage === 1 ? "#D7CCC8" : "#8D6E63",
-                padding: "6px 12px",
-                borderRadius: 8,
-                cursor: currentPage === 1 ? "not-allowed" : "pointer",
-                display: "flex",
-                alignItems: "center",
-              }}
+              className="calma-page-btn"
             >
               <ChevronLeft size={16} />
             </button>
-            <span style={{ fontSize: 13, color: "#6D4C41" }}>
+            <span style={{ fontSize: 13, color: "#8A7554" }}>
               Page {currentPage} of {totalPages}
             </span>
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              style={{
-                background: "transparent",
-                border: "1px solid #D7CCC8",
-                color: currentPage === totalPages ? "#D7CCC8" : "#8D6E63",
-                padding: "6px 12px",
-                borderRadius: 8,
-                cursor: currentPage === totalPages ? "not-allowed" : "pointer",
-                display: "flex",
-                alignItems: "center",
-              }}
+              className="calma-page-btn"
             >
               <ChevronRight size={16} />
             </button>
