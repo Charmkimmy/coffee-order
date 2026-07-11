@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff, AlertCircle, CheckCircle, Smartphone, Ban } from "lucide-react";import { peso } from "../utils/format";
+import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff, AlertCircle, CheckCircle, Smartphone, Ban } from "lucide-react";
+import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
-export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, onDeleteOrder, onBack, onEditOrder, onLogout, unmatchedPayments = [], onVerifyPayment, onRequestResubmit }) {
+export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, onDeleteOrder, onBack, onEditOrder, onLogout, unmatchedPayments = [], onVerifyPayment }) {
   const [selectedOrders, setSelectedOrders] = useState(new Set());
   const [editingOrder, setEditingOrder] = useState(null);
   const [editCustomerName, setEditCustomerName] = useState("");
@@ -11,8 +12,19 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [activeTab, setActiveTab] = useState("orders");
   const [previewImage, setPreviewImage] = useState(null);
+  const [rejectingOrder, setRejectingOrder] = useState(null); // NEW: track which order is being rejected
+  const [rejectReason, setRejectReason] = useState(""); // NEW: selected reason
   const prevOrderCountRef = useRef(orderHistory.length);
   const ordersPerPage = 5;
+
+  const REJECT_REASONS = [
+    { id: "wrong_amount", label: "Wrong payment amount" },
+    { id: "wrong_qr", label: "Wrong QR code scanned" },
+    { id: "wrong_ref", label: "Invalid reference number" },
+    { id: "screenshot_unclear", label: "Screenshot unclear / unreadable" },
+    { id: "screenshot_missing", label: "Screenshot missing details" },
+    { id: "other", label: "Other reason" },
+  ];
 
   // Sound notification for new orders
   useEffect(() => {
@@ -180,19 +192,33 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
     }
   };
 
-  // REJECT = bad proof, customer can re-submit
-  const handleRejectOrder = (orderId) => {
-    if (!window.confirm("Reject payment proof? Customer will be asked to re-upload.")) return;
+  // Start reject flow — show reason selector
+  const startReject = (orderId) => {
+    setRejectingOrder(orderId);
+    setRejectReason("");
+  };
+
+  // Cancel reject
+  const cancelReject = () => {
+    setRejectingOrder(null);
+    setRejectReason("");
+  };
+
+  // Confirm reject with reason
+  const confirmReject = () => {
+    if (!rejectReason) return;
     if (onEditOrder) {
-      onEditOrder(orderId, { 
+      onEditOrder(rejectingOrder, { 
         status: "rejected", 
         rejectedAt: Date.now(),
-        rejectReason: "Invalid payment screenshot",
-        // Clear the bad proof so they can upload new one
+        rejectReason: rejectReason,
+        rejectReasonLabel: REJECT_REASONS.find(r => r.id === rejectReason)?.label,
         screenshot: null,
         screenshotPreview: null,
       });
     }
+    setRejectingOrder(null);
+    setRejectReason("");
   };
 
   // CANCEL = permanently kill the order
@@ -326,7 +352,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           text-align: center;
         }
         .calma-summary-value { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: #F2EAD9; }
-        .calma-summary-label { font-size: 12px; color: #8A7554; margin-top: 4px; }
+        .calma-summary-label { font-size: 12px; color: '#8A7554'; margin-top: 4px; }
 
         .calma-search-wrap { position: relative; flex: 1; min-width: 140px; max-width: 280px; }
         .calma-search-input {
@@ -409,7 +435,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         .calma-mini-btn.danger { border: 1px solid rgba(194,69,58,0.5); color: #d4776c; }
         .calma-mini-btn.neutral { border: 1px solid rgba(198,162,101,0.25); color: #8A7554; }
         .calma-mini-btn.green { border: none; background: #4FBF3F; color: #0B0805; font-weight: 700; }
-        .calma-mini-btn.orange { border: 1px solid rgba(198,162,101,0.4); color: #C6A265; }
+        .calma-mini-btn.orange { border: 1px solid rgba(220, 140, 60, 0.4); color: #DC8C3C; }
 
         .calma-page-btn {
           background: transparent;
@@ -521,6 +547,70 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           border-radius: 8px;
         }
 
+        /* Reject reason selector styles */
+        .calma-reject-overlay {
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0,0,0,0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 4000;
+          padding: 24px;
+        }
+        .calma-reject-card {
+          background: #100A06;
+          border: 1px solid rgba(198,162,101,0.2);
+          border-radius: 16px;
+          max-width: 360px;
+          width: 100%;
+          padding: 24px;
+        }
+        .calma-reject-reason {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 14px;
+          border-radius: 8px;
+          border: 1px solid rgba(198,162,101,0.2);
+          background: rgba(198,162,101,0.04);
+          cursor: pointer;
+          margin-bottom: 8px;
+          font-size: 13px;
+          color: #C9BB9E;
+          transition: all 0.15s;
+        }
+        .calma-reject-reason:hover {
+          border-color: rgba(198,162,101,0.4);
+          background: rgba(198,162,101,0.08);
+        }
+        .calma-reject-reason.selected {
+          border-color: #C6A265;
+          background: rgba(198,162,101,0.12);
+          color: #F2EAD9;
+        }
+        .calma-reject-radio {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          border: 2px solid #8A7554;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .calma-reject-radio.selected {
+          border-color: #C6A265;
+          background: #C6A265;
+        }
+        .calma-reject-radio.selected::after {
+          content: "";
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #0B0805;
+        }
+
         @media (max-width: 640px) {
           .calma-summary-grid { grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 16px; }
           .calma-summary-card { padding: 14px 10px; }
@@ -532,6 +622,55 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
       {previewImage && (
         <div className="calma-image-preview-overlay" onClick={() => setPreviewImage(null)}>
           <img src={previewImage} alt="Payment proof" className="calma-image-preview-img" />
+        </div>
+      )}
+
+      {/* Reject Reason Modal */}
+      {rejectingOrder && (
+        <div className="calma-reject-overlay" onClick={cancelReject}>
+          <div className="calma-reject-card" onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 700, color: "#F2EAD9", marginBottom: 4 }}>
+              Reject payment
+            </div>
+            <div style={{ fontSize: 12, color: "#8A7554", marginBottom: 20 }}>
+              Select a reason to help the customer understand
+            </div>
+            
+            {REJECT_REASONS.map((reason) => (
+              <div
+                key={reason.id}
+                onClick={() => setRejectReason(reason.id)}
+                className={`calma-reject-reason ${rejectReason === reason.id ? "selected" : ""}`}
+              >
+                <div className={`calma-reject-radio ${rejectReason === reason.id ? "selected" : ""}`} />
+                {reason.label}
+              </div>
+            ))}
+
+            <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+              <button
+                onClick={cancelReject}
+                className="calma-ad-btn"
+                style={{ flex: 1, justifyContent: "center" }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmReject}
+                disabled={!rejectReason}
+                className="calma-ad-btn danger"
+                style={{ 
+                  flex: 1, 
+                  justifyContent: "center",
+                  opacity: rejectReason ? 1 : 0.4,
+                  cursor: rejectReason ? "pointer" : "not-allowed"
+                }}
+              >
+                <X size={14} />
+                Reject Payment
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -800,7 +939,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                   Approve Order
                                 </button>
                                 <button 
-                                  onClick={() => handleRejectOrder(order.id)}
+                                  onClick={() => startReject(order.id)}
                                   className="calma-mini-btn danger"
                                   style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
                                 >
@@ -823,8 +962,13 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                             <div style={{ marginTop: 8, marginLeft: 34, padding: "12px", background: "rgba(220, 140, 60, 0.06)", borderRadius: 8, border: "1px solid rgba(220, 140, 60, 0.2)" }}>
                               <div style={{ fontSize: 11, color: "#DC8C3C", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
                                 <AlertCircle size={11} />
-                                Proof rejected — waiting for customer to re-submit
+                                Proof rejected
                               </div>
+                              {order.rejectReasonLabel && (
+                                <div style={{ fontSize: 12, color: "#E8A0A0", marginBottom: 8, padding: "8px 10px", background: "rgba(220, 80, 80, 0.06)", borderRadius: 6 }}>
+                                  <strong>Reason:</strong> {order.rejectReasonLabel}
+                                </div>
+                              )}
                               {order.referenceNo && (
                                 <div style={{ fontSize: 12, color: "#C9BB9E", marginBottom: 8 }}>
                                   Previous ref: <strong style={{ color: "#F2EAD9" }}>{order.referenceNo}</strong>
