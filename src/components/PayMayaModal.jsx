@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import { X, Smartphone, Copy, CheckCircle, Camera, ShieldCheck, AlertCircle, Download } from "lucide-react";
+import { X, Smartphone, Copy, CheckCircle, Camera, ShieldCheck, AlertCircle, Download, Upload, ImageIcon } from "lucide-react";
 import { peso } from "../utils/format";
 
 const OWNER_PHONE = "09493008592";
@@ -9,7 +9,10 @@ const OWNER_NAME = "ALLAN SEPNO";
 export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
   const [copied, setCopied] = useState(false);
   const [referenceNo, setReferenceNo] = useState("");
+  const [screenshot, setScreenshot] = useState(null);
+  const [screenshotPreview, setScreenshotPreview] = useState(null);
   const [step, setStep] = useState("pay");
+  const fileInputRef = useRef(null);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(OWNER_PHONE);
@@ -24,21 +27,54 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
     link.click();
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Validate file type and size
+    if (!file.type.startsWith("image/")) {
+      alert("Please upload an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File too large. Max 5MB");
+      return;
+    }
+
+    setScreenshot(file);
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => setScreenshotPreview(e.target.result);
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveScreenshot = () => {
+    setScreenshot(null);
+    setScreenshotPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   const handlePaidClick = () => {
     setStep("verify");
   };
 
   const handleVerify = () => {
-    if (!referenceNo.trim()) return;
+    if (!referenceNo.trim() || !screenshot) return;
     setStep("confirmed");
     setTimeout(() => {
-      onConfirmPayment({ referenceNo: referenceNo.trim() });
+      onConfirmPayment({ 
+        referenceNo: referenceNo.trim(),
+        screenshot: screenshot,
+        screenshotPreview: screenshotPreview
+      });
     }, 1500);
   };
 
   const handleBackToPay = () => {
     setStep("pay");
     setReferenceNo("");
+    handleRemoveScreenshot();
   };
 
   return createPortal(
@@ -129,6 +165,31 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
         }
         .calma-ref-input::placeholder { color: #5C4E3C; letter-spacing: normal; }
         .calma-ref-input:focus { border-color: #C6A265; }
+        .calma-upload-area {
+          width: 100%;
+          padding: 20px;
+          border-radius: 10px;
+          border: 2px dashed rgba(198,162,101,0.3);
+          background: rgba(198,162,101,0.04);
+          text-align: center;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .calma-upload-area:hover {
+          border-color: #C6A265;
+          background: rgba(198,162,101,0.08);
+        }
+        .calma-upload-area.has-file {
+          border-color: #4FBF3F;
+          background: rgba(79,191,63,0.08);
+        }
+        .calma-upload-preview {
+          width: 100%;
+          max-height: 200px;
+          object-fit: contain;
+          border-radius: 8px;
+          margin-bottom: 10px;
+        }
         .calma-maya-copy {
           margin-top: 10px;
           display: inline-flex;
@@ -192,6 +253,20 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
           background: rgba(198,162,101,0.08);
           border: 1px solid rgba(198,162,101,0.2);
           margin-bottom: 16px;
+        }
+        .calma-requirement-list {
+          margin-bottom: 16px;
+        }
+        .calma-requirement-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 0;
+          font-size: 13px;
+          color: "#C9BB9E";
+        }
+        .calma-requirement-item.met {
+          color: #4FBF3F;
         }
       `}</style>
 
@@ -296,7 +371,7 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
                 Verify payment
               </div>
               <div style={{ fontSize: 13, color: "#8A7554", marginTop: 4, fontFamily: "'Montserrat', sans-serif" }}>
-                Enter reference number from your bank app
+                Upload proof of payment for verification
               </div>
             </div>
 
@@ -307,9 +382,22 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
               </div>
             </div>
 
-            <div style={{ marginBottom: 8 }}>
+            {/* Requirements checklist */}
+            <div className="calma-requirement-list">
+              <div className={`calma-requirement-item ${referenceNo.length >= 6 ? "met" : ""}`}>
+                <CheckCircle size={14} />
+                Reference number (6+ digits)
+              </div>
+              <div className={`calma-requirement-item ${screenshot ? "met" : ""}`}>
+                <CheckCircle size={14} />
+                Screenshot of payment confirmation
+              </div>
+            </div>
+
+            {/* Reference Number */}
+            <div style={{ marginBottom: 16 }}>
               <div style={{ fontSize: 11, color: "#8A7554", marginBottom: 8, textTransform: "uppercase", letterSpacing: 1, fontFamily: "'Montserrat', sans-serif" }}>
-                InstaPay reference number
+                InstaPay reference number *
               </div>
               <input
                 type="text"
@@ -320,18 +408,60 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
                 autoFocus
               />
               <div style={{ fontSize: 11, color: "#5C4E3C", marginTop: 6, fontFamily: "'Montserrat', sans-serif" }}>
-                Find this in your bank app after sending. Usually 10–12 digits.
+                Find this in your bank app after sending
               </div>
+            </div>
+
+            {/* Screenshot Upload */}
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 11, color: "#8A7554", marginBottom: 8, textTransform: "uppercase", letterSpacing: 1, fontFamily: "'Montserrat', sans-serif" }}>
+                Payment screenshot *
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                ref={fileInputRef}
+                style={{ display: "none" }}
+              />
+              {!screenshotPreview ? (
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="calma-upload-area"
+                >
+                  <Upload size={24} color="#8A7554" style={{ marginBottom: 8 }} />
+                  <div style={{ fontSize: 13, color: "#C9BB9E", marginBottom: 4 }}>
+                    Tap to upload screenshot
+                  </div>
+                  <div style={{ fontSize: 11, color: "#5C4E3C" }}>
+                    JPG, PNG · Max 5MB
+                  </div>
+                </div>
+              ) : (
+                <div className="calma-upload-area has-file">
+                  <img src={screenshotPreview} alt="Payment proof" className="calma-upload-preview" />
+                  <button 
+                    onClick={handleRemoveScreenshot}
+                    className="calma-mini-btn danger"
+                    style={{ margin: "0 auto" }}
+                  >
+                    <X size={12} />
+                    Remove & re-upload
+                  </button>
+                </div>
+              )}
             </div>
 
             <button 
               onClick={handleVerify} 
-              disabled={referenceNo.length < 6}
+              disabled={referenceNo.length < 6 || !screenshot}
               className="calma-maya-btn primary cos-btn"
               style={{ marginBottom: 10 }}
             >
               <ShieldCheck size={18} />
-              Verify & confirm
+              {referenceNo.length < 6 || !screenshot 
+                ? "Complete all requirements above" 
+                : "Submit for verification"}
             </button>
 
             <button onClick={handleBackToPay} className="calma-maya-btn secondary cos-btn">
@@ -352,13 +482,16 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
               <CheckCircle size={32} color="#7FAE68" />
             </div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#F2EAD9" }}>
-              Payment verified
+              Payment submitted
             </div>
             <div style={{ fontSize: 13, color: "#8A7554", marginTop: 6, fontFamily: "'Montserrat', sans-serif" }}>
               Ref: {referenceNo}
             </div>
-            <div style={{ fontSize: 13, color: "#8A7554", marginTop: 4, fontFamily: "'Montserrat', sans-serif" }}>
-              Processing your order...
+            <div style={{ fontSize: 13, color: "#C6A265", marginTop: 8, fontFamily: "'Montserrat', sans-serif" }}>
+              Waiting for admin verification...
+            </div>
+            <div style={{ fontSize: 12, color: "#5C4E3C", marginTop: 4, fontFamily: "'Montserrat', sans-serif" }}>
+              Your order will be processed once confirmed
             </div>
           </div>
         )}

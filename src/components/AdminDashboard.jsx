@@ -1,5 +1,6 @@
+
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff, AlertCircle, CheckCircle, Smartphone } from "lucide-react";
+import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff, AlertCircle, CheckCircle, Smartphone, ImageIcon } from "lucide-react";
 import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
@@ -10,7 +11,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [activeTab, setActiveTab] = useState("orders"); // "orders" | "payments"
+  const [activeTab, setActiveTab] = useState("orders");
+  const [previewImage, setPreviewImage] = useState(null);
   const prevOrderCountRef = useRef(orderHistory.length);
   const ordersPerPage = 5;
 
@@ -157,6 +159,12 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
 
   const allSelected = selectedOrders.size === filteredOrderHistory.length && filteredOrderHistory.length > 0;
 
+  // Count pending verification orders
+  const pendingOrders = useMemo(() => 
+    orderHistory.filter((o) => o.status === "pending_verification"),
+    [orderHistory]
+  );
+
   // Find matching order for a payment
   const findMatchingOrder = (payment) => {
     const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
@@ -168,9 +176,23 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
     );
   };
 
+  const handleApproveOrder = (orderId) => {
+    if (onEditOrder) {
+      onEditOrder(orderId, { status: "confirmed", verified: true, verifiedAt: Date.now() });
+    }
+  };
+
+  const handleRejectOrder = (orderId) => {
+    if (window.confirm("Reject this order? This will mark it as cancelled.")) {
+      if (onEditOrder) {
+        onEditOrder(orderId, { status: "rejected", rejectedAt: Date.now() });
+      }
+    }
+  };
+
   // Export to Excel
   const exportToExcel = () => {
-    const headers = ["Date", "Time", "Order #", "Customer", "Items", "Notes", "Payment", "Total"];
+    const headers = ["Date", "Time", "Order #", "Customer", "Items", "Notes", "Payment", "Status", "Total"];
     const rows = filteredOrderHistory.map((order) => [
       order.date,
       order.time,
@@ -179,6 +201,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
       order.items.map((i) => `${i.qty}x ${i.name} (${i.size})`).join("; "),
       order.notes || "",
       PAYMENTS.find((p) => p.id === order.payment)?.label || order.payment,
+      order.status || "confirmed",
       order.total,
     ]);
 
@@ -266,7 +289,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         .calma-ad-btn.green { 
           background: rgba(79,191,63,0.15); 
           border-color: rgba(79,191,63,0.4); 
-          color: "#4FBF3F"; 
+          color: #4FBF3F; 
         }
 
         .calma-summary-grid {
@@ -285,7 +308,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           padding: 20px;
           text-align: center;
         }
-        .calma-summary-value { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: "#F2EAD9"; }
+        .calma-summary-value { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: #F2EAD9; }
         .calma-summary-label { font-size: 12px; color: #8A7554; margin-top: 4px; }
 
         .calma-search-wrap { position: relative; flex: 1; min-width: 140px; max-width: 280px; }
@@ -398,12 +421,73 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           margin-top: 10px;
         }
 
+        .calma-pending-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 10px;
+          border-radius: 999px;
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          background: rgba(198,162,101,0.15);
+          color: #C6A265;
+          border: 1px solid rgba(198,162,101,0.3);
+        }
+        .calma-pending-badge.urgent {
+          background: rgba(194,69,58,0.15);
+          color: #C2453A;
+          border-color: rgba(194,69,58,0.3);
+          animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.6; }
+        }
+
+        .calma-screenshot-thumb {
+          width: 100%;
+          max-height: 180px;
+          object-fit: contain;
+          border-radius: 8px;
+          cursor: pointer;
+          border: 1px solid rgba(198,162,101,0.2);
+        }
+        .calma-screenshot-thumb:hover {
+          border-color: #C6A265;
+        }
+
+        .calma-image-preview-overlay {
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0,0,0,0.9);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 3000;
+          padding: 24px;
+        }
+        .calma-image-preview-img {
+          max-width: 100%;
+          max-height: 90vh;
+          object-fit: contain;
+          border-radius: 8px;
+        }
+
         @media (max-width: 640px) {
           .calma-summary-grid { grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 16px; }
           .calma-summary-card { padding: 14px 10px; }
           .calma-summary-value { font-size: 20px; }
         }
       `}</style>
+
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <div className="calma-image-preview-overlay" onClick={() => setPreviewImage(null)}>
+          <img src={previewImage} alt="Payment proof" className="calma-image-preview-img" />
+        </div>
+      )}
 
       {/* Header */}
       <div className="calma-ad-topbar">
@@ -444,6 +528,18 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         >
           <ShoppingBag size={14} />
           Orders
+          {pendingOrders.length > 0 && (
+            <span style={{
+              background: "#C2453A",
+              color: "#F2EAD9",
+              borderRadius: 999,
+              padding: "2px 8px",
+              fontSize: 10,
+              fontWeight: 700,
+            }}>
+              {pendingOrders.length}
+            </span>
+          )}
         </button>
         <button 
           onClick={() => setActiveTab("payments")}
@@ -585,6 +681,18 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                 <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, fontWeight: 700, color: "#F2EAD9" }}>
                                   Order #{order.orderNo}
                                 </span>
+                                {/* Status badge */}
+                                {order.status === "pending_verification" && (
+                                  <span className="calma-pending-badge urgent">
+                                    <Clock size={10} />
+                                    Pending
+                                  </span>
+                                )}
+                                {order.status === "rejected" && (
+                                  <span style={{ fontSize: 10, color: "#C2453A", fontWeight: 700, textTransform: "uppercase" }}>
+                                    Rejected
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -604,8 +712,53 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                               <div style={{ fontSize: 13, color: "#F2EAD9", fontStyle: "italic" }}>{order.notes}</div>
                             </div>
                           )}
+                          {/* Pending Verification Section */}
+                          {order.status === "pending_verification" && (
+                            <div style={{ marginTop: 8, marginLeft: 34, padding: "12px", background: "rgba(198,162,101,0.06)", borderRadius: 8, border: "1px solid rgba(198,162,101,0.2)" }}>
+                              <div style={{ fontSize: 11, color: "#C6A265", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
+                                <Clock size={11} />
+                                Awaiting verification
+                              </div>
+                              {order.screenshotPreview && (
+                                <>
+                                  <div style={{ fontSize: 10, color: "#8A7554", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>
+                                    Payment Screenshot
+                                  </div>
+                                  <img 
+                                    src={order.screenshotPreview} 
+                                    alt="Payment proof" 
+                                    className="calma-screenshot-thumb"
+                                    onClick={() => setPreviewImage(order.screenshotPreview)}
+                                  />
+                                </>
+                              )}
+                              {order.referenceNo && (
+                                <div style={{ fontSize: 12, color: "#C9BB9E", marginTop: 8, marginBottom: 8 }}>
+                                  Ref: <strong style={{ color: "#F2EAD9" }}>{order.referenceNo}</strong>
+                                </div>
+                              )}
+                              <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+                                <button 
+                                  onClick={() => handleApproveOrder(order.id)}
+                                  className="calma-mini-btn green"
+                                  style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
+                                >
+                                  <CheckCircle size={14} />
+                                  Approve Order
+                                </button>
+                                <button 
+                                  onClick={() => handleRejectOrder(order.id)}
+                                  className="calma-mini-btn danger"
+                                  style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
+                                >
+                                  <X size={14} />
+                                  Reject
+                                </button>
+                              </div>
+                            </div>
+                          )}
                           {/* Reference Number if verified */}
-                          {order.referenceNo && (
+                          {order.referenceNo && order.status !== "pending_verification" && (
                             <div style={{ marginTop: 6, marginLeft: 34, padding: "6px 10px", background: "rgba(79,191,63,0.08)", borderRadius: 6, border: "1px solid rgba(79,191,63,0.2)" }}>
                               <div style={{ fontSize: 11, color: "#4FBF3F", display: "flex", alignItems: "center", gap: 4 }}>
                                 <CheckCircle size={11} />
@@ -631,37 +784,39 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                             </span>
                             <span style={{ fontWeight: 700, color: "#F2EAD9", fontSize: 14 }}>{peso(order.total)}</span>
                           </div>
-                          {/* Edit & Delete Buttons */}
-                          <div style={{ display: "flex", gap: 8, marginTop: 8, paddingLeft: 34 }}>
-                            {editingOrder === order.id ? (
-                              <>
-                                <button onClick={() => saveEdit(order.id)} className="calma-mini-btn gold-fill">
-                                  Save
-                                </button>
-                                <button onClick={cancelEdit} className="calma-mini-btn neutral">
-                                  Cancel
-                                </button>
-                              </>
-                            ) : (
-                              <>
-                                <button onClick={() => startEdit(order)} className="calma-mini-btn gold">
-                                  <Pencil size={12} />
-                                  Edit
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    if (window.confirm("Delete this order? This cannot be undone.")) {
-                                      onDeleteOrder(order.id);
-                                    }
-                                  }}
-                                  className="calma-mini-btn danger"
-                                >
-                                  <X size={12} />
-                                  Delete
-                                </button>
-                              </>
-                            )}
-                          </div>
+                          {/* Edit & Delete Buttons - hide for pending */}
+                          {order.status !== "pending_verification" && (
+                            <div style={{ display: "flex", gap: 8, marginTop: 8, paddingLeft: 34 }}>
+                              {editingOrder === order.id ? (
+                                <>
+                                  <button onClick={() => saveEdit(order.id)} className="calma-mini-btn gold-fill">
+                                    Save
+                                  </button>
+                                  <button onClick={cancelEdit} className="calma-mini-btn neutral">
+                                    Cancel
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button onClick={() => startEdit(order)} className="calma-mini-btn gold">
+                                    <Pencil size={12} />
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      if (window.confirm("Delete this order? This cannot be undone.")) {
+                                        onDeleteOrder(order.id);
+                                      }
+                                    }}
+                                    className="calma-mini-btn danger"
+                                  >
+                                    <X size={12} />
+                                    Delete
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
