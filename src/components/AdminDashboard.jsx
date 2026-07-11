@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff, AlertCircle, CheckCircle, Smartphone } from "lucide-react";import { peso } from "../utils/format";
+import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff, AlertCircle, CheckCircle, Smartphone } from "lucide-react";
+import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
 export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, onDeleteOrder, onBack, onEditOrder, onLogout, unmatchedPayments = [], onVerifyPayment }) {
@@ -178,7 +179,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
   const findMatchingOrder = (payment) => {
     const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
     return orderHistory.find((o) => 
-      o.payment === "paymaya" && 
+      o.payment === "instapay" && 
       !o.verified && 
       Math.abs(o.total - payment.amount) < 1 &&
       (o.timestamp || 0) > fiveMinutesAgo
@@ -273,37 +274,37 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
   };
 
   return (
-    <div className="calma-admin-dash">
+    <div className="beanito-admin-dash">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
-        .calma-admin-dash * { box-sizing: border-box; }
+        .beanito-admin-dash * { box-sizing: border-box; }
 
-        .calma-admin-dash {
+        .beanito-admin-dash {
           min-height: 100dvh;
-          background: #0B0805;
-          background-image: radial-gradient(rgba(198,162,101,0.08) 1px, transparent 1px);
+          background: #0D0D0D;
+          background-image: radial-gradient(rgba(212,165,116,0.08) 1px, transparent 1px);
           background-size: 22px 22px;
           font-family: 'Montserrat', sans-serif;
-          color: #F2EAD9;
+          color: #F5E6C8;
         }
 
-        .calma-ad-topbar {
-          background: #100A06;
-          border-bottom: 1px solid rgba(198,162,101,0.18);
+        .beanito-ad-topbar {
+          background: #141414;
+          border-bottom: 1px solid rgba(245,230,200,0.15);
           padding: max(18px, env(safe-area-inset-top)) 24px 18px;
           display: flex;
           align-items: center;
           justify-content: space-between;
         }
 
-        .calma-ad-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: #F2EAD9; }
-        .calma-ad-subtitle { font-size: 11px; color: #8A7554; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+        .beanito-ad-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #F5E6C8; }
+        .beanito-ad-subtitle { font-size: 11px; color: #8B7355; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
 
-        .calma-ad-btn {
+        .beanito-ad-btn {
           background: transparent;
-          border: 1px solid rgba(198,162,101,0.35);
-          color: #C6A265;
+          border: 1px solid rgba(212,165,116,0.35);
+          color: #D4A574;
           padding: 8px 14px;
           border-radius: 8px;
           font-size: 12px;
@@ -315,22 +316,22 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           min-height: 36px;
           -webkit-tap-highlight-color: transparent;
         }
-        .calma-ad-btn:active { background: rgba(198,162,101,0.12); }
+        .beanito-ad-btn:active { background: rgba(212,165,116,0.12); }
         @media (hover: hover) {
-          .calma-ad-btn:hover { background: rgba(198,162,101,0.1); }
+          .beanito-ad-btn:hover { background: rgba(212,165,116,0.1); }
         }
-        .calma-ad-btn.danger { border-color: rgba(194,69,58,0.5); color: #d4776c; }
+        .beanito-ad-btn.danger { border-color: rgba(194,69,58,0.5); color: #d4776c; }
         @media (hover: hover) {
-          .calma-ad-btn.danger:hover { background: rgba(194,69,58,0.12); }
+          .beanito-ad-btn.danger:hover { background: rgba(194,69,58,0.12); }
         }
-        .calma-ad-btn.muted { border-color: rgba(198,162,101,0.2); color: #8A7554; }
-        .calma-ad-btn.green { 
+        .beanito-ad-btn.muted { border-color: rgba(245,230,200,0.2); color: #8B7355; }
+        .beanito-ad-btn.green { 
           background: rgba(79,191,63,0.15); 
           border-color: rgba(79,191,63,0.4); 
           color: #4FBF3F; 
         }
 
-        .calma-summary-grid {
+        .beanito-summary-grid {
           padding: 24px;
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -339,44 +340,44 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           margin: 0 auto;
         }
 
-        .calma-summary-card {
-          background: #100A06;
-          border: 1px solid rgba(198,162,101,0.18);
+        .beanito-summary-card {
+          background: #141414;
+          border: 1px solid rgba(245,230,200,0.15);
           border-radius: 12px;
           padding: 20px;
           text-align: center;
         }
-        .calma-summary-value { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: #F2EAD9; }
-        .calma-summary-label { font-size: 12px; color: '#8A7554'; margin-top: 4px; }
+        .beanito-summary-value { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #F5E6C8; }
+        .beanito-summary-label { font-size: 12px; color: #8B7355; margin-top: 4px; }
 
-        .calma-search-wrap { position: relative; flex: 1; min-width: 140px; max-width: 280px; }
-        .calma-search-input {
+        .beanito-search-wrap { position: relative; flex: 1; min-width: 140px; max-width: 280px; }
+        .beanito-search-input {
           width: 100%;
           padding: 9px 12px 9px 32px;
           border-radius: 8px;
-          border: 1px solid rgba(198,162,101,0.25);
-          background: rgba(198,162,101,0.04);
+          border: 1px solid rgba(245,230,200,0.2);
+          background: rgba(245,230,200,0.04);
           font-size: 16px;
           font-family: 'Montserrat', sans-serif;
-          color: #F2EAD9;
+          color: #F5E6C8;
           outline: none;
         }
-        .calma-search-input::placeholder { color: #5C4E3C; }
-        .calma-search-input:focus { border-color: #C6A265; }
+        .beanito-search-input::placeholder { color: #5C4E3C; }
+        .beanito-search-input:focus { border-color: #D4A574; }
 
-        .calma-tab-bar {
+        .beanito-tab-bar {
           display: flex;
           gap: 4px;
           padding: 0 24px;
           max-width: 900px;
           margin: 0 auto 16px;
-          border-bottom: 1px solid rgba(198,162,101,0.15);
+          border-bottom: 1px solid rgba(245,230,200,0.15);
         }
-        .calma-tab {
+        .beanito-tab {
           padding: 10px 18px;
           border: none;
           background: none;
-          color: #8A7554;
+          color: #8B7355;
           font-size: 13px;
           font-family: 'Montserrat', sans-serif;
           font-weight: 600;
@@ -388,32 +389,32 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           gap: 6px;
           -webkit-tap-highlight-color: transparent;
         }
-        .calma-tab.active {
-          color: #C6A265;
-          border-bottom-color: #C6A265;
+        .beanito-tab.active {
+          color: #D4A574;
+          border-bottom-color: #D4A574;
         }
 
-        .calma-day-card { background: #100A06; border: 1px solid rgba(198,162,101,0.18); border-radius: 12px; overflow: hidden; }
-        .calma-day-header { background: #0B0805; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(198,162,101,0.12); }
-        .calma-day-footer { background: rgba(198,162,101,0.05); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(198,162,101,0.12); }
+        .beanito-day-card { background: #141414; border: 1px solid rgba(245,230,200,0.15); border-radius: 12px; overflow: hidden; }
+        .beanito-day-header { background: #0D0D0D; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(245,230,200,0.12); }
+        .beanito-day-footer { background: rgba(212,165,116,0.05); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(245,230,200,0.12); }
 
-        .calma-order-row { border-bottom: 1px dashed rgba(198,162,101,0.2); padding: 12px 0; position: relative; }
-        .calma-order-row:last-child { border-bottom: none; }
+        .beanito-order-row { border-bottom: 1px dashed rgba(245,230,200,0.2); padding: 12px 0; position: relative; }
+        .beanito-order-row:last-child { border-bottom: none; }
 
-        .calma-check-btn { background: none; border: none; cursor: pointer; color: #C6A265; padding: 4px; display: flex; align-items: center; min-width: 32px; min-height: 32px; justify-content: center; }
+        .beanito-check-btn { background: none; border: none; cursor: pointer; color: #D4A574; padding: 4px; display: flex; align-items: center; min-width: 32px; min-height: 32px; justify-content: center; }
 
-        .calma-edit-input {
+        .beanito-edit-input {
           padding: 6px 10px;
           border-radius: 6px;
-          border: 1px solid #C6A265;
-          background: rgba(198,162,101,0.06);
+          border: 1px solid #D4A574;
+          background: rgba(212,165,116,0.06);
           font-size: 13px;
           font-family: 'Montserrat', sans-serif;
-          color: #F2EAD9;
+          color: #F5E6C8;
           outline: none;
         }
 
-        .calma-mini-btn {
+        .beanito-mini-btn {
           display: flex;
           align-items: center;
           gap: 4px;
@@ -425,16 +426,16 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           min-height: 30px;
           -webkit-tap-highlight-color: transparent;
         }
-        .calma-mini-btn.gold { border: 1px solid rgba(198,162,101,0.4); color: #C6A265; }
-        .calma-mini-btn.gold-fill { border: none; background: #C6A265; color: #0B0805; font-weight: 700; }
-        .calma-mini-btn.danger { border: 1px solid rgba(194,69,58,0.5); color: #d4776c; }
-        .calma-mini-btn.neutral { border: 1px solid rgba(198,162,101,0.25); color: #8A7554; }
-        .calma-mini-btn.green { border: none; background: #4FBF3F; color: #0B0805; font-weight: 700; }
-        .calma-mini-btn.orange { border: 1px solid rgba(220, 140, 60, 0.4); color: #DC8C3C; }
+        .beanito-mini-btn.gold { border: 1px solid rgba(212,165,116,0.4); color: #D4A574; }
+        .beanito-mini-btn.gold-fill { border: none; background: #D4A574; color: #0D0D0D; font-weight: 700; }
+        .beanito-mini-btn.danger { border: 1px solid rgba(194,69,58,0.5); color: #d4776c; }
+        .beanito-mini-btn.neutral { border: 1px solid rgba(245,230,200,0.25); color: #8B7355; }
+        .beanito-mini-btn.green { border: none; background: #4FBF3F; color: #0D0D0D; font-weight: 700; }
+        .beanito-mini-btn.orange { border: 1px solid rgba(220, 140, 60, 0.4); color: #DC8C3C; }
 
-        .calma-page-btn {
+        .beanito-page-btn {
           background: transparent;
-          border: 1px solid rgba(198,162,101,0.25);
+          border: 1px solid rgba(245,230,200,0.25);
           padding: 6px 12px;
           border-radius: 8px;
           display: flex;
@@ -442,17 +443,17 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           min-height: 36px;
           -webkit-tap-highlight-color: transparent;
         }
-        .calma-page-btn:not(:disabled) { color: #C6A265; cursor: pointer; }
-        .calma-page-btn:disabled { color: #4a3f30; cursor: not-allowed; }
+        .beanito-page-btn:not(:disabled) { color: #D4A574; cursor: pointer; }
+        .beanito-page-btn:disabled { color: #4a3f30; cursor: not-allowed; }
 
-        .calma-payment-card {
-          background: #100A06;
-          border: 1px solid rgba(198,162,101,0.18);
+        .beanito-payment-card {
+          background: #141414;
+          border: 1px solid rgba(245,230,200,0.15);
           border-radius: 12px;
           padding: 16px;
           margin-bottom: 10px;
         }
-        .calma-payment-match {
+        .beanito-payment-match {
           background: rgba(79,191,63,0.08);
           border: 1px solid rgba(79,191,63,0.25);
           border-radius: 8px;
@@ -460,7 +461,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           margin-top: 10px;
         }
 
-        .calma-pending-badge {
+        .beanito-pending-badge {
           display: inline-flex;
           align-items: center;
           gap: 6px;
@@ -470,17 +471,17 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.5px;
-          background: rgba(198,162,101,0.15);
-          color: #C6A265;
-          border: 1px solid rgba(198,162,101,0.3);
+          background: rgba(212,165,116,0.15);
+          color: #D4A574;
+          border: 1px solid rgba(212,165,116,0.3);
         }
-        .calma-pending-badge.urgent {
+        .beanito-pending-badge.urgent {
           background: rgba(194,69,58,0.15);
           color: #C2453A;
           border-color: rgba(194,69,58,0.3);
           animation: pulse 2s infinite;
         }
-        .calma-rejected-badge {
+        .beanito-rejected-badge {
           display: inline-flex;
           align-items: center;
           gap: 6px;
@@ -494,7 +495,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           color: #DC8C3C;
           border: 1px solid rgba(220, 140, 60, 0.3);
         }
-        .calma-cancelled-badge {
+        .beanito-cancelled-badge {
           display: inline-flex;
           align-items: center;
           gap: 6px;
@@ -505,7 +506,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           text-transform: uppercase;
           letter-spacing: 0.5px;
           background: rgba(100, 100, 100, 0.15);
-          color: #8A7554;
+          color: #8B7355;
           border: 1px solid rgba(100, 100, 100, 0.3);
         }
         @keyframes pulse {
@@ -513,19 +514,19 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           50% { opacity: 0.6; }
         }
 
-        .calma-screenshot-thumb {
+        .beanito-screenshot-thumb {
           width: 100%;
           max-height: 180px;
           object-fit: contain;
           border-radius: 8px;
           cursor: pointer;
-          border: 1px solid rgba(198,162,101,0.2);
+          border: 1px solid rgba(245,230,200,0.2);
         }
-        .calma-screenshot-thumb:hover {
-          border-color: #C6A265;
+        .beanito-screenshot-thumb:hover {
+          border-color: #D4A574;
         }
 
-        .calma-image-preview-overlay {
+        .beanito-image-preview-overlay {
           position: fixed;
           top: 0; left: 0; right: 0; bottom: 0;
           background: rgba(0,0,0,0.9);
@@ -535,7 +536,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           z-index: 3000;
           padding: 24px;
         }
-        .calma-image-preview-img {
+        .beanito-image-preview-img {
           max-width: 100%;
           max-height: 90vh;
           object-fit: contain;
@@ -543,7 +544,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         }
 
         /* Reject reason selector styles */
-        .calma-reject-overlay {
+        .beanito-reject-overlay {
           position: fixed;
           top: 0; left: 0; right: 0; bottom: 0;
           background: rgba(0,0,0,0.8);
@@ -553,81 +554,81 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           z-index: 4000;
           padding: 24px;
         }
-        .calma-reject-card {
-          background: #100A06;
-          border: 1px solid rgba(198,162,101,0.2);
+        .beanito-reject-card {
+          background: #141414;
+          border: 1px solid rgba(245,230,200,0.2);
           border-radius: 16px;
           max-width: 360px;
           width: 100%;
           padding: 24px;
         }
-        .calma-reject-reason {
+        .beanito-reject-reason {
           display: flex;
           align-items: center;
           gap: 10px;
           padding: 12px 14px;
           border-radius: 8px;
-          border: 1px solid rgba(198,162,101,0.2);
-          background: rgba(198,162,101,0.04);
+          border: 1px solid rgba(245,230,200,0.2);
+          background: rgba(245,230,200,0.04);
           cursor: pointer;
           margin-bottom: 8px;
           font-size: 13px;
           color: #C9BB9E;
           transition: all 0.15s;
         }
-        .calma-reject-reason:hover {
-          border-color: rgba(198,162,101,0.4);
-          background: rgba(198,162,101,0.08);
+        .beanito-reject-reason:hover {
+          border-color: rgba(245,230,200,0.4);
+          background: rgba(245,230,200,0.08);
         }
-        .calma-reject-reason.selected {
-          border-color: #C6A265;
-          background: rgba(198,162,101,0.12);
-          color: #F2EAD9;
+        .beanito-reject-reason.selected {
+          border-color: #D4A574;
+          background: rgba(212,165,116,0.12);
+          color: #F5E6C8;
         }
-        .calma-reject-radio {
+        .beanito-reject-radio {
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          border: 2px solid #8A7554;
+          border: 2px solid #8B7355;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
         }
-        .calma-reject-radio.selected {
-          border-color: #C6A265;
-          background: #C6A265;
+        .beanito-reject-radio.selected {
+          border-color: #D4A574;
+          background: #D4A574;
         }
-        .calma-reject-radio.selected::after {
+        .beanito-reject-radio.selected::after {
           content: "";
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: #0B0805;
+          background: #0D0D0D;
         }
 
         @media (max-width: 640px) {
-          .calma-summary-grid { grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 16px; }
-          .calma-summary-card { padding: 14px 10px; }
-          .calma-summary-value { font-size: 20px; }
+          .beanito-summary-grid { grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 16px; }
+          .beanito-summary-card { padding: 14px 10px; }
+          .beanito-summary-value { font-size: 20px; }
         }
       `}</style>
 
       {/* Image Preview Modal */}
       {previewImage && (
-        <div className="calma-image-preview-overlay" onClick={() => setPreviewImage(null)}>
-          <img src={previewImage} alt="Payment proof" className="calma-image-preview-img" />
+        <div className="beanito-image-preview-overlay" onClick={() => setPreviewImage(null)}>
+          <img src={previewImage} alt="Payment proof" className="beanito-image-preview-img" />
         </div>
       )}
 
       {/* Reject Reason Modal */}
       {rejectingOrder && (
-        <div className="calma-reject-overlay" onClick={cancelReject}>
-          <div className="calma-reject-card" onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 700, color: "#F2EAD9", marginBottom: 4 }}>
+        <div className="beanito-reject-overlay" onClick={cancelReject}>
+          <div className="beanito-reject-card" onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: "#F5E6C8", marginBottom: 4 }}>
               Reject payment
             </div>
-            <div style={{ fontSize: 12, color: "#8A7554", marginBottom: 20 }}>
+            <div style={{ fontSize: 12, color: "#8B7355", marginBottom: 20 }}>
               Select a reason to help the customer understand
             </div>
             
@@ -635,9 +636,9 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
               <div
                 key={reason.id}
                 onClick={() => setRejectReason(reason.id)}
-                className={`calma-reject-reason ${rejectReason === reason.id ? "selected" : ""}`}
+                className={`beanito-reject-reason ${rejectReason === reason.id ? "selected" : ""}`}
               >
-                <div className={`calma-reject-radio ${rejectReason === reason.id ? "selected" : ""}`} />
+                <div className={`beanito-reject-radio ${rejectReason === reason.id ? "selected" : ""}`} />
                 {reason.label}
               </div>
             ))}
@@ -645,7 +646,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
             <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
               <button
                 onClick={cancelReject}
-                className="calma-ad-btn"
+                className="beanito-ad-btn"
                 style={{ flex: 1, justifyContent: "center" }}
               >
                 Cancel
@@ -653,7 +654,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
               <button
                 onClick={confirmReject}
                 disabled={!rejectReason}
-                className="calma-ad-btn danger"
+                className="beanito-ad-btn danger"
                 style={{ 
                   flex: 1, 
                   justifyContent: "center",
@@ -670,48 +671,48 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
       )}
 
       {/* Header */}
-      <div className="calma-ad-topbar">
+      <div className="beanito-ad-topbar">
         <div>
-          <div className="calma-ad-title">Admin dashboard</div>
-          <div className="calma-ad-subtitle">Sales history</div>
+          <div className="beanito-ad-title">Admin dashboard</div>
+          <div className="beanito-ad-subtitle">Sales history</div>
         </div>
-        <button onClick={onLogout} className="calma-ad-btn muted">
+        <button onClick={onLogout} className="beanito-ad-btn muted">
           <LogOut size={14} />
           Logout
         </button>
       </div>
 
       {/* Summary Cards */}
-      <div className="calma-summary-grid">
-        <div className="calma-summary-card">
-          <DollarSign size={22} color="#C6A265" style={{ marginBottom: 8 }} />
-          <div className="calma-summary-value">{peso(grandTotal)}</div>
-          <div className="calma-summary-label">Total sales</div>
+      <div className="beanito-summary-grid">
+        <div className="beanito-summary-card">
+          <DollarSign size={22} color="#D4A574" style={{ marginBottom: 8 }} />
+          <div className="beanito-summary-value">{peso(grandTotal)}</div>
+          <div className="beanito-summary-label">Total sales</div>
         </div>
-        <div className="calma-summary-card">
-          <ShoppingBag size={22} color="#C6A265" style={{ marginBottom: 8 }} />
-          <div className="calma-summary-value">{orderHistory.length}</div>
-          <div className="calma-summary-label">Total orders</div>
+        <div className="beanito-summary-card">
+          <ShoppingBag size={22} color="#D4A574" style={{ marginBottom: 8 }} />
+          <div className="beanito-summary-value">{orderHistory.length}</div>
+          <div className="beanito-summary-label">Total orders</div>
         </div>
-        <div className="calma-summary-card">
-          <Calendar size={22} color="#C6A265" style={{ marginBottom: 8 }} />
-          <div className="calma-summary-value">{dailyTotals.length}</div>
-          <div className="calma-summary-label">Days active</div>
+        <div className="beanito-summary-card">
+          <Calendar size={22} color="#D4A574" style={{ marginBottom: 8 }} />
+          <div className="beanito-summary-value">{dailyTotals.length}</div>
+          <div className="beanito-summary-label">Days active</div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="calma-tab-bar">
+      <div className="beanito-tab-bar">
         <button 
           onClick={() => setActiveTab("orders")}
-          className={`calma-tab ${activeTab === "orders" ? "active" : ""}`}
+          className={`beanito-tab ${activeTab === "orders" ? "active" : ""}`}
         >
           <ShoppingBag size={14} />
           Orders
           {pendingOrders.length > 0 && (
             <span style={{
               background: "#C2453A",
-              color: "#F2EAD9",
+              color: "#F5E6C8",
               borderRadius: 999,
               padding: "2px 8px",
               fontSize: 10,
@@ -723,14 +724,14 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         </button>
         <button 
           onClick={() => setActiveTab("payments")}
-          className={`calma-tab ${activeTab === "payments" ? "active" : ""}`}
+          className={`beanito-tab ${activeTab === "payments" ? "active" : ""}`}
         >
           <Smartphone size={14} />
           Unmatched Payments
           {unmatchedPayments.length > 0 && (
             <span style={{
               background: "#C2453A",
-              color: "#F2EAD9",
+              color: "#F5E6C8",
               borderRadius: 999,
               padding: "2px 8px",
               fontSize: 10,
@@ -746,7 +747,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
       <div style={{ padding: "0 24px 8px", maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "flex-end" }}>
         <button
           onClick={() => setSoundEnabled(!soundEnabled)}
-          className={`calma-ad-btn ${soundEnabled ? "" : "muted"}`}
+          className={`beanito-ad-btn ${soundEnabled ? "" : "muted"}`}
           style={{ fontSize: 11, padding: "6px 12px", minHeight: 32 }}
           title={soundEnabled ? "Sound notifications on" : "Sound notifications off"}
         >
@@ -760,8 +761,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         <>
           {/* Search & Actions Bar */}
           <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "space-between" }}>
-            <div className="calma-search-wrap">
-              <Search size={14} color="#8A7554" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
+            <div className="beanito-search-wrap">
+              <Search size={14} color="#8B7355" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
               <input
                 type="text"
                 placeholder="Search..."
@@ -770,11 +771,11 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="calma-search-input"
+                className="beanito-search-input"
               />
             </div>
 
-            <button onClick={exportToExcel} className="calma-ad-btn">
+            <button onClick={exportToExcel} className="beanito-ad-btn">
               <Download size={14} />
               <span>Export Excel</span>
             </button>
@@ -783,17 +784,17 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           {/* Select All / Delete Selected Bar */}
           {filteredOrderHistory.length > 0 && (
             <div style={{ padding: "0 24px 16px", maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-              <button onClick={allSelected ? deselectAll : selectAll} className="calma-ad-btn">
+              <button onClick={allSelected ? deselectAll : selectAll} className="beanito-ad-btn">
                 {allSelected ? <CheckSquare size={14} /> : <Square size={14} />}
                 {allSelected ? "Deselect all" : "Select all"}
               </button>
               {selectedOrders.size > 0 && (
-                <button onClick={deleteSelected} className="calma-ad-btn danger">
+                <button onClick={deleteSelected} className="beanito-ad-btn danger">
                   <Trash2 size={14} />
                   Delete selected ({selectedOrders.size})
                 </button>
               )}
-              <span style={{ fontSize: 12, color: "#8A7554", marginLeft: "auto" }}>
+              <span style={{ fontSize: 12, color: "#8B7355", marginLeft: "auto" }}>
                 {filteredOrderHistory.length} order{filteredOrderHistory.length !== 1 ? "s" : ""} found
               </span>
             </div>
@@ -801,27 +802,27 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
 
           {/* Daily Sales */}
           <div style={{ padding: "0 24px 32px", maxWidth: 900, margin: "0 auto" }}>
-            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, marginBottom: 16, color: "#F2EAD9" }}>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, marginBottom: 16, color: "#F5E6C8" }}>
               Daily sales
             </div>
 
             {paginatedDailyTotals.length === 0 ? (
-              <div style={{ background: "#100A06", border: "1px dashed rgba(198,162,101,0.3)", borderRadius: 12, padding: "40px", textAlign: "center", color: "#8A7554" }}>
+              <div style={{ background: "#141414", border: "1px dashed rgba(245,230,200,0.3)", borderRadius: 12, padding: "40px", textAlign: "center", color: "#8B7355" }}>
                 {searchQuery ? "No orders match your search." : "No sales yet. Orders will appear here once customers start ordering."}
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 {paginatedDailyTotals.map((day) => (
-                  <div key={day.date} className="calma-day-card">
+                  <div key={day.date} className="beanito-day-card">
                     {/* Day Header */}
-                    <div className="calma-day-header">
+                    <div className="beanito-day-header">
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <Calendar size={16} color="#C6A265" />
-                        <span style={{ fontWeight: 600, fontSize: 15, color: "#F2EAD9" }}>{day.date}</span>
+                        <Calendar size={16} color="#D4A574" />
+                        <span style={{ fontWeight: 600, fontSize: 15, color: "#F5E6C8" }}>{day.date}</span>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 13 }}>
-                        <span style={{ color: "#8A7554" }}>{day.orders.length} orders</span>
-                        <span style={{ fontFamily: "'Montserrat', sans-serif", color: "#C6A265", fontWeight: 700 }}>
+                        <span style={{ color: "#8B7355" }}>{day.orders.length} orders</span>
+                        <span style={{ fontFamily: "'Montserrat', sans-serif", color: "#D4A574", fontWeight: 700 }}>
                           {peso(day.totalSales)}
                         </span>
                       </div>
@@ -830,13 +831,13 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                     {/* Orders List */}
                     <div style={{ padding: "16px 20px" }}>
                       {day.orders.map((order) => (
-                        <div key={order.id} className="calma-order-row">
+                        <div key={order.id} className="beanito-order-row">
                           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                            <button onClick={() => toggleSelect(order.id)} className="calma-check-btn">
-                              {selectedOrders.has(order.id) ? <CheckSquare size={16} /> : <Square size={16} color="#8A7554" />}
+                            <button onClick={() => toggleSelect(order.id)} className="beanito-check-btn">
+                              {selectedOrders.has(order.id) ? <CheckSquare size={16} /> : <Square size={16} color="#8B7355" />}
                             </button>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flex: 1, paddingRight: 20, flexWrap: "wrap", gap: 6 }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#8A7554" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#8B7355" }}>
                                 <Clock size={12} />
                                 {order.time}
                               </div>
@@ -847,29 +848,29 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                     value={editCustomerName}
                                     onChange={(e) => setEditCustomerName(e.target.value)}
                                     placeholder="Customer name..."
-                                    className="calma-edit-input"
+                                    className="beanito-edit-input"
                                     autoFocus
                                   />
                                 ) : (
                                   order.customerName && (
-                                    <span style={{ fontSize: 11, color: "#C6A265", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                                    <span style={{ fontSize: 11, color: "#D4A574", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
                                       <User size={11} />
                                       {order.customerName}
                                     </span>
                                   )
                                 )}
-                                <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, fontWeight: 700, color: "#F2EAD9" }}>
+                                <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, fontWeight: 700, color: "#F5E6C8" }}>
                                   Order #{order.orderNo}
                                 </span>
                                 {/* Status badges */}
                                 {order.status === "pending_verification" && (
-                                  <span className="calma-pending-badge urgent">
+                                  <span className="beanito-pending-badge urgent">
                                     <Clock size={10} />
                                     Pending
                                   </span>
                                 )}
                                 {order.status === "rejected" && (
-                                  <span className="calma-rejected-badge">
+                                  <span className="beanito-rejected-badge">
                                     <AlertCircle size={10} />
                                     Rejected
                                   </span>
@@ -885,43 +886,43 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                           ))}
                           {/* Order Notes */}
                           {order.notes && (
-                            <div style={{ marginTop: 8, marginBottom: 4, marginLeft: 34, padding: "8px 10px", background: "rgba(198,162,101,0.06)", borderRadius: 6, borderLeft: "3px solid #C6A265" }}>
+                            <div style={{ marginTop: 8, marginBottom: 4, marginLeft: 34, padding: "8px 10px", background: "rgba(212,165,116,0.06)", borderRadius: 6, borderLeft: "3px solid #D4A574" }}>
                               <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
-                                <FileText size={11} color="#C6A265" />
-                                <span style={{ fontSize: 10, fontFamily: "'Montserrat', sans-serif", textTransform: "uppercase", letterSpacing: 1, color: "#8A7554" }}>Notes</span>
+                                <FileText size={11} color="#D4A574" />
+                                <span style={{ fontSize: 10, fontFamily: "'Montserrat', sans-serif", textTransform: "uppercase", letterSpacing: 1, color: "#8B7355" }}>Notes</span>
                               </div>
-                              <div style={{ fontSize: 13, color: "#F2EAD9", fontStyle: "italic" }}>{order.notes}</div>
+                              <div style={{ fontSize: 13, color: "#F5E6C8", fontStyle: "italic" }}>{order.notes}</div>
                             </div>
                           )}
                           {/* Pending Verification Section */}
                           {order.status === "pending_verification" && (
-                            <div style={{ marginTop: 8, marginLeft: 34, padding: "12px", background: "rgba(198,162,101,0.06)", borderRadius: 8, border: "1px solid rgba(198,162,101,0.2)" }}>
-                              <div style={{ fontSize: 11, color: "#C6A265", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
+                            <div style={{ marginTop: 8, marginLeft: 34, padding: "12px", background: "rgba(212,165,116,0.06)", borderRadius: 8, border: "1px solid rgba(212,165,116,0.2)" }}>
+                              <div style={{ fontSize: 11, color: "#D4A574", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
                                 <Clock size={11} />
                                 Awaiting verification
                               </div>
                               {order.screenshotPreview && (
                                 <>
-                                  <div style={{ fontSize: 10, color: "#8A7554", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>
+                                  <div style={{ fontSize: 10, color: "#8B7355", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>
                                     Payment Screenshot
                                   </div>
                                   <img 
                                     src={order.screenshotPreview} 
                                     alt="Payment proof" 
-                                    className="calma-screenshot-thumb"
+                                    className="beanito-screenshot-thumb"
                                     onClick={() => setPreviewImage(order.screenshotPreview)}
                                   />
                                 </>
                               )}
                               {order.referenceNo && (
                                 <div style={{ fontSize: 12, color: "#C9BB9E", marginTop: 8, marginBottom: 8 }}>
-                                  Ref: <strong style={{ color: "#F2EAD9" }}>{order.referenceNo}</strong>
+                                  Ref: <strong style={{ color: "#F5E6C8" }}>{order.referenceNo}</strong>
                                 </div>
                               )}
                               <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
                                 <button 
                                   onClick={() => handleApproveOrder(order.id)}
-                                  className="calma-mini-btn green"
+                                  className="beanito-mini-btn green"
                                   style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
                                 >
                                   <CheckCircle size={14} />
@@ -929,7 +930,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                 </button>
                                 <button 
                                   onClick={() => startReject(order.id)}
-                                  className="calma-mini-btn danger"
+                                  className="beanito-mini-btn danger"
                                   style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
                                 >
                                   <X size={14} />
@@ -937,7 +938,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                 </button>
                                 <button 
                                   onClick={() => handleCancelOrder(order.id)}
-                                  className="calma-mini-btn danger"
+                                  className="beanito-mini-btn danger"
                                   style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
                                 >
                                   <Trash2 size={14} />
@@ -960,13 +961,13 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                               )}
                               {order.referenceNo && (
                                 <div style={{ fontSize: 12, color: "#C9BB9E", marginBottom: 8 }}>
-                                  Previous ref: <strong style={{ color: "#F2EAD9" }}>{order.referenceNo}</strong>
+                                  Previous ref: <strong style={{ color: "#F5E6C8" }}>{order.referenceNo}</strong>
                                 </div>
                               )}
                               <div style={{ display: "flex", gap: 8 }}>
                                 <button 
                                   onClick={() => handleCancelOrder(order.id)}
-                                  className="calma-mini-btn danger"
+                                  className="beanito-mini-btn danger"
                                   style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
                                 >
                                   <Trash2 size={14} />
@@ -993,30 +994,30 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                               letterSpacing: 0.5,
                               padding: "3px 10px",
                               borderRadius: 999,
-                              ...(order.payment === "paymaya" 
+                              ...(order.payment === "instapay" 
                                 ? { background: "rgba(79,191,63,0.15)", color: "#4FBF3F", border: "1px solid rgba(79,191,63,0.3)" }
-                                : { background: "rgba(198,162,101,0.08)", color: "#8A7554", border: "1px solid rgba(198,162,101,0.15)" }
+                                : { background: "rgba(212,165,116,0.08)", color: "#8B7355", border: "1px solid rgba(212,165,116,0.15)" }
                               )
                             }}>
-                              {order.payment === "paymaya" ? "✓ Maya" : `Paid via ${PAYMENTS.find((p) => p.id === order.payment)?.label || order.payment}`}
+                              {order.payment === "instapay" ? "✓ InstaPay" : `Paid via ${PAYMENTS.find((p) => p.id === order.payment)?.label || order.payment}`}
                             </span>
-                            <span style={{ fontWeight: 700, color: "#F2EAD9", fontSize: 14 }}>{peso(order.total)}</span>
+                            <span style={{ fontWeight: 700, color: "#F5E6C8", fontSize: 14 }}>{peso(order.total)}</span>
                           </div>
                           {/* Edit & Delete Buttons - hide for pending and rejected */}
                           {order.status !== "pending_verification" && order.status !== "rejected" && (
                             <div style={{ display: "flex", gap: 8, marginTop: 8, paddingLeft: 34 }}>
                               {editingOrder === order.id ? (
                                 <>
-                                  <button onClick={() => saveEdit(order.id)} className="calma-mini-btn gold-fill">
+                                  <button onClick={() => saveEdit(order.id)} className="beanito-mini-btn gold-fill">
                                     Save
                                   </button>
-                                  <button onClick={cancelEdit} className="calma-mini-btn neutral">
+                                  <button onClick={cancelEdit} className="beanito-mini-btn neutral">
                                     Cancel
                                   </button>
                                 </>
                               ) : (
                                 <>
-                                  <button onClick={() => startEdit(order)} className="calma-mini-btn gold">
+                                  <button onClick={() => startEdit(order)} className="beanito-mini-btn gold">
                                     <Pencil size={12} />
                                     Edit
                                   </button>
@@ -1026,7 +1027,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                         onDeleteOrder(order.id);
                                       }
                                     }}
-                                    className="calma-mini-btn danger"
+                                    className="beanito-mini-btn danger"
                                   >
                                     <X size={12} />
                                     Delete
@@ -1040,9 +1041,9 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                     </div>
 
                     {/* Day Footer */}
-                    <div className="calma-day-footer">
-                      <span style={{ fontSize: 12, color: "#8A7554" }}>{day.itemCount} items sold</span>
-                      <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontWeight: 700, color: "#F2EAD9" }}>
+                    <div className="beanito-day-footer">
+                      <span style={{ fontSize: 12, color: "#8B7355" }}>{day.itemCount} items sold</span>
+                      <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 17, fontWeight: 700, color: "#F5E6C8" }}>
                         Day total: {peso(day.totalSales)}
                       </span>
                     </div>
@@ -1057,17 +1058,17 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="calma-page-btn"
+                  className="beanito-page-btn"
                 >
                   <ChevronLeft size={16} />
                 </button>
-                <span style={{ fontSize: 13, color: "#8A7554" }}>
+                <span style={{ fontSize: 13, color: "#8B7355" }}>
                   Page {currentPage} of {totalPages}
                 </span>
                 <button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="calma-page-btn"
+                  className="beanito-page-btn"
                 >
                   <ChevronRight size={16} />
                 </button>
@@ -1080,13 +1081,13 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
       {/* PAYMENTS TAB */}
       {activeTab === "payments" && (
         <div style={{ padding: "0 24px 32px", maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, marginBottom: 16, color: "#F2EAD9", display: "flex", alignItems: "center", gap: 8 }}>
-            <Smartphone size={20} color="#C6A265" />
+          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, marginBottom: 16, color: "#F5E6C8", display: "flex", alignItems: "center", gap: 8 }}>
+            <Smartphone size={20} color="#D4A574" />
             Unmatched InstaPay Payments
           </div>
 
           {unmatchedPayments.length === 0 ? (
-            <div style={{ background: "#100A06", border: "1px dashed rgba(198,162,101,0.3)", borderRadius: 12, padding: "40px", textAlign: "center", color: "#8A7554" }}>
+            <div style={{ background: "#141414", border: "1px dashed rgba(245,230,200,0.3)", borderRadius: 12, padding: "40px", textAlign: "center", color: "#8B7355" }}>
               <Smartphone size={32} color="#5C4E3C" style={{ marginBottom: 12 }} />
               <div style={{ fontSize: 14, marginBottom: 4 }}>No unmatched payments</div>
               <div style={{ fontSize: 12 }}>Payments received via SMS will appear here for manual matching.</div>
@@ -1096,42 +1097,42 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
               {unmatchedPayments.map((payment) => {
                 const match = findMatchingOrder(payment);
                 return (
-                  <div key={payment.id} className="calma-payment-card">
+                  <div key={payment.id} className="beanito-payment-card">
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                       <span style={{ fontSize: 22, fontWeight: 700, color: "#4FBF3F" }}>{peso(payment.amount)}</span>
-                      <span style={{ fontSize: 11, color: "#8A7554" }}>
+                      <span style={{ fontSize: 11, color: "#8B7355" }}>
                         {new Date(payment.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                       </span>
                     </div>
                     
                     <div style={{ fontSize: 13, color: "#C9BB9E", marginBottom: 4 }}>
-                      From: <strong style={{ color: "#F2EAD9" }}>{payment.senderName || "Unknown sender"}</strong>
+                      From: <strong style={{ color: "#F5E6C8" }}>{payment.senderName || "Unknown sender"}</strong>
                     </div>
                     
                     {payment.refNo && (
-                      <div style={{ fontSize: 12, color: "#8A7554", marginBottom: 8 }}>
+                      <div style={{ fontSize: 12, color: "#8B7355", marginBottom: 8 }}>
                         Ref: {payment.refNo}
                       </div>
                     )}
                     
                     {payment.smsBody && (
-                      <div style={{ fontSize: 11, color: "#5C4E3C", fontStyle: "italic", marginBottom: 10, padding: "8px 10px", background: "rgba(198,162,101,0.04)", borderRadius: 6 }}>
+                      <div style={{ fontSize: 11, color: "#5C4E3C", fontStyle: "italic", marginBottom: 10, padding: "8px 10px", background: "rgba(212,165,116,0.04)", borderRadius: 6 }}>
                         "{payment.smsBody}"
                       </div>
                     )}
 
                     {match ? (
-                      <div className="calma-payment-match">
+                      <div className="beanito-payment-match">
                         <div style={{ fontSize: 12, color: "#4FBF3F", fontWeight: 600, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
                           <CheckCircle size={14} />
                           Possible match found
                         </div>
                         <div style={{ fontSize: 13, color: "#C9BB9E", marginBottom: 8 }}>
-                          Order <strong style={{ color: "#F2EAD9" }}>#{match.orderNo}</strong> · {match.customerName} · {peso(match.total)}
+                          Order <strong style={{ color: "#F5E6C8" }}>#{match.orderNo}</strong> · {match.customerName} · {peso(match.total)}
                         </div>
                         <button 
                           onClick={() => onVerifyPayment && onVerifyPayment(payment.id, match.id)}
-                          className="calma-mini-btn green"
+                          className="beanito-mini-btn green"
                           style={{ width: "100%", justifyContent: "center", minHeight: 36 }}
                         >
                           <CheckCircle size={14} />
@@ -1139,7 +1140,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                         </button>
                       </div>
                     ) : (
-                      <div style={{ fontSize: 12, color: "#8A7554", marginTop: 8, padding: "8px 10px", background: "rgba(198,162,101,0.04)", borderRadius: 6 }}>
+                      <div style={{ fontSize: 12, color: "#8B7355", marginTop: 8, padding: "8px 10px", background: "rgba(212,165,116,0.04)", borderRadius: 6 }}>
                         <AlertCircle size={12} style={{ marginRight: 6, display: "inline" }} />
                         No matching order found. Amount or time doesn't match any pending order.
                       </div>
