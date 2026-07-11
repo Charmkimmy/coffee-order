@@ -1,5 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase/config"; // adjust path if needed
 import { useFirebaseOrders } from "../hooks/useFirebaseOrders";
 import Header from "./Header";
 import MenuColumn from "./MenuColumn";
@@ -15,6 +17,22 @@ export default function CoffeeOrderingSystem({ onBack }) {
   const [orderNotes, setOrderNotes] = useState("");
 
   const { addOrder } = useFirebaseOrders();
+
+  // REAL-TIME LISTENER for current order status
+  useEffect(() => {
+    if (!orderPlaced?.id) return;
+
+    const unsubscribe = onSnapshot(
+      doc(db, "orders", orderPlaced.id),
+      (snapshot) => {
+        if (snapshot.exists()) {
+          setOrderPlaced((prev) => ({ ...prev, ...snapshot.data() }));
+        }
+      }
+    );
+
+    return () => unsubscribe();
+  }, [orderPlaced?.id]);
 
   const addToCart = (item, selectedSize) => {
     const price = selectedSize === "16oz" ? item.price16 : item.price22;
@@ -47,30 +65,32 @@ export default function CoffeeOrderingSystem({ onBack }) {
 
   const itemCount = useMemo(() => cart.reduce((s, c) => s + c.qty, 0), [cart]);
 
- const placeOrder = (paymentData = {}) => {
-  if (cart.length === 0 || !payment || !customerName.trim()) return;
+  const placeOrder = async (paymentData = {}) => {
+    if (cart.length === 0 || !payment || !customerName.trim()) return;
 
-  const orderNo = Math.floor(100 + Math.random() * 900);
-  const orderData = {
-    orderNo,
-    items: [...cart],
-    total,
-    payment,
-    customerName: customerName.trim(),
-    notes: orderNotes.trim(),
-    referenceNo: paymentData.referenceNo || null,
-    screenshotPreview: paymentData.screenshotPreview || null,
-    status: payment === "paymaya" ? "pending_verification" : "confirmed",
-    verified: false,
+    const orderNo = Math.floor(100 + Math.random() * 900);
+    const orderData = {
+      orderNo,
+      items: [...cart],
+      total,
+      payment,
+      customerName: customerName.trim(),
+      notes: orderNotes.trim(),
+      referenceNo: paymentData.referenceNo || null,
+      screenshotPreview: paymentData.screenshotPreview || null,
+      status: payment === "paymaya" ? "pending_verification" : "confirmed",
+      verified: false,
+    };
+
+    // addOrder now returns { id, ...orderData }
+    const savedOrder = await addOrder(orderData);
+    
+    setOrderPlaced({
+      ...savedOrder,
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    });
+    setShowCart(false);
   };
-
-  addOrder(orderData);
-  setOrderPlaced({
-    ...orderData,
-    time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-  });
-  setShowCart(false);
-};
 
   const newOrder = () => {
     setCart([]);
