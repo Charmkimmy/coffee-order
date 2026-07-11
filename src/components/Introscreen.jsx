@@ -215,17 +215,14 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           border-radius: 50%;
           border: 2px solid #F5E6C8;
         }
-          .beanito-badge {
-           width: clamp(140px, 36vw, 180px);   /* was 120px-160px */
-           height: clamp(140px, 36vw, 180px);
-           margin: 0 auto 18px;
-            border-radius: 50%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center
-            }
-
+          .beanito-badge-img {
+          width: calc(100% - 28px);   /* was 20px — increase padding */
+          height: calc(100% - 28px);
+           border-radius: 50%;
+           object-fit: cover;
+           display: block;
+           }
+           
         .beanito-wordmark {
           font-size: clamp(28px, 8vw, 38px);
           line-height: 1;
