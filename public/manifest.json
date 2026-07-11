@@ -1,7 +1,7 @@
 ﻿{
-  "short_name": "Calma Cafe",
-  "name": "Calma Cafe - Order & Pay",
-  "id": "calma-cafe-pos-v2",
+  "short_name": "Beanito",
+  "name": "Beanito - Order & Pay",
+  "id": "beanito-pos-v2",
   "description": "Order your favorite coffee, pay, and skip the line",
   "icons": [
     {
