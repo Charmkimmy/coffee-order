@@ -18,11 +18,14 @@ function App() {
     grandTotal,
   } = useFirebaseOrders();
 
-  // Fetch unmatched payments from Firebase (if you have a node for it)
+  // Fetch unmatched payments from Firebase
   useEffect(() => {
     // TODO: Replace with actual Firebase listener
-    // Example: firebase.database().ref('unmatchedPayments').on('value', ...)
-    // For now, unmatchedPayments is managed locally or via webhook
+    // firebase.database().ref('unmatchedPayments').on('value', (snap) => {
+    //   const data = [];
+    //   snap.forEach((child) => data.push({ id: child.key, ...child.val() }));
+    //   setUnmatchedPayments(data);
+    // });
   }, []);
 
   const handleGetStarted = () => setScreen("order");
@@ -30,23 +33,11 @@ function App() {
   const handleBack = () => setScreen("intro");
   const handleLogout = () => setScreen("intro");
 
-  // Add a new unmatched payment (called from SMS webhook or manual entry)
-  const addUnmatchedPayment = (paymentData) => {
-    const newPayment = {
-      id: `pay_${Date.now()}`,
-      timestamp: Date.now(),
-      status: "pending",
-      ...paymentData,
-    };
-    setUnmatchedPayments((prev) => [newPayment, ...prev]);
-  };
-
   // Verify a payment and match it to an order
   const handleVerifyPayment = (paymentId, orderId) => {
     const payment = unmatchedPayments.find((p) => p.id === paymentId);
     if (!payment) return;
 
-    // Update the order with verification data
     editOrder(orderId, {
       verified: true,
       verifiedAt: Date.now(),
@@ -55,12 +46,11 @@ function App() {
       smsSender: payment.senderName,
     });
 
-    // Remove from unmatched payments
     setUnmatchedPayments((prev) => prev.filter((p) => p.id !== paymentId));
   };
 
   // Remove an unmatched payment (if invalid/spam)
-  const removeUnmatchedPayment = (paymentId) => {
+  const handleRemoveUnmatchedPayment = (paymentId) => {
     setUnmatchedPayments((prev) => prev.filter((p) => p.id !== paymentId));
   };
 
@@ -116,7 +106,7 @@ function App() {
           onDeleteOrder={deleteOrder}
           onEditOrder={editOrder}
           onVerifyPayment={handleVerifyPayment}
-          onRemoveUnmatchedPayment={removeUnmatchedPayment}
+          onRemoveUnmatchedPayment={handleRemoveUnmatchedPayment}
           onBack={handleBack}
           onLogout={handleLogout}
         />
