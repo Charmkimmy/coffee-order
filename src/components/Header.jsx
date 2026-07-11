@@ -6,11 +6,13 @@ const BeanitoLogo = ({ size = 80 }) => (
     style={{
       width: size,
       height: size,
-      borderRadius: "50%",
-      border: "1px solid #F5E6C8",
+      borderRadius: "12px",
+      border: "1px solid rgba(198,162,101,0.35)",
       padding: 2,
       flexShrink: 0,
       overflow: "hidden",
+      background: "#0B0805",
+      boxShadow: "0 0 12px rgba(198,162,101,0.18)",
     }}
   >
     <img
@@ -20,7 +22,7 @@ const BeanitoLogo = ({ size = 80 }) => (
       height="100%"
       style={{
         objectFit: "contain",
-        borderRadius: "50%",
+        borderRadius: "10px",
         display: "block",
       }}
     />
@@ -31,18 +33,18 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
   return (
     <div className="beanito-header-wrap" style={{ position: "sticky", top: 0, zIndex: 50 }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;500;600;700&display=swap');
 
         .beanito-header-bar {
-          background: #0D0D0D;
-          border-bottom: 1px solid rgba(245,230,200,0.15);
+          background: #0B0805;
+          border-bottom: 1px solid rgba(198,162,101,0.16);
           padding: max(14px, env(safe-area-inset-top)) 20px 14px;
         }
 
         .beanito-icon-btn {
           background: none;
           border: none;
-          color: #8B7355;
+          color: #8A7554;
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -52,18 +54,18 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
           border-radius: 8px;
           -webkit-tap-highlight-color: transparent;
         }
-        .beanito-icon-btn:active { background: rgba(212,165,116,0.12); color: #D4A574; }
+        .beanito-icon-btn:active { background: rgba(198,162,101,0.12); color: #C6A265; }
         @media (hover: hover) {
-          .beanito-icon-btn:hover { color: #D4A574; }
+          .beanito-icon-btn:hover { color: #C6A265; }
         }
 
         .beanito-cart-badge {
           position: absolute;
           top: -2px;
           right: -2px;
-          background: #0D0D0D;
-          border: 1px solid #D4A574;
-          color: #F5E6C8;
+          background: #0B0805;
+          border: 1px solid #C6A265;
+          color: #F2EAD9;
           border-radius: 50%;
           width: 18px;
           height: 18px;
@@ -83,17 +85,17 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
             </button>
           )}
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <BeanitoLogo size={32} />
+            <BeanitoLogo size={36} />
             <div>
               <div
                 style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: 18,
-                  fontWeight: 700,
-                  letterSpacing: 1.5,
-                  textTransform: "uppercase",
-                  color: "#F5E6C8",
-                  lineHeight: 1.1,
+                  fontFamily: "'Kaushan Script', cursive",
+                  fontSize: 22,
+                  fontWeight: 400,
+                  letterSpacing: 0.3,
+                  color: "#F0CE97",
+                  lineHeight: 1,
+                  textShadow: "0 0 8px rgba(230,166,84,0.4)",
                 }}
               >
                 Beanito
@@ -102,9 +104,10 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
                 style={{
                   fontFamily: "'Montserrat', sans-serif",
                   fontSize: 9,
-                  color: "#8B7355",
+                  color: "#8A7554",
                   letterSpacing: 2,
                   textTransform: "uppercase",
+                  marginTop: 2,
                 }}
               >
                 Coffee Shop
@@ -127,7 +130,7 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
               alignItems: "center",
               gap: 6,
               fontSize: 13,
-              color: "#8B7355",
+              color: "#8A7554",
               fontFamily: "'Montserrat', sans-serif",
               fontWeight: 500,
             }}

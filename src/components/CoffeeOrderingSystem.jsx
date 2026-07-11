@@ -84,7 +84,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
 
     // addOrder now returns { id, ...orderData }
     const savedOrder = await addOrder(orderData);
-    
+
     setOrderPlaced({
       ...savedOrder,
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
@@ -103,15 +103,15 @@ export default function CoffeeOrderingSystem({ onBack }) {
   return (
     <div className="beanito-cos">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Montserrat:wght@400;500;600;700&display=swap');
 
         .beanito-cos {
           font-family: 'Montserrat', sans-serif;
-          background: #0D0D0D;
-          background-image: radial-gradient(rgba(212,165,116,0.10) 1px, transparent 1px);
+          background: #0B0805;
+          background-image: radial-gradient(rgba(198,162,101,0.09) 1px, transparent 1px);
           background-size: 22px 22px;
           min-height: 100dvh;
-          color: #F5E6C8;
+          color: #F2EAD9;
           overflow-x: hidden;
         }
 
@@ -120,13 +120,13 @@ export default function CoffeeOrderingSystem({ onBack }) {
           font-family: 'Montserrat', sans-serif;
           text-transform: uppercase;
           letter-spacing: 1.5px;
-          color: #8B7355;
+          color: #8A7554;
         }
 
         .beanito-size-toggle {
           display: flex;
-          background: rgba(212,165,116,0.08);
-          border: 1px solid rgba(212,165,116,0.18);
+          background: rgba(198,162,101,0.07);
+          border: 1px solid rgba(198,162,101,0.18);
           border-radius: 999px;
           padding: 4px;
           gap: 4px;
@@ -145,27 +145,27 @@ export default function CoffeeOrderingSystem({ onBack }) {
         }
 
         .beanito-divider {
-          border-top: 1px solid rgba(245,230,200,0.15);
+          border-top: 1px solid rgba(198,162,101,0.15);
           margin-bottom: 18px;
         }
 
         .beanito-panel {
-          background: #141414;
-          border-left: 1px solid rgba(245,230,200,0.15);
+          background: #120D07;
+          border-left: 1px solid rgba(198,162,101,0.15);
         }
 
         .beanito-cart-panel {
-          background: #0D0D0D;
-          box-shadow: -4px 0 24px rgba(0,0,0,0.45);
+          background: #0B0805;
+          box-shadow: -4px 0 24px rgba(0,0,0,0.5);
         }
 
         .beanito-cart-backdrop {
-          background: rgba(0,0,0,0.6);
+          background: rgba(0,0,0,0.65);
         }
 
         .beanito-cart-fab {
-          background: #D4A574;
-          color: #0D0D0D;
+          background: linear-gradient(180deg, #DDB076 0%, #C6A265 100%);
+          color: #0B0805;
           border: none;
           border-radius: 50%;
           width: 56px;
@@ -174,22 +174,22 @@ export default function CoffeeOrderingSystem({ onBack }) {
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          box-shadow: 0 4px 16px rgba(212,165,116,0.35);
+          box-shadow: 0 4px 20px rgba(198,162,101,0.4);
           -webkit-tap-highlight-color: transparent;
           transition: transform 0.15s ease;
         }
         .beanito-cart-fab:active { transform: scale(0.94); }
         @media (hover: hover) {
-          .beanito-cart-fab:hover { background: #e4b584; }
+          .beanito-cart-fab:hover { box-shadow: 0 6px 26px rgba(198,162,101,0.55); }
         }
 
         .beanito-cart-fab-badge {
           position: absolute;
           top: -4px;
           right: -4px;
-          background: #0D0D0D;
-          border: 1.5px solid #D4A574;
-          color: #F5E6C8;
+          background: #0B0805;
+          border: 1.5px solid #C6A265;
+          color: #F2EAD9;
           border-radius: 50%;
           width: 22px;
           height: 22px;
@@ -202,7 +202,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
 
         .beanito-panel-lip {
           height: 6px;
-          background: linear-gradient(90deg, transparent, #D4A574 20%, #D4A574 80%, transparent);
+          background: linear-gradient(90deg, transparent, #C6A265 20%, #C6A265 80%, transparent);
           opacity: 0.35;
           flex-shrink: 0;
         }
@@ -228,8 +228,8 @@ export default function CoffeeOrderingSystem({ onBack }) {
                   onClick={() => setSize(s)}
                   className="beanito-size-btn cos-btn"
                   style={{
-                    background: size === s ? "#D4A574" : "transparent",
-                    color: size === s ? "#0D0D0D" : "#8B7355",
+                    background: size === s ? "#C6A265" : "transparent",
+                    color: size === s ? "#0B0805" : "#8A7554",
                   }}
                 >
                   {s}
@@ -272,8 +272,8 @@ export default function CoffeeOrderingSystem({ onBack }) {
                 onClick={() => setSize(s)}
                 className="beanito-size-btn cos-btn"
                 style={{
-                  background: size === s ? "#D4A574" : "transparent",
-                  color: size === s ? "#0D0D0D" : "#8B7355",
+                  background: size === s ? "#C6A265" : "transparent",
+                  color: size === s ? "#0B0805" : "#8A7554",
                 }}
               >
                 {s}

@@ -48,15 +48,15 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
   return (
     <div className="beanito-intro">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Montserrat:wght@400;500;600;700&display=swap');
 
         .beanito-intro * { box-sizing: border-box; }
 
         .beanito-intro {
           min-height: 100dvh;
           width: 100%;
-          font-family: 'Playfair Display', 'Georgia', serif;
-          background: #0D0D0D;
+          font-family: 'Fraunces', 'Georgia', serif;
+          background: #0B0805;
           position: relative;
           overflow-x: hidden;
           display: flex;
@@ -68,14 +68,15 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
 
         .beanito-glow-top {
           position: absolute;
-          width: clamp(260px, 70vw, 420px);
-          height: clamp(260px, 70vw, 420px);
+          width: clamp(280px, 75vw, 460px);
+          height: clamp(280px, 75vw, 460px);
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(212,165,116,0.12) 0%, transparent 72%);
-          top: -140px;
+          background: radial-gradient(circle, rgba(230,166,84,0.16) 0%, rgba(180,100,40,0.05) 45%, transparent 72%);
+          top: -160px;
           left: 50%;
           transform: translateX(-50%);
           pointer-events: none;
+          animation: emberBreathe 5s ease-in-out infinite;
         }
 
         .beanito-glow-bottom {
@@ -83,10 +84,15 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           width: clamp(200px, 55vw, 320px);
           height: clamp(200px, 55vw, 320px);
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(212,165,116,0.07) 0%, transparent 72%);
+          background: radial-gradient(circle, rgba(200,120,50,0.10) 0%, transparent 72%);
           bottom: 60px;
           right: -100px;
           pointer-events: none;
+        }
+
+        @keyframes emberBreathe {
+          0%, 100% { opacity: 0.75; transform: translateX(-50%) scale(1); }
+          50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
         }
 
         .beanito-staff-wrap {
@@ -97,10 +103,10 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
         }
 
         .beanito-staff-btn {
-          background: rgba(30,30,30,0.85);
-          border: 1px solid rgba(245,230,200,0.25);
+          background: rgba(26,20,13,0.85);
+          border: 1px solid rgba(198,162,101,0.3);
           border-radius: 8px;
-          color: #F5E6C8;
+          color: #E7CDA0;
           font-family: 'Montserrat', sans-serif;
           font-size: 10px;
           font-weight: 600;
@@ -114,15 +120,15 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           min-height: 36px;
           -webkit-tap-highlight-color: transparent;
         }
-        .beanito-staff-btn:active { background: rgba(46,46,46,0.9); }
+        .beanito-staff-btn:active { background: rgba(40,30,18,0.9); }
         @media (hover: hover) {
-          .beanito-staff-btn:hover { border-color: rgba(245,230,200,0.45); }
+          .beanito-staff-btn:hover { border-color: rgba(198,162,101,0.55); }
         }
 
         .beanito-admin-card {
           width: min(220px, 62vw);
-          background: rgba(13,13,13,0.97);
-          border: 1px solid rgba(245,230,200,0.25);
+          background: rgba(11,8,5,0.97);
+          border: 1px solid rgba(198,162,101,0.3);
           border-radius: 12px;
           padding: 16px;
           backdrop-filter: blur(20px);
@@ -130,7 +136,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
 
         .beanito-admin-label {
           font-size: 10px;
-          color: #8B7355;
+          color: #8A7554;
           margin-bottom: 10px;
           font-family: 'Montserrat', sans-serif;
           letter-spacing: 2px;
@@ -141,13 +147,13 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           width: 100%;
           padding: 11px 12px;
           border-radius: 6px;
-          background: rgba(40,40,40,0.6);
+          background: rgba(50,38,22,0.5);
           font-size: 16px;
           font-family: 'Montserrat', sans-serif;
-          color: #F5E6C8;
+          color: #F2EAD9;
           margin-bottom: 10px;
           outline: none;
-          border: 1px solid rgba(245,230,200,0.25);
+          border: 1px solid rgba(198,162,101,0.3);
         }
         .beanito-admin-input.error { border: 1.5px solid #c44; }
 
@@ -166,8 +172,8 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           padding: 10px;
           border-radius: 6px;
           border: none;
-          background: #D4A574;
-          color: #0D0D0D;
+          background: linear-gradient(180deg, #DDB076 0%, #C6A265 100%);
+          color: #0B0805;
           font-size: 11px;
           font-family: 'Montserrat', sans-serif;
           font-weight: 700;
@@ -181,9 +187,9 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           flex: 1;
           padding: 10px;
           border-radius: 6px;
-          border: 1px solid rgba(245,230,200,0.25);
+          border: 1px solid rgba(198,162,101,0.3);
           background: transparent;
-          color: #8B7355;
+          color: #8A7554;
           font-size: 11px;
           font-family: 'Montserrat', sans-serif;
           cursor: pointer;
@@ -192,11 +198,11 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
 
         .beanito-header { text-align: center; margin-bottom: clamp(20px, 5vw, 32px); position: relative; z-index: 2; }
 
-        /* LOGO: No circular clipping — show full image */
+        /* LOGO: No circular clipping — show full image, let it sit in the dark like the sign */
         .beanito-badge {
-          width: clamp(160px, 45vw, 240px);
+          width: clamp(170px, 48vw, 250px);
           height: auto;
-          margin: 0 auto 18px;
+          margin: 0 auto 6px;
           position: relative;
           display: flex;
           align-items: center;
@@ -208,40 +214,48 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           height: auto;
           object-fit: contain;
           display: block;
-          border-radius: 16px;  /* soft rounded corners, not a circle */
+          border-radius: 18px;
+          filter: drop-shadow(0 0 26px rgba(230,166,84,0.22));
         }
 
-        /* Optional: subtle ring behind the logo */
+        /* Faint warm ring, like the glow bleeding past the sign's edge */
         .beanito-badge-ring-outer {
           position: absolute;
-          inset: -8px;
-          border-radius: 24px;
-          border: 1px solid rgba(245,230,200,0.2);
+          inset: -10px;
+          border-radius: 26px;
+          border: 1px solid rgba(198,162,101,0.16);
           pointer-events: none;
         }
 
         .beanito-wordmark {
-          font-size: clamp(28px, 8vw, 38px);
-          line-height: 1;
-          letter-spacing: clamp(2px, 1vw, 4px);
-          margin-bottom: 10px;
-          font-family: 'Playfair Display', serif;
-          color: #F5E6C8;
-          font-weight: 700;
+          font-size: clamp(40px, 12vw, 58px);
+          line-height: 1.15;
+          letter-spacing: 0.5px;
+          margin-bottom: 6px;
+          font-family: 'Kaushan Script', cursive;
+          font-weight: 400;
+          color: #F0CE97;
+          text-shadow: 0 0 14px rgba(230,166,84,0.55), 0 0 34px rgba(200,130,50,0.28);
+          animation: signFlicker 4.5s ease-in-out infinite;
+        }
+
+        @keyframes signFlicker {
+          0%, 100% { text-shadow: 0 0 14px rgba(230,166,84,0.55), 0 0 34px rgba(200,130,50,0.28); }
+          50% { text-shadow: 0 0 18px rgba(230,166,84,0.7), 0 0 42px rgba(200,130,50,0.36); }
         }
 
         .beanito-tagline {
           font-family: 'Montserrat', sans-serif;
           font-size: 11px;
-          letter-spacing: 3px;
-          color: #8B7355;
+          letter-spacing: 4px;
+          color: #8A7554;
           text-transform: uppercase;
         }
 
         .beanito-card {
-          background: rgba(30,30,30,0.55);
+          background: rgba(30,22,12,0.5);
           backdrop-filter: blur(10px);
-          border: 1px solid rgba(245,230,200,0.15);
+          border: 1px solid rgba(198,162,101,0.16);
           border-radius: 16px;
           width: 100%;
           max-width: 380px;
@@ -255,7 +269,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 3px;
-          color: #D4A574;
+          color: #C6A265;
           margin-bottom: 18px;
           font-family: 'Montserrat', sans-serif;
         }
@@ -265,7 +279,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           align-items: center;
           gap: 14px;
           padding: 13px 0;
-          border-bottom: 1px solid rgba(245,230,200,0.1);
+          border-bottom: 1px solid rgba(198,162,101,0.12);
           transition: opacity 0.5s cubic-bezier(0.34,1.56,0.64,1), transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
         }
         .beanito-step:last-child { border-bottom: none; }
@@ -274,29 +288,29 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           width: 34px;
           height: 34px;
           border-radius: 50%;
-          border: 1.5px solid #D4A574;
+          border: 1.5px solid #C6A265;
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: 'Montserrat', sans-serif;
           font-size: 13px;
           font-weight: 700;
-          color: #D4A574;
+          color: #C6A265;
           flex-shrink: 0;
         }
 
         .beanito-step-label {
           font-size: 15px;
           font-weight: 600;
-          color: #F5E6C8;
-          font-family: 'Playfair Display', serif;
+          color: #F2EAD9;
+          font-family: 'Fraunces', serif;
           margin-bottom: 2px;
         }
 
         .beanito-step-note {
           font-family: 'Montserrat', sans-serif;
           font-size: 11px;
-          color: #8B7355;
+          color: #8A7554;
         }
 
         .beanito-cta-wrap { width: 100%; max-width: 380px; margin-bottom: clamp(20px, 5vw, 30px); position: relative; z-index: 2; }
@@ -304,8 +318,8 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
         .beanito-cta {
           width: 100%;
           padding: 17px;
-          background: #D4A574;
-          color: #0D0D0D;
+          background: linear-gradient(180deg, #DDB076 0%, #C6A265 100%);
+          color: #0B0805;
           border: none;
           border-radius: 12px;
           font-family: 'Montserrat', sans-serif;
@@ -319,19 +333,20 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
           justify-content: center;
           gap: 10px;
           min-height: 52px;
-          transition: transform 0.15s ease, background 0.2s ease;
+          box-shadow: 0 6px 24px rgba(198,162,101,0.25);
+          transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
           -webkit-tap-highlight-color: transparent;
         }
-        .beanito-cta:active { transform: scale(0.97); background: #c49664; }
+        .beanito-cta:active { transform: scale(0.97); background: #b9925a; }
         @media (hover: hover) {
-          .beanito-cta:hover { background: #e4b584; transform: translateY(-1px); }
+          .beanito-cta:hover { box-shadow: 0 8px 30px rgba(198,162,101,0.4); transform: translateY(-1px); }
         }
 
         .beanito-footer {
           text-align: center;
           font-family: 'Montserrat', sans-serif;
           font-size: 10px;
-          color: #5a5a5a;
+          color: #5a4d38;
           letter-spacing: 2px;
           text-transform: uppercase;
           position: relative;
@@ -339,7 +354,6 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
         }
 
         @media (max-width: 360px) {
-          .beanito-wordmark { letter-spacing: 2px; }
           .beanito-card { padding: 16px; }
         }
       `}</style>
@@ -387,7 +401,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
         )}
       </div>
 
-      {/* Header / logo — NO circular rings, show full logo */}
+      {/* Header / logo — full glowing sign, no circular crop */}
       <div className="beanito-header">
         <div className="beanito-badge">
           <div className="beanito-badge-ring-outer" />

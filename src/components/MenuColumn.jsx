@@ -16,6 +16,13 @@ export default function MenuColumn({ size, setSize, onAddToCart }) {
           border-radius: 8px;
           padding: 14px 16px;
           gap: 12px;
+          transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        @media (hover: hover) {
+          .calma-menu-card:hover {
+            border-color: rgba(198,162,101,0.32);
+            background: rgba(198,162,101,0.06);
+          }
         }
 
         .calma-add-btn {
@@ -31,10 +38,11 @@ export default function MenuColumn({ size, setSize, onAddToCart }) {
           cursor: pointer;
           flex-shrink: 0;
           -webkit-tap-highlight-color: transparent;
+          transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
         }
-        .calma-add-btn:active { background: rgba(198,162,101,0.2); }
+        .calma-add-btn:active { background: rgba(198,162,101,0.25); box-shadow: 0 0 14px rgba(198,162,101,0.4); }
         @media (hover: hover) {
-          .calma-add-btn:hover { background: #C6A265; color: #0B0805; }
+          .calma-add-btn:hover { background: #C6A265; color: #0B0805; box-shadow: 0 0 16px rgba(198,162,101,0.45); }
         }
       `}</style>
 
