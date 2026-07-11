@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Minus, Plus, Trash2, Check, X, User, FileText } from "lucide-react";
+import { Minus, Plus, Trash2, Check, X, User, FileText, Clock, AlertCircle, CheckCircle } from "lucide-react";
 import { PAYMENTS } from "../data/payments";
 import { peso } from "../utils/format";
 import OrderReceipt from "./OrderReceipt";
@@ -37,6 +37,28 @@ export default function OrderColumn({
     setShowPayMayaModal(false);
     onPlaceOrder(paymentData);
   };
+
+  // Determine what screen to show after order is placed
+  const getOrderScreen = () => {
+    if (!orderPlaced) return null;
+    
+    // Cash/other payments — instant confirmation
+    if (orderPlaced.payment !== "paymaya") {
+      return "receipt";
+    }
+    
+    // Maya payments — check status
+    if (orderPlaced.status === "confirmed") {
+      return "receipt";
+    }
+    if (orderPlaced.status === "rejected") {
+      return "rejected";
+    }
+    // pending_verification or no status yet
+    return "pending";
+  };
+
+  const screen = getOrderScreen();
 
   return (
     <>
@@ -148,6 +170,7 @@ export default function OrderColumn({
       <div className="calma-oc" style={{ width: "100%" }}>
         {!orderPlaced ? (
           <>
+            {/* ... cart UI stays the same ... */}
             {isMobile && onCloseCart && (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: "#F2EAD9" }}>
@@ -307,13 +330,88 @@ export default function OrderColumn({
                 : `Place order · ${peso(total)}`}
             </button>
           </>
-        ) : (
+        ) : screen === "receipt" ? (
           <OrderReceipt orderPlaced={orderPlaced} onNewOrder={onNewOrder} />
-        )}
+        ) : screen === "pending" ? (
+          /* WAITING FOR VERIFICATION SCREEN */
+          <div style={{ textAlign: "center", padding: "40px 0" }}>
+            <div style={{
+              width: 64, height: 64, borderRadius: "50%",
+              background: "rgba(198,162,101,0.1)",
+              border: "2px solid rgba(198,162,101,0.3)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              margin: "0 auto 16px",
+            }}>
+              <Clock size={28} color="#C6A265" />
+            </div>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#F2EAD9" }}>
+              Payment submitted
+            </div>
+            <div style={{ fontSize: 13, color: "#8A7554", marginTop: 8, fontFamily: "'Montserrat', sans-serif" }}>
+              Ref: <strong style={{ color: "#F2EAD9" }}>{orderPlaced.referenceNo || "—"}</strong>
+            </div>
+            <div style={{ fontSize: 13, color: "#C6A265", marginTop: 12, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.6 }}>
+              Your payment is being reviewed by our team.<br />
+              You'll receive your receipt once verified.
+            </div>
+            <div style={{ marginTop: 24, padding: "14px 18px", background: "rgba(198,162,101,0.06)", borderRadius: 10, border: "1px solid rgba(198,162,101,0.2)" }}>
+              <div style={{ fontSize: 11, color: "#8A7554", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>
+                Order #{orderPlaced.orderNo}
+              </div>
+              <div style={{ fontSize: 14, color: "#F2EAD9", fontWeight: 600 }}>
+                {peso(orderPlaced.total)}
+              </div>
+              <div style={{ fontSize: 12, color: "#8A7554", marginTop: 4 }}>
+                {orderPlaced.items.reduce((sum, i) => sum + i.qty, 0)} items
+              </div>
+            </div>
+            <button onClick={onNewOrder} className="calma-receipt-newbtn cos-btn" style={{ marginTop: 20 }}>
+              Start new order
+            </button>
+          </div>
+        ) : screen === "rejected" ? (
+          /* PAYMENT REJECTED SCREEN */
+          <div style={{ textAlign: "center", padding: "40px 0" }}>
+            <div style={{
+              width: 64, height: 64, borderRadius: "50%",
+              background: "rgba(194,69,58,0.1)",
+              border: "2px solid rgba(194,69,58,0.3)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              margin: "0 auto 16px",
+            }}>
+              <AlertCircle size={28} color="#C2453A" />
+            </div>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#F2EAD9" }}>
+              Payment rejected
+            </div>
+            <div style={{ fontSize: 13, color: "#8A7554", marginTop: 8, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.6 }}>
+              Your payment proof was invalid or unclear.<br />
+              Please re-submit a valid screenshot.
+            </div>
+            <button 
+              onClick={() => setShowPayMayaModal(true)}
+              className="calma-place-order enabled cos-btn"
+              style={{ marginTop: 24 }}
+            >
+              <CheckCircle size={16} />
+              Re-submit payment proof
+            </button>
+            <button onClick={onNewOrder} className="calma-receipt-newbtn cos-btn" style={{ marginTop: 12 }}>
+              Cancel & start new order
+            </button>
+          </div>
+        ) : null}
       </div>
 
       {showPayMayaModal && (
-        <PayMayaModal total={total} onClose={() => setShowPayMayaModal(false)} onConfirmPayment={handlePayMayaConfirm} />
+        <PayMayaModal 
+          total={total} 
+          onClose={() => setShowPayMayaModal(false)} 
+          onConfirmPayment={handlePayMayaConfirm}
+          onCancelOrder={onNewOrder}
+          orderStatus={orderPlaced?.status}
+          existingReferenceNo={orderPlaced?.referenceNo}
+        />
       )}
     </>
   );
