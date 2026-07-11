@@ -478,8 +478,8 @@ export default function OrderColumn({
         ) : null}
       </div>
 
-      {showPayMayaModal && (
-        <PayMayaModal 
+           {showPayMayaModal && (
+        <InstaPayModal 
           total={total} 
           onClose={() => setShowPayMayaModal(false)} 
           onConfirmPayment={handlePayMayaConfirm}
