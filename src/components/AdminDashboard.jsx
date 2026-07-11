@@ -168,11 +168,6 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
 
   const allSelected = selectedOrders.size === filteredOrderHistory.length && filteredOrderHistory.length > 0;
 
-  // Count pending verification orders
-  const pendingOrders = useMemo(() => 
-    orderHistory.filter((o) => o.status === "pending_verification"),
-    [orderHistory]
-  );
 
   const handleApproveOrder = (orderId) => {
     if (onEditOrder) {
