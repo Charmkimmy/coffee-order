@@ -1,10 +1,9 @@
-
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff, AlertCircle, CheckCircle, Smartphone } from "lucide-react";
+import { Calendar, DollarSign, ShoppingBag, Clock, Trash2, User, Pencil, CheckSquare, Square, X, Search, Download, ChevronLeft, ChevronRight, LogOut, FileText, BellRing, BellOff, AlertCircle, CheckCircle, Smartphone, Ban, RotateCcw } from "lucide-react";
 import { peso } from "../utils/format";
 import { PAYMENTS } from "../data/payments";
 
-export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, onDeleteOrder, onBack, onEditOrder, onLogout, unmatchedPayments = [], onVerifyPayment }) {
+export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, onDeleteOrder, onBack, onEditOrder, onLogout, unmatchedPayments = [], onVerifyPayment, onRequestResubmit }) {
   const [selectedOrders, setSelectedOrders] = useState(new Set());
   const [editingOrder, setEditingOrder] = useState(null);
   const [editCustomerName, setEditCustomerName] = useState("");
@@ -182,11 +181,30 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
     }
   };
 
+  // REJECT = bad proof, customer can re-submit
   const handleRejectOrder = (orderId) => {
-    if (window.confirm("Reject this order? This will mark it as cancelled.")) {
-      if (onEditOrder) {
-        onEditOrder(orderId, { status: "rejected", rejectedAt: Date.now() });
-      }
+    if (!window.confirm("Reject payment proof? Customer will be asked to re-upload.")) return;
+    if (onEditOrder) {
+      onEditOrder(orderId, { 
+        status: "rejected", 
+        rejectedAt: Date.now(),
+        rejectReason: "Invalid payment screenshot",
+        // Clear the bad proof so they can upload new one
+        screenshot: null,
+        screenshotPreview: null,
+      });
+    }
+  };
+
+  // CANCEL = permanently kill the order
+  const handleCancelOrder = (orderId) => {
+    if (!window.confirm("Cancel this order permanently? This cannot be undone.")) return;
+    if (onEditOrder) {
+      onEditOrder(orderId, { 
+        status: "cancelled", 
+        cancelledAt: Date.now(),
+        cancelledBy: "admin",
+      });
     }
   };
 
@@ -392,6 +410,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
         .calma-mini-btn.danger { border: 1px solid rgba(194,69,58,0.5); color: #d4776c; }
         .calma-mini-btn.neutral { border: 1px solid rgba(198,162,101,0.25); color: #8A7554; }
         .calma-mini-btn.green { border: none; background: #4FBF3F; color: #0B0805; font-weight: 700; }
+        .calma-mini-btn.orange { border: 1px solid rgba(198,162,101,0.4); color: #C6A265; }
 
         .calma-page-btn {
           background: transparent;
@@ -440,6 +459,34 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
           color: #C2453A;
           border-color: rgba(194,69,58,0.3);
           animation: pulse 2s infinite;
+        }
+        .calma-rejected-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 10px;
+          border-radius: 999px;
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          background: rgba(220, 140, 60, 0.15);
+          color: #DC8C3C;
+          border: 1px solid rgba(220, 140, 60, 0.3);
+        }
+        .calma-cancelled-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 10px;
+          border-radius: 999px;
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          background: rgba(100, 100, 100, 0.15);
+          color: #8A7554;
+          border: 1px solid rgba(100, 100, 100, 0.3);
         }
         @keyframes pulse {
           0%, 100% { opacity: 1; }
@@ -681,7 +728,7 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                 <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, fontWeight: 700, color: "#F2EAD9" }}>
                                   Order #{order.orderNo}
                                 </span>
-                                {/* Status badge */}
+                                {/* Status badges */}
                                 {order.status === "pending_verification" && (
                                   <span className="calma-pending-badge urgent">
                                     <Clock size={10} />
@@ -689,8 +736,15 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                   </span>
                                 )}
                                 {order.status === "rejected" && (
-                                  <span style={{ fontSize: 10, color: "#C2453A", fontWeight: 700, textTransform: "uppercase" }}>
+                                  <span className="calma-rejected-badge">
+                                    <AlertCircle size={10} />
                                     Rejected
+                                  </span>
+                                )}
+                                {order.status === "cancelled" && (
+                                  <span className="calma-cancelled-badge">
+                                    <Ban size={10} />
+                                    Cancelled
                                   </span>
                                 )}
                               </div>
@@ -752,13 +806,45 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                   style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
                                 >
                                   <X size={14} />
-                                  Reject
+                                  Reject Proof
+                                </button>
+                                <button 
+                                  onClick={() => handleCancelOrder(order.id)}
+                                  className="calma-mini-btn danger"
+                                  style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
+                                >
+                                  <Ban size={14} />
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                          {/* Rejected Order Section */}
+                          {order.status === "rejected" && (
+                            <div style={{ marginTop: 8, marginLeft: 34, padding: "12px", background: "rgba(220, 140, 60, 0.06)", borderRadius: 8, border: "1px solid rgba(220, 140, 60, 0.2)" }}>
+                              <div style={{ fontSize: 11, color: "#DC8C3C", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
+                                <AlertCircle size={11} />
+                                Proof rejected — waiting for customer to re-submit
+                              </div>
+                              {order.referenceNo && (
+                                <div style={{ fontSize: 12, color: "#C9BB9E", marginBottom: 8 }}>
+                                  Previous ref: <strong style={{ color: "#F2EAD9" }}>{order.referenceNo}</strong>
+                                </div>
+                              )}
+                              <div style={{ display: "flex", gap: 8 }}>
+                                <button 
+                                  onClick={() => handleCancelOrder(order.id)}
+                                  className="calma-mini-btn danger"
+                                  style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
+                                >
+                                  <Ban size={14} />
+                                  Cancel Order
                                 </button>
                               </div>
                             </div>
                           )}
                           {/* Reference Number if verified */}
-                          {order.referenceNo && order.status !== "pending_verification" && (
+                          {order.referenceNo && order.status !== "pending_verification" && order.status !== "rejected" && (
                             <div style={{ marginTop: 6, marginLeft: 34, padding: "6px 10px", background: "rgba(79,191,63,0.08)", borderRadius: 6, border: "1px solid rgba(79,191,63,0.2)" }}>
                               <div style={{ fontSize: 11, color: "#4FBF3F", display: "flex", alignItems: "center", gap: 4 }}>
                                 <CheckCircle size={11} />
@@ -784,8 +870,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                             </span>
                             <span style={{ fontWeight: 700, color: "#F2EAD9", fontSize: 14 }}>{peso(order.total)}</span>
                           </div>
-                          {/* Edit & Delete Buttons - hide for pending */}
-                          {order.status !== "pending_verification" && (
+                          {/* Edit & Delete Buttons - hide for pending and rejected */}
+                          {order.status !== "pending_verification" && order.status !== "rejected" && (
                             <div style={{ display: "flex", gap: 8, marginTop: 8, paddingLeft: 34 }}>
                               {editingOrder === order.id ? (
                                 <>
