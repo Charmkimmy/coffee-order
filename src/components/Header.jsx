@@ -1,24 +1,25 @@
 import React from "react";
 import { ShoppingBag, ArrowLeft, ShoppingCart } from "lucide-react";
 
-const CalmaLogo = ({ size = 80 }) => (
+const BeanitoLogo = ({ size = 80 }) => (
   <div
     style={{
       width: size,
       height: size,
       borderRadius: "50%",
-      border: "1px solid #C6A265",
+      border: "1px solid #F5E6C8",
       padding: 2,
       flexShrink: 0,
+      overflow: "hidden",
     }}
   >
     <img
-      src="/logo192.png"
-      alt="Calma Cafe"
+      src="/beanito.png"
+      alt="Beanito Coffee Shop"
       width="100%"
       height="100%"
       style={{
-        objectFit: "cover",
+        objectFit: "contain",
         borderRadius: "50%",
         display: "block",
       }}
@@ -28,20 +29,20 @@ const CalmaLogo = ({ size = 80 }) => (
 
 export default function Header({ itemCount, onBack, isCustomer, onCartToggle, showCart }) {
   return (
-    <div className="calma-header-wrap" style={{ position: "sticky", top: 0, zIndex: 50 }}>
+    <div className="beanito-header-wrap" style={{ position: "sticky", top: 0, zIndex: 50 }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
-        .calma-header-bar {
-          background: #0B0805;
-          border-bottom: 1px solid rgba(198,162,101,0.18);
+        .beanito-header-bar {
+          background: #0D0D0D;
+          border-bottom: 1px solid rgba(245,230,200,0.15);
           padding: max(14px, env(safe-area-inset-top)) 20px 14px;
         }
 
-        .calma-icon-btn {
+        .beanito-icon-btn {
           background: none;
           border: none;
-          color: #8A7554;
+          color: #8B7355;
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -51,18 +52,18 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
           border-radius: 8px;
           -webkit-tap-highlight-color: transparent;
         }
-        .calma-icon-btn:active { background: rgba(198,162,101,0.12); color: #C6A265; }
+        .beanito-icon-btn:active { background: rgba(212,165,116,0.12); color: #D4A574; }
         @media (hover: hover) {
-          .calma-icon-btn:hover { color: #C6A265; }
+          .beanito-icon-btn:hover { color: #D4A574; }
         }
 
-        .calma-cart-badge {
+        .beanito-cart-badge {
           position: absolute;
           top: -2px;
           right: -2px;
-          background: #0B0805;
-          border: 1px solid #C6A265;
-          color: #E8D5A3;
+          background: #0D0D0D;
+          border: 1px solid #D4A574;
+          color: #F5E6C8;
           border-radius: 50%;
           width: 18px;
           height: 18px;
@@ -74,39 +75,39 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
         }
       `}</style>
 
-      <div className="calma-header-bar" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <div className="beanito-header-bar" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {isCustomer && (
-            <button onClick={onBack} className="calma-icon-btn cos-btn">
+            <button onClick={onBack} className="beanito-icon-btn cos-btn">
               <ArrowLeft size={20} />
             </button>
           )}
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <CalmaLogo size={32} />
+            <BeanitoLogo size={32} />
             <div>
               <div
                 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
+                  fontFamily: "'Playfair Display', serif",
                   fontSize: 18,
                   fontWeight: 700,
                   letterSpacing: 1.5,
                   textTransform: "uppercase",
-                  color: "#F2EAD9",
+                  color: "#F5E6C8",
                   lineHeight: 1.1,
                 }}
               >
-                Calma Cafe
+                Beanito
               </div>
               <div
                 style={{
                   fontFamily: "'Montserrat', sans-serif",
                   fontSize: 9,
-                  color: "#8A7554",
+                  color: "#8B7355",
                   letterSpacing: 2,
                   textTransform: "uppercase",
                 }}
               >
-                Brewed with calm
+                Coffee Shop
               </div>
             </div>
           </div>
@@ -114,9 +115,9 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
 
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {/* Mobile cart toggle button */}
-          <button onClick={onCartToggle} className="calma-icon-btn cos-btn mobile-cart-btn" style={{ display: "none", position: "relative" }}>
+          <button onClick={onCartToggle} className="beanito-icon-btn cos-btn mobile-cart-btn" style={{ display: "none", position: "relative" }}>
             <ShoppingCart size={20} />
-            {itemCount > 0 && <span className="calma-cart-badge">{itemCount}</span>}
+            {itemCount > 0 && <span className="beanito-cart-badge">{itemCount}</span>}
           </button>
 
           <div
@@ -126,7 +127,7 @@ export default function Header({ itemCount, onBack, isCustomer, onCartToggle, sh
               alignItems: "center",
               gap: 6,
               fontSize: 13,
-              color: "#8A7554",
+              color: "#8B7355",
               fontFamily: "'Montserrat', sans-serif",
               fontWeight: 500,
             }}

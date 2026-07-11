@@ -78,7 +78,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
       notes: orderNotes.trim(),
       referenceNo: paymentData.referenceNo || null,
       screenshotPreview: paymentData.screenshotPreview || null,
-      status: payment === "paymaya" ? "pending_verification" : "confirmed",
+      status: payment === "instapay" ? "pending_verification" : "confirmed",
       verified: false,
     };
 
@@ -101,38 +101,38 @@ export default function CoffeeOrderingSystem({ onBack }) {
   };
 
   return (
-    <div className="calma-cos">
+    <div className="beanito-cos">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
-        .calma-cos {
+        .beanito-cos {
           font-family: 'Montserrat', sans-serif;
-          background: #0B0805;
-          background-image: radial-gradient(rgba(198,162,101,0.10) 1px, transparent 1px);
+          background: #0D0D0D;
+          background-image: radial-gradient(rgba(212,165,116,0.10) 1px, transparent 1px);
           background-size: 22px 22px;
           min-height: 100dvh;
-          color: #F2EAD9;
+          color: #F5E6C8;
           overflow-x: hidden;
         }
 
-        .calma-size-label {
+        .beanito-size-label {
           font-size: 11px;
           font-family: 'Montserrat', sans-serif;
           text-transform: uppercase;
           letter-spacing: 1.5px;
-          color: #8A7554;
+          color: #8B7355;
         }
 
-        .calma-size-toggle {
+        .beanito-size-toggle {
           display: flex;
-          background: rgba(198,162,101,0.08);
-          border: 1px solid rgba(198,162,101,0.18);
+          background: rgba(212,165,116,0.08);
+          border: 1px solid rgba(212,165,116,0.18);
           border-radius: 999px;
           padding: 4px;
           gap: 4px;
         }
 
-        .calma-size-btn {
+        .beanito-size-btn {
           border: none;
           padding: 7px 18px;
           border-radius: 999px;
@@ -144,28 +144,28 @@ export default function CoffeeOrderingSystem({ onBack }) {
           -webkit-tap-highlight-color: transparent;
         }
 
-        .calma-divider {
-          border-top: 1px solid rgba(198,162,101,0.18);
+        .beanito-divider {
+          border-top: 1px solid rgba(245,230,200,0.15);
           margin-bottom: 18px;
         }
 
-        .calma-panel {
-          background: #100A06;
-          border-left: 1px solid rgba(198,162,101,0.18);
+        .beanito-panel {
+          background: #141414;
+          border-left: 1px solid rgba(245,230,200,0.15);
         }
 
-        .calma-cart-panel {
-          background: #0B0805;
+        .beanito-cart-panel {
+          background: #0D0D0D;
           box-shadow: -4px 0 24px rgba(0,0,0,0.45);
         }
 
-        .calma-cart-backdrop {
+        .beanito-cart-backdrop {
           background: rgba(0,0,0,0.6);
         }
 
-        .calma-cart-fab {
-          background: #C6A265;
-          color: #0B0805;
+        .beanito-cart-fab {
+          background: #D4A574;
+          color: #0D0D0D;
           border: none;
           border-radius: 50%;
           width: 56px;
@@ -174,22 +174,22 @@ export default function CoffeeOrderingSystem({ onBack }) {
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          box-shadow: 0 4px 16px rgba(198,162,101,0.35);
+          box-shadow: 0 4px 16px rgba(212,165,116,0.35);
           -webkit-tap-highlight-color: transparent;
           transition: transform 0.15s ease;
         }
-        .calma-cart-fab:active { transform: scale(0.94); }
+        .beanito-cart-fab:active { transform: scale(0.94); }
         @media (hover: hover) {
-          .calma-cart-fab:hover { background: #d6b578; }
+          .beanito-cart-fab:hover { background: #e4b584; }
         }
 
-        .calma-cart-fab-badge {
+        .beanito-cart-fab-badge {
           position: absolute;
           top: -4px;
           right: -4px;
-          background: #0B0805;
-          border: 1.5px solid #C6A265;
-          color: #F2EAD9;
+          background: #0D0D0D;
+          border: 1.5px solid #D4A574;
+          color: #F5E6C8;
           border-radius: 50%;
           width: 22px;
           height: 22px;
@@ -200,9 +200,9 @@ export default function CoffeeOrderingSystem({ onBack }) {
           justify-content: center;
         }
 
-        .calma-panel-lip {
+        .beanito-panel-lip {
           height: 6px;
-          background: linear-gradient(90deg, transparent, #C6A265 20%, #C6A265 80%, transparent);
+          background: linear-gradient(90deg, transparent, #D4A574 20%, #D4A574 80%, transparent);
           opacity: 0.35;
           flex-shrink: 0;
         }
@@ -220,16 +220,16 @@ export default function CoffeeOrderingSystem({ onBack }) {
       <div className="desktop-layout" style={{ display: "grid", gridTemplateColumns: "1fr 340px" }}>
         <div style={{ padding: "24px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-            <span className="calma-size-label">Size</span>
-            <div className="calma-size-toggle">
+            <span className="beanito-size-label">Size</span>
+            <div className="beanito-size-toggle">
               {["16oz", "22oz"].map((s) => (
                 <button
                   key={s}
                   onClick={() => setSize(s)}
-                  className="calma-size-btn cos-btn"
+                  className="beanito-size-btn cos-btn"
                   style={{
-                    background: size === s ? "#C6A265" : "transparent",
-                    color: size === s ? "#0B0805" : "#8A7554",
+                    background: size === s ? "#D4A574" : "transparent",
+                    color: size === s ? "#0D0D0D" : "#8B7355",
                   }}
                 >
                   {s}
@@ -237,11 +237,11 @@ export default function CoffeeOrderingSystem({ onBack }) {
               ))}
             </div>
           </div>
-          <div className="calma-divider" />
+          <div className="beanito-divider" />
           <MenuColumn size={size} setSize={setSize} onAddToCart={addToCart} />
         </div>
 
-        <div className="calma-panel" style={{ position: "sticky", top: 0, minHeight: "600px", padding: "24px 20px" }}>
+        <div className="beanito-panel" style={{ position: "sticky", top: 0, minHeight: "600px", padding: "24px 20px" }}>
           <OrderColumn
             cart={cart}
             total={total}
@@ -264,16 +264,16 @@ export default function CoffeeOrderingSystem({ onBack }) {
       {/* Mobile: Menu always visible, cart slides from right */}
       <div className="mobile-layout" style={{ position: "relative", padding: "16px", paddingBottom: "max(80px, calc(64px + env(safe-area-inset-bottom)))" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-          <span className="calma-size-label">Size</span>
-          <div className="calma-size-toggle">
+          <span className="beanito-size-label">Size</span>
+          <div className="beanito-size-toggle">
             {["16oz", "22oz"].map((s) => (
               <button
                 key={s}
                 onClick={() => setSize(s)}
-                className="calma-size-btn cos-btn"
+                className="beanito-size-btn cos-btn"
                 style={{
-                  background: size === s ? "#C6A265" : "transparent",
-                  color: size === s ? "#0B0805" : "#8A7554",
+                  background: size === s ? "#D4A574" : "transparent",
+                  color: size === s ? "#0D0D0D" : "#8B7355",
                 }}
               >
                 {s}
@@ -281,7 +281,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
             ))}
           </div>
         </div>
-        <div className="calma-divider" />
+        <div className="beanito-divider" />
         <MenuColumn size={size} setSize={setSize} onAddToCart={addToCart} />
       </div>
 
@@ -289,7 +289,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
       {showCart && createPortal(
         <>
           <div
-            className="mobile-cart-backdrop calma-cart-backdrop"
+            className="mobile-cart-backdrop beanito-cart-backdrop"
             onClick={() => setShowCart(false)}
             style={{
               position: "fixed",
@@ -301,7 +301,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
             }}
           />
           <div
-            className="mobile-cart-panel calma-cart-panel"
+            className="mobile-cart-panel beanito-cart-panel"
             style={{
               position: "fixed",
               top: 0,
@@ -314,7 +314,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
               flexDirection: "column",
             }}
           >
-            <div className="calma-panel-lip" />
+            <div className="beanito-panel-lip" />
             <div
               style={{
                 padding: "20px 20px max(20px, env(safe-area-inset-bottom))",
@@ -349,7 +349,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
       {itemCount > 0 && !showCart && (
         <button
           onClick={() => setShowCart(true)}
-          className="mobile-cart-fab calma-cart-fab cos-btn"
+          className="mobile-cart-fab beanito-cart-fab cos-btn"
           style={{
             position: "fixed",
             bottom: "max(20px, calc(12px + env(safe-area-inset-bottom)))",
@@ -362,7 +362,7 @@ export default function CoffeeOrderingSystem({ onBack }) {
             <circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
           </svg>
-          <span className="calma-cart-fab-badge">{itemCount}</span>
+          <span className="beanito-cart-fab-badge">{itemCount}</span>
         </button>
       )}
     </div>
