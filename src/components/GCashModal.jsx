@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { X, Smartphone, Copy, CheckCircle, QrCode } from "lucide-react";
 import { peso } from "../utils/format";
 
-const OWNER_GCASH_NUMBER = "0968-304-5499"; 
-const OWNER_GCASH_NAME = "REALYN RILE"; 
+const OWNER_GCASH_NUMBER = "0968-304-5499";
+const OWNER_GCASH_NAME = "REALYN RILE";
 export default function GCashModal({ total, onClose, onConfirmPayment }) {
   const [copied, setCopied] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -22,46 +22,95 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "rgba(43, 27, 18, 0.7)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1000,
-        padding: "24px",
-      }}
-    >
-      <div
-        style={{
-          background: "#FFFDF9",
-          borderRadius: 16,
-          maxWidth: 380,
-          width: "100%",
-          padding: "28px",
-          position: "relative",
-          boxShadow: "0 20px 60px rgba(43, 27, 18, 0.3)",
-        }}
-      >
+    <div className="calma-gcash-overlay">
+      <style>{`
+        .calma-gcash-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0,0,0,0.7);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+        }
+
+        .calma-gcash-card {
+          background: #100A06;
+          border: 1px solid rgba(198,162,101,0.2);
+          border-radius: 16px;
+          max-width: 380px;
+          width: 100%;
+          max-height: calc(100dvh - 48px);
+          overflow-y: auto;
+          padding: 28px;
+          position: relative;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .calma-gcash-close {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: #8A7554;
+          padding: 6px;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .calma-gcash-close:active { color: #C6A265; }
+
+        .calma-gcash-copy {
+          margin-top: 10px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 7px 14px;
+          border-radius: 6px;
+          font-size: 12px;
+          cursor: pointer;
+          font-family: 'Montserrat', sans-serif;
+          -webkit-tap-highlight-color: transparent;
+          min-height: 36px;
+        }
+        .calma-gcash-copy.copied {
+          background: rgba(127,174,104,0.12);
+          border: 1px solid #7FAE68;
+          color: #7FAE68;
+        }
+        .calma-gcash-copy.idle {
+          background: rgba(198,162,101,0.06);
+          border: 1px solid rgba(198,162,101,0.3);
+          color: #C9BB9E;
+        }
+
+        .calma-gcash-confirm {
+          width: 100%;
+          padding: 14px;
+          border-radius: 10px;
+          border: none;
+          background: #0070E0;
+          color: #FFF;
+          font-size: 14px;
+          font-weight: 700;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          min-height: 48px;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .calma-gcash-confirm:active { background: #005bb8; }
+      `}</style>
+
+      <div className="calma-gcash-card">
         {/* Close button */}
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: 16,
-            right: 16,
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "#9A8770",
-            padding: 4,
-          }}
-        >
+        <button onClick={onClose} className="calma-gcash-close">
           <X size={20} />
         </button>
 
@@ -83,10 +132,10 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
               >
                 <Smartphone size={28} color="#FFF" />
               </div>
-              <div style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 700, color: "#2B1B12" }}>
-                GCash Payment
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#F2EAD9" }}>
+                GCash payment
               </div>
-              <div style={{ fontSize: 13, color: "#9A8770", marginTop: 4 }}>
+              <div style={{ fontSize: 13, color: "#8A7554", marginTop: 4, fontFamily: "'Montserrat', sans-serif" }}>
                 Scan QR or send to number
               </div>
             </div>
@@ -94,67 +143,48 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
             {/* QR Code Placeholder */}
             <div
               style={{
-                background: "#F7F2E9",
-                border: "2px dashed #D8C9AF",
+                background: "rgba(198,162,101,0.05)",
+                border: "1.5px dashed rgba(198,162,101,0.35)",
                 borderRadius: 12,
                 padding: "32px",
                 textAlign: "center",
                 marginBottom: 20,
               }}
             >
-              <QrCode size={80} color="#B8763E" style={{ marginBottom: 12 }} />
-              <div style={{ fontSize: 12, color: "#9A8770", fontFamily: "'Space Mono', monospace" }}>
+              <QrCode size={80} color="#C6A265" style={{ marginBottom: 12 }} />
+              <div style={{ fontSize: 12, color: "#8A7554", fontFamily: "'Montserrat', sans-serif" }}>
                 [Owner's GCash QR]
-              </div>
-              <div style={{ fontSize: 11, color: "#B0A088", marginTop: 8 }}>
-               
               </div>
             </div>
 
             {/* OR Divider */}
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-              <div style={{ flex: 1, height: 1, background: "#E7DCC7" }}></div>
-              <span style={{ fontSize: 11, color: "#9A8770", textTransform: "uppercase", letterSpacing: 1 }}>or</span>
-              <div style={{ flex: 1, height: 1, background: "#E7DCC7" }}></div>
+              <div style={{ flex: 1, height: 1, background: "rgba(198,162,101,0.2)" }}></div>
+              <span style={{ fontSize: 11, color: "#8A7554", textTransform: "uppercase", letterSpacing: 1, fontFamily: "'Montserrat', sans-serif" }}>or</span>
+              <div style={{ flex: 1, height: 1, background: "rgba(198,162,101,0.2)" }}></div>
             </div>
 
             {/* GCash Number */}
             <div
               style={{
-                background: "#FBF7EE",
-                border: "1px solid #E7DCC7",
+                background: "rgba(198,162,101,0.04)",
+                border: "1px solid rgba(198,162,101,0.18)",
                 borderRadius: 10,
                 padding: "16px",
                 textAlign: "center",
                 marginBottom: 20,
               }}
             >
-              <div style={{ fontSize: 11, color: "#9A8770", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>
-                Send to GCash Number
+              <div style={{ fontSize: 11, color: "#8A7554", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1, fontFamily: "'Montserrat', sans-serif" }}>
+                Send to GCash number
               </div>
-              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 22, fontWeight: 700, color: "#2B1B12", marginBottom: 4 }}>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 22, fontWeight: 700, color: "#F2EAD9", marginBottom: 4 }}>
                 {OWNER_GCASH_NUMBER}
               </div>
-              <div style={{ fontSize: 12, color: "#7A6650" }}>{OWNER_GCASH_NAME}</div>
-              <button
-                onClick={handleCopy}
-                style={{
-                  marginTop: 10,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: copied ? "#EAF3E6" : "#FFF",
-                  border: copied ? "1px solid #4C7A3D" : "1px solid #D8C9AF",
-                  color: copied ? "#4C7A3D" : "#7A6650",
-                  padding: "6px 14px",
-                  borderRadius: 6,
-                  fontSize: 12,
-                  cursor: "pointer",
-                  fontFamily: "'Public Sans', sans-serif",
-                }}
-              >
+              <div style={{ fontSize: 12, color: "#8A7554", fontFamily: "'Montserrat', sans-serif" }}>{OWNER_GCASH_NAME}</div>
+              <button onClick={handleCopy} className={`calma-gcash-copy cos-btn ${copied ? "copied" : "idle"}`}>
                 {copied ? <CheckCircle size={14} /> : <Copy size={14} />}
-                {copied ? "Copied!" : "Copy Number"}
+                {copied ? "Copied!" : "Copy number"}
               </button>
             </div>
 
@@ -164,43 +194,26 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                background: "#2B1B12",
-                color: "#F7F2E9",
+                background: "#0B0805",
+                border: "1px solid rgba(198,162,101,0.25)",
+                color: "#F2EAD9",
                 padding: "14px 18px",
                 borderRadius: 10,
                 marginBottom: 16,
               }}
             >
-              <span style={{ fontSize: 13 }}>Amount to Pay</span>
-              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 20, fontWeight: 700, color: "#D8A15C" }}>
+              <span style={{ fontSize: 13, fontFamily: "'Montserrat', sans-serif" }}>Amount to pay</span>
+              <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 20, fontWeight: 700, color: "#C6A265" }}>
                 {peso(total)}
               </span>
             </div>
 
             {/* Confirm Button */}
-            <button
-              onClick={handleConfirm}
-              className="cos-btn"
-              style={{
-                width: "100%",
-                padding: "14px",
-                borderRadius: 10,
-                border: "none",
-                background: "#0070E0",
-                color: "#FFF",
-                fontSize: 14,
-                fontWeight: 700,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-              }}
-            >
+            <button onClick={handleConfirm} className="calma-gcash-confirm cos-btn">
               <CheckCircle size={18} />
-              I've Paid via GCash
+              I've paid via GCash
             </button>
-            <div style={{ textAlign: "center", marginTop: 10, fontSize: 11, color: "#B0A088" }}>
+            <div style={{ textAlign: "center", marginTop: 10, fontSize: 11, color: "#5C4E3C", fontFamily: "'Montserrat', sans-serif" }}>
               Tap confirm after sending payment
             </div>
           </>
@@ -212,19 +225,20 @@ export default function GCashModal({ total, onClose, onConfirmPayment }) {
                 width: 64,
                 height: 64,
                 borderRadius: "50%",
-                background: "#EAF3E6",
+                background: "rgba(127,174,104,0.12)",
+                border: "1px solid rgba(127,174,104,0.4)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 margin: "0 auto 16px",
               }}
             >
-              <CheckCircle size={32} color="#4C7A3D" />
+              <CheckCircle size={32} color="#7FAE68" />
             </div>
-            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 700, color: "#2B1B12" }}>
-              Payment Confirmed
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#F2EAD9" }}>
+              Payment confirmed
             </div>
-            <div style={{ fontSize: 13, color: "#9A8770", marginTop: 6 }}>
+            <div style={{ fontSize: 13, color: "#8A7554", marginTop: 6, fontFamily: "'Montserrat', sans-serif" }}>
               Processing your order...
             </div>
           </div>

@@ -5,14 +5,38 @@ import { peso } from "../utils/format";
 
 export default function OrderReceipt({ orderPlaced, onNewOrder }) {
   return (
-    <div style={{ textAlign: "center", padding: "6px 0" }}>
+    <div className="calma-receipt" style={{ textAlign: "center", padding: "6px 0" }}>
+      <style>{`
+        .calma-receipt-newbtn {
+          width: 100%;
+          margin-top: 18px;
+          padding: 13px;
+          border-radius: 6px;
+          border: 1.5px solid #C6A265;
+          background: transparent;
+          color: #C6A265;
+          font-size: 12px;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          cursor: pointer;
+          min-height: 46px;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .calma-receipt-newbtn:active { background: rgba(198,162,101,0.12); }
+        @media (hover: hover) {
+          .calma-receipt-newbtn:hover { background: rgba(198,162,101,0.1); }
+        }
+      `}</style>
+
       {/* stamped approval mark */}
       <div
         style={{
           width: 64,
           height: 64,
           borderRadius: "50%",
-          border: "3px solid #4C7A3D",
+          border: "3px solid #7FAE68",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -20,58 +44,58 @@ export default function OrderReceipt({ orderPlaced, onNewOrder }) {
           transform: "rotate(-8deg)",
         }}
       >
-        <Check size={26} color="#4C7A3D" strokeWidth={3} />
+        <Check size={26} color="#7FAE68" strokeWidth={3} />
       </div>
-      <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 16, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#241A12" }}>
-        Order Placed
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#F2EAD9" }}>
+        Order placed
       </div>
-      <div style={{ fontSize: 11, fontFamily: "'Space Mono', monospace", color: "#8A7F6C", marginBottom: 16, letterSpacing: 0.5 }}>
+      <div style={{ fontSize: 11, fontFamily: "'Montserrat', sans-serif", color: "#8A7554", marginBottom: 16, letterSpacing: 0.5 }}>
         {orderPlaced.time} · NO. {orderPlaced.orderNo}
       </div>
 
       {/* Customer Name */}
       {orderPlaced.customerName && (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 14, fontSize: 13, color: "#5C5140", fontFamily: "'Space Mono', monospace" }}>
-          <User size={13} color="#B23A1E" />
-          <span style={{ fontWeight: 700 }}>{orderPlaced.customerName}</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 14, fontSize: 13, color: "#C9BB9E", fontFamily: "'Montserrat', sans-serif" }}>
+          <User size={13} color="#C6A265" />
+          <span style={{ fontWeight: 700, color: "#F2EAD9" }}>{orderPlaced.customerName}</span>
         </div>
       )}
 
       {/* the ticket */}
-      <div style={{ position: "relative", boxShadow: "0 6px 16px rgba(36,26,18,0.12)" }}>
+      <div style={{ position: "relative", boxShadow: "0 6px 20px rgba(0,0,0,0.4)" }}>
         <div
           style={{
             height: 8,
             backgroundImage:
-              "linear-gradient(135deg, #FCFAF5 50%, transparent 50%), linear-gradient(-135deg, #FCFAF5 50%, transparent 50%)",
+              "linear-gradient(135deg, #0B0805 50%, transparent 50%), linear-gradient(-135deg, #0B0805 50%, transparent 50%)",
             backgroundSize: "12px 12px",
             backgroundRepeat: "repeat-x",
             backgroundPosition: "bottom",
-            backgroundColor: "#F2E9D8",
+            backgroundColor: "#150F09",
           }}
         />
-        <div style={{ textAlign: "left", background: "#FCFAF5", padding: "16px 18px", fontFamily: "'Space Mono', monospace", fontSize: 12 }}>
+        <div style={{ textAlign: "left", background: "#150F09", border: "1px solid rgba(198,162,101,0.14)", borderTop: "none", borderBottom: "none", padding: "16px 18px", fontFamily: "'Montserrat', sans-serif", fontSize: 12 }}>
           {orderPlaced.items.map((c) => (
-            <div key={c.key} style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, color: "#241A12" }}>
+            <div key={c.key} style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, color: "#F2EAD9" }}>
               <span>{c.qty}× {c.name} ({c.size})</span>
               <span>{peso(c.price * c.qty)}</span>
             </div>
           ))}
-          <div style={{ borderTop: "1.5px dashed #C9BB9E", marginTop: 10, paddingTop: 10, display: "flex", justifyContent: "space-between", fontWeight: 700, color: "#241A12", textTransform: "uppercase" }}>
+          <div style={{ borderTop: "1px dashed rgba(198,162,101,0.3)", marginTop: 10, paddingTop: 10, display: "flex", justifyContent: "space-between", fontWeight: 700, color: "#C6A265", textTransform: "uppercase" }}>
             <span>Total</span>
             <span>{peso(orderPlaced.total)}</span>
           </div>
-          <div style={{ marginTop: 8, color: "#8A7F6C", fontSize: 11 }}>
+          <div style={{ marginTop: 8, color: "#8A7554", fontSize: 11 }}>
             Paid via {PAYMENTS.find((p) => p.id === orderPlaced.payment)?.label}
           </div>
           {/* Order Notes */}
           {orderPlaced.notes && (
-            <div style={{ marginTop: 14, padding: "10px 12px", background: "#F2E9D8", borderRadius: 6, borderLeft: "3px solid #B23A1E" }}>
+            <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(198,162,101,0.08)", borderRadius: 6, borderLeft: "3px solid #C6A265" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
-                <FileText size={11} color="#B23A1E" />
-                <span style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", textTransform: "uppercase", letterSpacing: 1, color: "#8A7F6C" }}>Notes</span>
+                <FileText size={11} color="#C6A265" />
+                <span style={{ fontSize: 10, fontFamily: "'Montserrat', sans-serif", textTransform: "uppercase", letterSpacing: 1, color: "#8A7554" }}>Notes</span>
               </div>
-              <div style={{ fontSize: 13, color: "#241A12", fontStyle: "italic" }}>{orderPlaced.notes}</div>
+              <div style={{ fontSize: 13, color: "#F2EAD9", fontStyle: "italic" }}>{orderPlaced.notes}</div>
             </div>
           )}
           {/* barcode */}
@@ -80,8 +104,8 @@ export default function OrderReceipt({ orderPlaced, onNewOrder }) {
               height: 20,
               marginTop: 14,
               background:
-                "repeating-linear-gradient(90deg, #241A12 0px, #241A12 2px, transparent 2px, transparent 4px, #241A12 4px, #241A12 5px, transparent 5px, transparent 9px)",
-              opacity: 0.8,
+                "repeating-linear-gradient(90deg, #C6A265 0px, #C6A265 2px, transparent 2px, transparent 4px, #C6A265 4px, #C6A265 5px, transparent 5px, transparent 9px)",
+              opacity: 0.75,
             }}
           />
         </div>
@@ -89,34 +113,16 @@ export default function OrderReceipt({ orderPlaced, onNewOrder }) {
           style={{
             height: 8,
             backgroundImage:
-              "linear-gradient(45deg, #FCFAF5 50%, transparent 50%), linear-gradient(-45deg, #FCFAF5 50%, transparent 50%)",
+              "linear-gradient(45deg, #0B0805 50%, transparent 50%), linear-gradient(-45deg, #0B0805 50%, transparent 50%)",
             backgroundSize: "12px 12px",
             backgroundRepeat: "repeat-x",
             backgroundPosition: "top",
-            backgroundColor: "#F2E9D8",
+            backgroundColor: "#150F09",
           }}
         />
       </div>
 
-      <button
-        onClick={onNewOrder}
-        className="cos-btn"
-        style={{
-          width: "100%",
-          marginTop: 18,
-          padding: "13px",
-          borderRadius: 6,
-          border: "2px solid #241A12",
-          background: "transparent",
-          color: "#241A12",
-          fontSize: 12,
-          fontFamily: "'Space Mono', monospace",
-          fontWeight: 700,
-          letterSpacing: 1,
-          textTransform: "uppercase",
-          cursor: "pointer",
-        }}
-      >
+      <button onClick={onNewOrder} className="calma-receipt-newbtn cos-btn">
         Start new order
       </button>
     </div>
