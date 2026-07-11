@@ -402,9 +402,10 @@ export default function OrderColumn({
                 {orderPlaced.items.reduce((sum, i) => sum + i.qty, 0)} items
               </div>
             </div>
-            <button onClick={onNewOrder} className="beanito-receipt-newbtn cos-btn" style={{ marginTop: 20 }}>
-              Start new order
-            </button>
+            <div style={{ fontSize: 11, color: "#5C4E3C", marginTop: 18, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.6 }}>
+              You can leave this page open — we'll keep checking your payment.<br />
+              Please wait here until it's approved or rejected.
+            </div>
           </div>
         ) : screen === "rejected" ? (
           /* PAYMENT REJECTED SCREEN — with specific reason */
