@@ -368,7 +368,7 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
             </span>
           </div>
 
-          {/* Logo badge - stands alone since it already contains the name + tagline */}
+          {/* ========== LOGO - FIXED: No white border, no shadow, no borderRadius ========== */}
           <div
             style={{
               display: "flex",
@@ -376,40 +376,17 @@ export default function IntroScreen({ onGetStarted, onAdminLogin }) {
               margin: "6px 0 16px",
             }}
           >
-            <div
+            <img
+              src="/logo512.png"
+              alt="Calma Cafe"
               style={{
-                position: "relative",
-                width: 116,
-                height: 116,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transform: "rotate(-2deg)",
+                width: 100,
+                height: 100,
+                objectFit: "contain",
+                display: "block",
+                // No border, no shadow, no borderRadius - clean logo only
               }}
-            >
-              {/* dashed ring echoing the ticket's dashed dividers */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  borderRadius: "50%",
-                  border: "1.5px dashed #C9BB9E",
-                }}
-              />
-              <img
-                src="/logo512.png"
-                alt="Calma Cafe"
-                style={{
-                  width: 96,
-                  height: 96,
-                  objectFit: "contain",
-                  display: "block",
-                  borderRadius: "50%",
-                  boxShadow: "0 6px 16px rgba(36,26,18,0.28)",
-                  border: "2px solid #FCFAF5",
-                }}
-              />
-            </div>
+            />
           </div>
 
           <div style={{ borderTop: "1.5px dashed #C9BB9E", marginBottom: 16 }} />
