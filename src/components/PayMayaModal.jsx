@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import { X, Smartphone, Copy, CheckCircle, Camera, ShieldCheck, AlertCircle, Download, Upload, ImageIcon } from "lucide-react";
+import { X, Smartphone, Copy, CheckCircle, Camera, ShieldCheck, AlertCircle, Download, Upload } from "lucide-react";
 import { peso } from "../utils/format";
 
 const OWNER_PHONE = "09493008592";
