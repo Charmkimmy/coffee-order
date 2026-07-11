@@ -12,8 +12,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [activeTab, setActiveTab] = useState("orders");
   const [previewImage, setPreviewImage] = useState(null);
-  const [rejectingOrder, setRejectingOrder] = useState(null); // NEW: track which order is being rejected
-  const [rejectReason, setRejectReason] = useState(""); // NEW: selected reason
+  const [rejectingOrder, setRejectingOrder] = useState(null);
+  const [rejectReason, setRejectReason] = useState("");
   const prevOrderCountRef = useRef(orderHistory.length);
   const ordersPerPage = 5;
 
@@ -221,15 +221,11 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
     setRejectReason("");
   };
 
-  // CANCEL = permanently kill the order
+  // CANCEL = permanently DELETE the order (not just mark as cancelled)
   const handleCancelOrder = (orderId) => {
-    if (!window.confirm("Cancel this order permanently? This cannot be undone.")) return;
-    if (onEditOrder) {
-      onEditOrder(orderId, { 
-        status: "cancelled", 
-        cancelledAt: Date.now(),
-        cancelledBy: "admin",
-      });
+    if (!window.confirm("Delete this order permanently? This cannot be undone.")) return;
+    if (onDeleteOrder) {
+      onDeleteOrder(orderId);
     }
   };
 
@@ -879,12 +875,6 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                     Rejected
                                   </span>
                                 )}
-                                {order.status === "cancelled" && (
-                                  <span className="calma-cancelled-badge">
-                                    <Ban size={10} />
-                                    Cancelled
-                                  </span>
-                                )}
                               </div>
                             </div>
                           </div>
@@ -951,8 +941,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                   className="calma-mini-btn danger"
                                   style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
                                 >
-                                  <Ban size={14} />
-                                  Cancel
+                                  <Trash2 size={14} />
+                                  Delete
                                 </button>
                               </div>
                             </div>
@@ -980,8 +970,8 @@ export default function AdminDashboard({ dailyTotals, grandTotal, orderHistory, 
                                   className="calma-mini-btn danger"
                                   style={{ flex: 1, justifyContent: "center", minHeight: 36 }}
                                 >
-                                  <Ban size={14} />
-                                  Cancel Order
+                                  <Trash2 size={14} />
+                                  Delete
                                 </button>
                               </div>
                             </div>
