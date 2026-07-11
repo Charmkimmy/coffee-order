@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Smartphone, Copy, CheckCircle } from "lucide-react";
+import { X, Smartphone, Copy, CheckCircle, Camera } from "lucide-react";
 import { peso } from "../utils/format";
 
 const OWNER_PHONE = "09493008592";
@@ -58,11 +58,28 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
           -webkit-tap-highlight-color: transparent;
         }
         .calma-maya-close:active { color: #C6A265; }
+        .calma-maya-qr-wrap {
+          background: #ffffff;
+          border-radius: 12px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 20;
+        }
         .calma-maya-qr {
           width: 220px;
           height: 220px;
           object-fit: contain;
-          border-radius: 8px;
+        }
+        .calma-maya-qr-hint {
+          font-size: 11px;
+          color: #5C4E3C;
+          font-family: 'Montserrat', sans-serif;
+          display: flex;
+          align-items: center;
+          gap: 6px;
         }
         .calma-maya-copy {
           margin-top: 10px;
@@ -128,16 +145,12 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
                 Scan to pay
               </div>
               <div style={{ fontSize: 13, color: "#8A7554", marginTop: 4, fontFamily: "'Montserrat', sans-serif" }}>
-                Works with Maya, GCash, BPI, and any InstaPay app
+                Works with Maya, GCash, BPI, and any bank app
               </div>
             </div>
 
-            {/* QR Code Image */}
-            <div style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: 20,
-            }}>
+            {/* QR Code with white background */}
+            <div className="calma-maya-qr-wrap">
               <img
                 src="/QR.jpg"
                 alt="InstaPay QR Code"
@@ -146,6 +159,10 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
                   e.target.style.display = "none";
                 }}
               />
+              <div className="calma-maya-qr-hint">
+                <Camera size={12} />
+                Open your camera or bank app to scan
+              </div>
             </div>
 
             {/* OR Divider */}
