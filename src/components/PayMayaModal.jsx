@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Smartphone, Copy, CheckCircle, QrCode } from "lucide-react";
+import { X, Smartphone, Copy, CheckCircle } from "lucide-react";
 import { peso } from "../utils/format";
 
-const OWNER_MAYA_NUMBER = "0968-304-5499";
-const OWNER_MAYA_NAME = "REALYN RILE";
+const OWNER_MAYA_NUMBER = "09493008592";
+const OWNER_MAYA_NAME = "ALLAN SEPNO";
+
 export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
   const [copied, setCopied] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -64,6 +65,14 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
           -webkit-tap-highlight-color: transparent;
         }
         .calma-maya-close:active { color: #C6A265; }
+
+        .calma-maya-qr {
+          width: 180px;
+          height: 180px;
+          object-fit: contain;
+          border-radius: 8px;
+          margin-bottom: 12px;
+        }
 
         .calma-maya-copy {
           margin-top: 10px;
@@ -141,20 +150,28 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
               </div>
             </div>
 
-            {/* QR Code Placeholder */}
+            {/* QR Code Image */}
             <div
               style={{
                 background: "rgba(198,162,101,0.05)",
                 border: "1.5px dashed rgba(198,162,101,0.35)",
                 borderRadius: 12,
-                padding: "32px",
+                padding: "24px",
                 textAlign: "center",
                 marginBottom: 20,
               }}
             >
-              <QrCode size={80} color="#C6A265" style={{ marginBottom: 12 }} />
-              <div style={{ fontSize: 12, color: "#8A7554", fontFamily: "'Montserrat', sans-serif" }}>
-                [Owner's Maya QR]
+              <img
+                src="/QR.jpg"
+                alt="Maya QR Code"
+                className="calma-maya-qr"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                  e.target.nextSibling.style.display = "block";
+                }}
+              />
+              <div style={{ fontSize: 12, color: "#8A7554", fontFamily: "'Montserrat', sans-serif", display: "none" }}>
+                QR code not available
               </div>
             </div>
 
@@ -249,4 +266,3 @@ export default function PayMayaModal({ total, onClose, onConfirmPayment }) {
     document.body
   );
 }
-
